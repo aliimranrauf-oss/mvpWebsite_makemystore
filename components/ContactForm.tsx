@@ -95,7 +95,7 @@ export default function ContactForm() {
           Message sent
         </h3>
         <p className="max-w-[40ch] text-sm leading-relaxed text-muted">
-          Thanks — I&apos;ll get back to you within 24 hours.
+          Thanks — we&apos;ll get back to you within 24 hours.
         </p>
         <button
           type="button"
