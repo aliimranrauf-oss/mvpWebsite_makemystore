@@ -7,7 +7,7 @@ import CountUp from "./CountUp";
 
 const container = {
   hidden: {},
-  show: {
+  show: {a
     transition: { staggerChildren: 0.12, delayChildren: 0.05 },
   },
 };
@@ -35,7 +35,34 @@ export default function Hero() {
         className="pointer-events-none absolute -right-40 top-40 h-[380px] w-[380px] rounded-full bg-cyan/10 blur-[120px]"
       />
 
-      <div className="relative mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 -left-8 z-0 h-[300px] w-[460px] sm:h-[360px] sm:w-[560px]"
+      >
+        <svg
+          viewBox="0 0 560 360"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-full w-full"
+        >
+          <path
+            d="M0 360V190C70 150 150 170 220 130C290 90 330 45 410 32C455 24 500 40 560 68V360H0Z"
+            fill="#0B2417"
+          />
+          <path
+            d="M0 360V230C65 200 145 210 210 172C280 130 320 82 400 66C445 58 490 72 520 92V360H0Z"
+            fill="#166B34"
+            fillOpacity="0.9"
+          />
+          <path
+            d="M0 360V270C60 252 130 258 190 226C255 190 295 152 360 140C405 132 450 146 480 164V360H0Z"
+            fill="#2E9E48"
+            fillOpacity="0.55"
+          />
+        </svg>
+      </div>
+
+      <div className="relative z-10 mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
         <motion.div variants={container} initial="hidden" animate="show">
           <motion.span
             variants={fadeUp}
@@ -62,7 +89,7 @@ export default function Hero() {
               >
                 <path
                   d="M2 5.5C20 1 40 1 60 4C80 7 100 2 118 3"
-                  stroke="#4CAF50"
+                  stroke="#2E9E48"
                   strokeWidth="3"
                   strokeLinecap="round"
                 />
