@@ -1,25 +1,4 @@
-const steps = [
-  {
-    n: "1",
-    title: "Tell us what you need",
-    desc: "A chatbot, a new MVP, or a project that's stuck. Send a few details through the contact form.",
-  },
-  {
-    n: "2",
-    title: "Get a fixed quote",
-    desc: "You'll hear back with a clear price and timeline before anything starts — no surprises later.",
-  },
-  {
-    n: "3",
-    title: "We build or fix it",
-    desc: "Work happens on Next.js, Supabase, and Vercel, with updates along the way.",
-  },
-  {
-    n: "4",
-    title: "You get everything",
-    desc: "Full source pushed to your GitHub, deployed to your Vercel. You own all of it.",
-  },
-];
+import { howItWorksSteps as steps } from "@/lib/data";
 
 export default function HowItWorks() {
   return (
