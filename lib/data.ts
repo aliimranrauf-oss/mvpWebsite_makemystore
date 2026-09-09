@@ -208,6 +208,14 @@ export const chatbotFaqs = [
     q: "Do I own the chatbot afterward?",
     a: "Yes. It's deployed on your own accounts — no dependency on a third-party platform or a subscription you don't control.",
   },
+  {
+    q: "Can I add it to my existing website?",
+    a: "Yes. It works with any website or framework — WordPress, Wix, Shopify, Webflow, or a custom build — added with a simple script or iframe embed, no rebuild required.",
+  },
+  {
+    q: "What if I need help or changes after it's live?",
+    a: "For existing customers, small tweaks and quick help are provided free whenever needed. Bigger requests — new features or major changes — are treated as separate, paid work with their own quote.",
+  },
 ];
 
 export const mvpFaqs = [
@@ -230,6 +238,14 @@ export const mvpFaqs = [
   {
     q: "Who owns the code and hosting after delivery?",
     a: "You do, completely. GitHub, Vercel, and Supabase are all set up under your own accounts from day one.",
+  },
+  {
+    q: "Will you set up the admin panel for me too?",
+    a: "Yes. Every MVP is built from scratch and handed over complete — including a working admin panel — so you can run and manage your business without touching any code.",
+  },
+  {
+    q: "What if I need help or changes after launch?",
+    a: "For existing customers, small tweaks and quick help are provided free whenever needed. Bigger requests — new features or major changes — are treated as separate, paid work with their own quote.",
   },
 ];
 
@@ -280,13 +296,5 @@ export const faqs = [
   {
     q: "How fast is delivery?",
     a: "Most SaaS MVPs ship in 48–72 hours. Chatbots and quick fixes are often faster. Full rebuilds depend on the size of the existing project.",
-  },
-  {
-    q: "Can I add the chatbot to my existing website?",
-    a: "Yes. The chatbot works with any website or framework — WordPress, Wix, Shopify, Webflow, or a custom build — and is added with a simple script or iframe embed, no rebuild required.",
-  },
-  {
-    q: "Do I need a GitHub account?",
-    a: "No, not for a chatbot. For a full SaaS MVP, having your own GitHub, Vercel, and Supabase accounts means everything is set up under your name from the start — if you don't have one yet, that's fine too.",
   },
 ];
