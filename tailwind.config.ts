@@ -5,19 +5,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: "#070B10",
-        surface: "#0D131A",
-        surface2: "#121A23",
-        border: "#1D2833",
-        ink: "#E9F1F4",
-        muted: "#8FA3AF",
+        bg: "#FFFFFF",
+        surface: "#FFFFFF",
+        surface2: "#F6F8F7",
+        border: "#E6EAE8",
+        ink: "#10241E",
+        muted: "#64748B",
         mint: {
-          DEFAULT: "#3CE29A",
-          dim: "#1F6B4C",
+          DEFAULT: "#4CAF50",
+          dim: "#E7F5E8",
         },
         cyan: {
-          DEFAULT: "#37D0E8",
-          dim: "#1B6674",
+          DEFAULT: "#0EA5E9",
+          dim: "#E5F4FC",
         },
       },
       fontFamily: {
