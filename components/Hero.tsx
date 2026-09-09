@@ -1,7 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, ImagePlus } from "lucide-react";
+import CountUp from "./CountUp";
+
+const container = {
+  hidden: {},
+  show: {
+    transition: { staggerChildren: 0.12, delayChildren: 0.05 },
+  },
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function Hero() {
   const [imgFailed, setImgFailed] = useState(false);
@@ -18,17 +36,30 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
-        <div>
-          <h1 className="text-balance font-display text-4xl font-bold leading-[1.12] text-ink sm:text-5xl lg:text-[3.4rem]">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+        >
+          <motion.h1
+            variants={fadeUp}
+            className="text-balance font-display text-4xl font-bold leading-[1.12] text-ink sm:text-5xl lg:text-[3.4rem]"
+          >
             AI chatbots and SaaS MVPs, built with real, production code
-          </h1>
-          <p className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted">
+          </motion.h1>
+          <motion.p
+            variants={fadeUp}
+            className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted"
+          >
             Get a custom AI chatbot, a full SaaS MVP, or a proper fix for the
             AI-generated project you&apos;re stuck on. Built on Next.js,
             Supabase, and Vercel — and pushed straight to your own GitHub.
-          </p>
+          </motion.p>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <motion.div
+            variants={fadeUp}
+            className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center"
+          >
             <a
               href="#contact"
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
@@ -43,10 +74,39 @@ export default function Hero() {
               See how it works
               <Sparkles size={15} />
             </a>
-          </div>
-        </div>
+          </motion.div>
 
-        <div className="relative mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none">
+          <motion.dl
+            variants={fadeUp}
+            className="mt-12 grid grid-cols-3 gap-4 border-t border-border pt-6 sm:max-w-md"
+          >
+            <div>
+              <dt className="font-display text-2xl font-semibold text-ink">
+                <CountUp prefix="48–" to={72} suffix="h" />
+              </dt>
+              <dd className="mt-1 text-xs text-muted">MVP delivery</dd>
+            </div>
+            <div>
+              <dt className="font-display text-2xl font-semibold text-ink">
+                <CountUp to={100} suffix="%" />
+              </dt>
+              <dd className="mt-1 text-xs text-muted">Code ownership</dd>
+            </div>
+            <div>
+              <dt className="font-display text-2xl font-semibold text-ink">
+                <CountUp from={24} to={0} />
+              </dt>
+              <dd className="mt-1 text-xs text-muted">Vendor lock-in</dd>
+            </div>
+          </motion.dl>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 40, scale: 0.96 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
+          className="relative mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none"
+        >
           {!imgFailed && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -75,7 +135,7 @@ export default function Hero() {
               </p>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
