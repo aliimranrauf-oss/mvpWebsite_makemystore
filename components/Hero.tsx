@@ -102,39 +102,39 @@ export default function Hero() {
 
           <motion.dl
             variants={fadeUp}
-            className="mt-10 grid grid-cols-3 gap-4 sm:max-w-md"
+            className="mt-10 grid grid-cols-3 gap-3 sm:max-w-md sm:gap-4"
           >
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint sm:h-9 sm:w-9">
                 <Zap size={16} />
               </span>
               <div>
-                <dt className="font-display text-lg font-semibold text-ink">
+                <dt className="whitespace-nowrap font-display text-base font-semibold text-ink sm:text-lg">
                   <CountUp prefix="48–" to={72} suffix="h" />
                 </dt>
-                <dd className="text-xs text-muted">MVP delivery</dd>
+                <dd className="text-[11px] leading-tight text-muted sm:text-xs">MVP delivery</dd>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint sm:h-9 sm:w-9">
                 <ShieldCheck size={16} />
               </span>
               <div>
-                <dt className="font-display text-lg font-semibold text-ink">
+                <dt className="whitespace-nowrap font-display text-base font-semibold text-ink sm:text-lg">
                   <CountUp to={100} suffix="%" />
                 </dt>
-                <dd className="text-xs text-muted">Code ownership</dd>
+                <dd className="text-[11px] leading-tight text-muted sm:text-xs">Code ownership</dd>
               </div>
             </div>
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface2 text-ink">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-surface2 text-ink sm:h-9 sm:w-9">
                 <Github size={16} />
               </span>
               <div>
-                <dt className="font-display text-lg font-semibold text-ink">
+                <dt className="whitespace-nowrap font-display text-base font-semibold text-ink sm:text-lg">
                   <CountUp from={24} to={0} />
                 </dt>
-                <dd className="text-xs text-muted">Vendor lock-in</dd>
+                <dd className="text-[11px] leading-tight text-muted sm:text-xs">Vendor lock-in</dd>
               </div>
             </div>
           </motion.dl>
