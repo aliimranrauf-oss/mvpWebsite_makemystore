@@ -281,4 +281,12 @@ export const faqs = [
     q: "How fast is delivery?",
     a: "Most SaaS MVPs ship in 48–72 hours. Chatbots and quick fixes are often faster. Full rebuilds depend on the size of the existing project.",
   },
+  {
+    q: "Can I add the chatbot to my existing website?",
+    a: "Yes. The chatbot works with any website or framework — WordPress, Wix, Shopify, Webflow, or a custom build — and is added with a simple script or iframe embed, no rebuild required.",
+  },
+  {
+    q: "Do I need a GitHub account?",
+    a: "No, not for a chatbot. For a full SaaS MVP, having your own GitHub, Vercel, and Supabase accounts means everything is set up under your name from the start — if you don't have one yet, that's fine too.",
+  },
 ];
