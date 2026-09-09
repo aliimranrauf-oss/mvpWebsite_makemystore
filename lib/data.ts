@@ -187,6 +187,75 @@ export const trustPoints = [
   },
 ];
 
+export const chatbotFaqs = [
+  {
+    q: "What's the difference between a Basic bot and an AI-Powered bot?",
+    a: "A Basic bot answers from a fixed script you provide — reliable for simple, repeated questions like hours, pricing, or FAQs. An AI-Powered bot (GPT, Claude, or Grok) understands open-ended questions and answers from your actual business data, with real memory across a conversation.",
+  },
+  {
+    q: "Can the chatbot connect to WhatsApp or Telegram?",
+    a: "Yes. Every bot ships with a website widget by default. WhatsApp and Telegram integrations are available as add-ons (+$120 and +$100) on the AI-Powered tier.",
+  },
+  {
+    q: "What data can the AI bot be trained on?",
+    a: "Your own business content — product info, FAQs, docs, or policies — using retrieval (RAG) so answers stay grounded in what you actually offer, instead of generic AI responses.",
+  },
+  {
+    q: "How long does a chatbot take to build?",
+    a: "Basic FAQ bots are usually the quickest to deliver. AI-Powered bots take a bit longer to set up memory and train on your data, but most are still delivered within a few days.",
+  },
+  {
+    q: "Do I own the chatbot afterward?",
+    a: "Yes. It's deployed on your own accounts — no dependency on a third-party platform or a subscription you don't control.",
+  },
+];
+
+export const mvpFaqs = [
+  {
+    q: "What exactly do I get in 48–72 hours?",
+    a: "A working, deployed product on Next.js and Supabase — not a mockup. The Starter tier covers a focused, single-purpose build; Growth and Pro add user accounts, a database, and more complete flows.",
+  },
+  {
+    q: "Can I add an AI chatbot to my MVP?",
+    a: "Yes — it's built into the Pro tier, and can be added to Starter or Growth as well. The same AI chatbot service that trains on your data can be wired straight into your MVP.",
+  },
+  {
+    q: "What if I need more features after launch?",
+    a: "Every MVP is built on clean, standard Next.js and Supabase, so new features can be added later without rebuilding what's already there.",
+  },
+  {
+    q: "Do I need to be technical to work with you?",
+    a: "No. You describe what the product needs to do, and the technical side — code, database, hosting, deployment — is handled for you. You still end up owning real, readable code.",
+  },
+  {
+    q: "Who owns the code and hosting after delivery?",
+    a: "You do, completely. GitHub, Vercel, and Supabase are all set up under your own accounts from day one.",
+  },
+];
+
+export const rescueFaqs = [
+  {
+    q: "My project was built with Lovable, Bolt, or another AI builder — can you fix it?",
+    a: "Yes. That's exactly what Project Rescue is for. Send the current state of it and you'll get an honest read on what it needs, with a fixed quote before anything starts.",
+  },
+  {
+    q: "What kinds of problems do you fix?",
+    a: "Broken or half-working features, missing or misconfigured databases, failed deployments, and projects that technically run but were never set up properly on real hosting.",
+  },
+  {
+    q: "What if the project needs a full rebuild?",
+    a: "That's the Full Rebuild tier — priced after a quick, free review, rebuilt cleanly on Next.js, with a fixed quote agreed before work starts.",
+  },
+  {
+    q: "Will I own the fixed project afterward?",
+    a: "Yes. It's rebuilt and deployed on your own GitHub, Vercel, and Supabase accounts — no lock-in to any platform.",
+  },
+  {
+    q: "How fast can a rescue be done?",
+    a: "Quick fixes and standard rescues are often turned around in a few days. Full rebuilds depend on the size of the existing project, and you'll get a timeline with the quote.",
+  },
+];
+
 export const faqs = [
   {
     q: "Do I need any coding knowledge?",
