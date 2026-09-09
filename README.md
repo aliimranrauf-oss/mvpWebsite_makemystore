@@ -26,6 +26,10 @@ makemystore/
 │   ├── FAQ.tsx             Accordion FAQ (native <details>, no JS needed)
 │   ├── FinalCTA.tsx        Closing CTA + email (id="contact")
 │   └── Footer.tsx          Footer nav + email
+├── lib/
+│   ├── constants.ts        SITE_URL, CONTACT_EMAIL, nav links — site-wide values
+│   └── data.ts             Services, pricing tiers, FAQs, steps, benefits —
+│                            shared content so future pages don't duplicate it
 ├── public/
 │   ├── favicon.svg         ✅ already included (modern browsers)
 │   └── images/             ⬅ you add files here (see checklist below)
@@ -36,6 +40,11 @@ makemystore/
 ├── package.json
 └── .gitignore               Keeps node_modules/.next out of your repo
 ```
+
+`lib/data.ts` is the important one going forward: when we build the dedicated
+Chatbot, SaaS MVP, and Project Rescue pages, they'll import their pricing
+tiers and copy straight from here instead of duplicating it — so updating a
+price in one place updates it everywhere it's shown.
 
 ## Run it locally
 
