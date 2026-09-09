@@ -12,7 +12,7 @@ const config: Config = {
         ink: "#10241E",
         muted: "#64748B",
         mint: {
-          DEFAULT: "#4CAF50",
+          DEFAULT: "#2E9E48",
           dim: "#E7F5E8",
         },
         cyan: {
