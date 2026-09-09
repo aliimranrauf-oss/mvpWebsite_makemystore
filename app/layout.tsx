@@ -70,9 +70,34 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: SITE_NAME,
+    url: SITE_URL,
+    description:
+      "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
+    email: "info@makemystore.online",
+    areaServed: "Worldwide",
+    priceRange: "$150-$1600+",
+    knowsAbout: [
+      "AI Chatbot Development",
+      "SaaS MVP Development",
+      "Next.js",
+      "Supabase",
+      "Project Rescue",
+    ],
+  };
+
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="font-body antialiased">{children}</body>
+      <body className="font-body antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
