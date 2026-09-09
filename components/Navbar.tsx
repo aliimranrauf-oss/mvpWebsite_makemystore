@@ -10,7 +10,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
-        <a href="#top" className="flex items-center gap-2.5">
+        <a href="/" className="flex items-center gap-2.5">
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
             <rect width="30" height="30" rx="8" fill="#2E9E48" />
             <path
@@ -40,7 +40,7 @@ export default function Navbar() {
         </nav>
 
         <a
-          href="#contact"
+          href="/contact"
           className="hidden rounded-lg bg-mint px-4 py-2 text-sm font-semibold text-bg transition-transform hover:scale-[1.03] md:inline-block"
         >
           Start a project
@@ -73,7 +73,7 @@ export default function Navbar() {
             ))}
             <li className="pt-2">
               <a
-                href="#contact"
+                href="/contact"
                 onClick={() => setOpen(false)}
                 className="block rounded-lg bg-mint px-4 py-3 text-center text-sm font-semibold text-bg"
               >
