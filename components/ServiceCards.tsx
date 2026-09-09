@@ -56,7 +56,7 @@ export default function ServiceCards() {
                 <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
                   <span className="font-display text-lg font-semibold text-ink">{s.price}</span>
                   <a
-                    href="#pricing"
+                    href={`/${s.slug}`}
                     className={`inline-flex items-center gap-1.5 text-sm font-medium ${ring}`}
                   >
                     Details
