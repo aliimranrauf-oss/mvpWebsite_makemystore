@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from "@/lib/constants";
+
 export default function Footer() {
   return (
     <footer className="border-t border-border">
@@ -20,8 +22,8 @@ export default function Footer() {
           <a href="#services" className="hover:text-ink">Services</a>
           <a href="#pricing" className="hover:text-ink">Pricing</a>
           <a href="#faq" className="hover:text-ink">FAQ</a>
-          <a href="mailto:info@makemystore.online" className="hover:text-ink">
-            info@makemystore.online
+          <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-ink">
+            {CONTACT_EMAIL}
           </a>
         </nav>
         <p>© {new Date().getFullYear()} makemystore.online</p>
