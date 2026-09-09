@@ -34,7 +34,7 @@ export default function ServiceCards() {
             return (
               <div
                 key={s.title}
-                className="flex flex-col rounded-xl2 border border-border bg-surface p-7"
+                className="flex flex-col rounded-xl2 card-glow-border p-7"
               >
                 <span
                   className={`inline-flex h-11 w-11 items-center justify-center rounded-lg ${bg} ${ring}`}
