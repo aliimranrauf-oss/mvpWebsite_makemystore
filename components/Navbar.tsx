@@ -2,13 +2,7 @@
 
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-
-const links = [
-  { href: "#services", label: "Services" },
-  { href: "#pricing", label: "Pricing" },
-  { href: "#how-it-works", label: "How It Works" },
-  { href: "#faq", label: "FAQ" },
-];
+import { NAV_LINKS } from "@/lib/constants";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -34,7 +28,7 @@ export default function Navbar() {
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
+          {NAV_LINKS.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -66,7 +60,7 @@ export default function Navbar() {
       {open && (
         <nav className="border-t border-border bg-bg px-5 pb-6 pt-2 md:hidden">
           <ul className="flex flex-col gap-1">
-            {links.map((link) => (
+            {NAV_LINKS.map((link) => (
               <li key={link.href}>
                 <a
                   href={link.href}
