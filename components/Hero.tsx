@@ -7,7 +7,7 @@ import CountUp from "./CountUp";
 
 const container = {
   hidden: {},
-  show: {a
+  show: {
     transition: { staggerChildren: 0.12, delayChildren: 0.05 },
   },
 };
