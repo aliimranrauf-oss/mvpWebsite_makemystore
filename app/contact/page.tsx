@@ -72,7 +72,10 @@ export default function ContactPage() {
                   })}
                 </div>
 
-                <div className="mt-10 rounded-xl2 border border-border bg-surface2 p-6">
+                <div
+                  className="mt-10 rounded-xl2 card-glow-border p-6"
+                  style={{ ["--card-bg" as string]: "#F6F8F7" }}
+                >
                   <p className="text-sm text-muted">Prefer email?</p>
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
@@ -84,7 +87,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl2 border border-border bg-surface p-6 sm:p-8">
+              <div className="rounded-xl2 card-glow-border p-6 sm:p-8">
                 <ContactForm />
               </div>
             </div>
