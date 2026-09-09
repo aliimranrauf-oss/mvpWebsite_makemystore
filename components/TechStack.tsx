@@ -1,12 +1,4 @@
-const stack = [
-  "Next.js",
-  "Supabase",
-  "Vercel",
-  "OpenAI",
-  "Claude",
-  "Tailwind CSS",
-  "GitHub",
-];
+import { techStack as stack } from "@/lib/data";
 
 export default function TechStack() {
   return (
