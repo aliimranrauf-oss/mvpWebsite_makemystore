@@ -75,9 +75,10 @@ export default function Hero() {
             variants={fadeUp}
             className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted"
           >
-            Get a custom AI chatbot, a full SaaS MVP, or a proper fix for the
+            Get a custom AI chatbot — that works with any website or
+            framework — a full SaaS MVP, or a proper fix for the
             AI-generated project you&apos;re stuck on. Built on Next.js,
-            Supabase, and Vercel — and pushed straight to your own GitHub.
+            Supabase, and Vercel, with full code ownership from day one.
           </motion.p>
 
           <motion.div
