@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE } from "@/lib/constants";
+import FaqChatBot from "@/components/FaqChatBot";
+import AiChatBot from "@/components/AiChatBot";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -113,6 +115,9 @@ export default function RootLayout({
         </Script>
 
         {children}
+
+        {CHATBOT_MODE === "faq" && <FaqChatBot />}
+        {CHATBOT_MODE === "ai" && <AiChatBot />}
       </body>
     </html>
   );
