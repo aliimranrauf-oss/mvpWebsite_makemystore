@@ -37,3 +37,58 @@ body {
 .text-balance {
   text-wrap: balance;
 }
+
+/* Animated card borders — spinning gradient outline so card/form edges
+   are always clearly visible instead of relying on the very light
+   default border color. Works on any solid-white-background container. */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.card-glow-border {
+  --card-bg: #FFFFFF;
+  position: relative;
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+    conic-gradient(
+        from var(--border-angle),
+        #E6EAE8 0deg,
+        #2E9E48 90deg,
+        #0EA5E9 180deg,
+        #E6EAE8 270deg,
+        #E6EAE8 360deg
+      )
+      border-box;
+  animation: card-border-spin 7s linear infinite;
+}
+
+.card-glow-border--accent {
+  background:
+    linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+    conic-gradient(
+        from var(--border-angle),
+        #2E9E48 0deg,
+        #0EA5E9 180deg,
+        #2E9E48 360deg
+      )
+      border-box;
+}
+
+@keyframes card-border-spin {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-glow-border {
+    animation: none;
+    background:
+      linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+      linear-gradient(#2E9E48, #0EA5E9) border-box;
+  }
+}
+
