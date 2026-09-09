@@ -1,17 +1,4 @@
-const points = [
-  {
-    title: "You own every account",
-    desc: "GitHub, Vercel, Supabase, OpenAI — all set up under your own accounts, not mine.",
-  },
-  {
-    title: "Full code ownership",
-    desc: "The entire codebase belongs to you the moment it's delivered. No licensing, no revoked access.",
-  },
-  {
-    title: "No lock-in",
-    desc: "Hand the project to any other developer at any time — it's plain Next.js, nothing proprietary.",
-  },
-];
+import { trustPoints as points } from "@/lib/data";
 
 export default function Trust() {
   return (
