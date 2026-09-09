@@ -8,8 +8,15 @@ import { services } from "@/lib/data";
 export const metadata: Metadata = {
   title: "Terms of Service — MakeMyStore",
   description: "The terms that apply when you work with MakeMyStore.",
+  keywords: ["MakeMyStore terms of service", "terms and conditions"],
   alternates: {
     canonical: `${SITE_URL}/terms`,
+  },
+  openGraph: {
+    title: "Terms of Service — MakeMyStore",
+    description: "The terms that apply when you work with MakeMyStore.",
+    url: `${SITE_URL}/terms`,
+    type: "website",
   },
   robots: {
     index: true,
