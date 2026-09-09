@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import "./globals.css";
+import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -16,10 +17,8 @@ const body = Inter({
   display: "swap",
 });
 
-const siteUrl = "https://makemystore.online";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: "MakeMyStore — AI Chatbots, SaaS MVPs & Project Rescue",
   description:
     "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects. Real production code, delivered on Next.js, Supabase, and Vercel — you own everything.",
@@ -35,8 +34,8 @@ export const metadata: Metadata = {
     title: "MakeMyStore — AI Chatbots, SaaS MVPs & Project Rescue",
     description:
       "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
-    url: siteUrl,
-    siteName: "MakeMyStore",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
     locale: "en_US",
     type: "website",
@@ -56,7 +55,7 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
   },
 };
 
