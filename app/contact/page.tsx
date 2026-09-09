@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   title: "Contact — MakeMyStore",
   description:
     "Tell us about your AI chatbot, SaaS MVP, or project rescue and get a fixed quote back within 24 hours.",
+  keywords: [
+    "contact MakeMyStore",
+    "hire AI chatbot developer",
+    "get SaaS MVP quote",
+    "fix AI generated project",
+    "Next.js developer contact",
+  ],
   alternates: {
     canonical: `${SITE_URL}/contact`,
   },
@@ -19,6 +26,12 @@ export const metadata: Metadata = {
       "Tell us about your project and get a fixed quote back within 24 hours.",
     url: `${SITE_URL}/contact`,
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Contact — MakeMyStore",
+    description:
+      "Tell us about your project and get a fixed quote back within 24 hours.",
   },
 };
 
