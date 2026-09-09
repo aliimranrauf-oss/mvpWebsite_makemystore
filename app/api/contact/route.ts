@@ -7,6 +7,8 @@ export const runtime = "nodejs";
 
 const VALID_SERVICE_SLUGS = new Set(services.map((s) => s.slug).concat("other"));
 
+const VALID_SOURCES = new Set(["contact_page", "faq_chatbot", "ai_chatbot"]);
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type ContactPayload = {
@@ -16,6 +18,7 @@ type ContactPayload = {
   service?: unknown;
   budget?: unknown;
   message?: unknown;
+  source?: unknown; // "contact_page" | "faq_chatbot" | "ai_chatbot"
   company_website?: unknown; // honeypot
 };
 
@@ -60,6 +63,8 @@ export async function POST(req: NextRequest) {
   if (!message) errors.message = "Message is required.";
 
   const service = VALID_SERVICE_SLUGS.has(rawService) ? rawService : "other";
+  const rawSource = clean(body.source, 50);
+  const source = VALID_SOURCES.has(rawSource) ? rawSource : "contact_page";
 
   if (Object.keys(errors).length > 0) {
     return NextResponse.json(
@@ -85,7 +90,7 @@ export async function POST(req: NextRequest) {
       budget: budget || null,
       message,
       status: "new",
-      source: "contact_page",
+      source,
       user_agent: userAgent,
       ip_address: ip,
     });
