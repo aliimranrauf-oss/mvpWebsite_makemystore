@@ -1,37 +1,8 @@
 import { Code2, Github, Unlock, Timer, MessagesSquare, LayoutGrid } from "lucide-react";
+import { benefits } from "@/lib/data";
 
-const items = [
-  {
-    icon: Code2,
-    title: "Real production code",
-    desc: "No drag-and-drop templates. Every project is written, readable code you can hand to any developer.",
-  },
-  {
-    icon: Github,
-    title: "Full source on your GitHub",
-    desc: "The complete codebase is pushed to a repository you own from day one.",
-  },
-  {
-    icon: Unlock,
-    title: "No lock-in, ever",
-    desc: "Your GitHub, your Vercel, your Supabase. Nothing is tied to my accounts.",
-  },
-  {
-    icon: Timer,
-    title: "Fast turnaround",
-    desc: "Most MVPs ship in 48–72 hours. Chatbots and fixes are usually quicker.",
-  },
-  {
-    icon: MessagesSquare,
-    title: "Direct communication",
-    desc: "You talk to the person building it — no account managers, no handoffs.",
-  },
-  {
-    icon: LayoutGrid,
-    title: "Built to grow",
-    desc: "Clean, scalable structure so new features don't mean starting over.",
-  },
-];
+const icons = [Code2, Github, Unlock, Timer, MessagesSquare, LayoutGrid];
+const items = benefits.map((b, i) => ({ ...b, icon: icons[i] }));
 
 export default function Benefits() {
   return (
