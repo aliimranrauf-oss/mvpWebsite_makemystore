@@ -1,43 +1,16 @@
 import { MessageSquare, Rocket, Wrench, ArrowRight } from "lucide-react";
+import { services as serviceData } from "@/lib/data";
 
-const services = [
-  {
-    icon: MessageSquare,
-    title: "Custom AI Chatbot",
-    desc: "A chatbot trained on your business — from a simple FAQ bot to a full AI assistant with memory.",
-    points: [
-      "Basic scripted bot or GPT/Claude-powered",
-      "Real memory + RAG on your own data",
-      "WhatsApp, Telegram, or website widget",
-    ],
-    price: "From $150",
-    accent: "mint" as const,
-  },
-  {
-    icon: Rocket,
-    title: "AI-Powered SaaS MVP",
-    desc: "A working SaaS product built on Next.js and Supabase, delivered in days, not months.",
-    points: [
-      "Production code, not a template",
-      "48–72 hour delivery",
-      "Optional AI chatbot built in",
-    ],
-    price: "From $250",
-    accent: "cyan" as const,
-  },
-  {
-    icon: Wrench,
-    title: "Project Rescue",
-    desc: "Stuck on a project from Lovable, Bolt, or another AI builder? We finish it properly and deploy it right.",
-    points: [
-      "We review and fix what's broken",
-      "Rebuilt cleanly on Next.js",
-      "Deployed to your GitHub + Vercel",
-    ],
-    price: "From $150",
-    accent: "mint" as const,
-  },
-];
+const icons = {
+  "ai-chatbot": MessageSquare,
+  "saas-mvp": Rocket,
+  "project-rescue": Wrench,
+};
+
+const services = serviceData.map((s) => ({
+  ...s,
+  icon: icons[s.slug as keyof typeof icons],
+}));
 
 export default function ServiceCards() {
   return (
