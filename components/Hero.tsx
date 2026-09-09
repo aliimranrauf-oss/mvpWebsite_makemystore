@@ -1,8 +1,13 @@
-import { ArrowRight, Play } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { ArrowRight, Sparkles, ImagePlus } from "lucide-react";
 
 export default function Hero() {
+  const [imgFailed, setImgFailed] = useState(false);
+
   return (
-    <section id="top" className="relative overflow-hidden">
+    <section id="top" className="relative overflow-hidden bg-bg">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-40 left-1/2 h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-mint/10 blur-[120px]"
@@ -12,12 +17,9 @@ export default function Hero() {
         className="pointer-events-none absolute -right-40 top-40 h-[380px] w-[380px] rounded-full bg-cyan/10 blur-[120px]"
       />
 
-      <div className="relative mx-auto grid max-w-content gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-8 lg:pb-24 lg:pt-24">
+      <div className="relative mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
         <div>
-          <p className="mb-5 text-sm font-medium text-cyan">
-            For businesses and builders who need AI shipped, not explained
-          </p>
-          <h1 className="text-balance font-display text-4xl font-semibold leading-[1.1] text-ink sm:text-5xl lg:text-[3.4rem]">
+          <h1 className="text-balance font-display text-4xl font-bold leading-[1.12] text-ink sm:text-5xl lg:text-[3.4rem]">
             AI chatbots and SaaS MVPs, built with real, production code
           </h1>
           <p className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted">
@@ -29,80 +31,50 @@ export default function Hero() {
           <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.02]"
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               Start a project
               <ArrowRight size={16} />
             </a>
             <a
               href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-cyan/60 hover:text-cyan"
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
             >
-              <Play size={15} />
               See how it works
+              <Sparkles size={15} />
             </a>
           </div>
-
-          <dl className="mt-12 grid grid-cols-3 gap-4 border-t border-border pt-6 sm:max-w-md">
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">48–72h</dt>
-              <dd className="mt-1 text-xs text-muted">MVP delivery</dd>
-            </div>
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">100%</dt>
-              <dd className="mt-1 text-xs text-muted">Code ownership</dd>
-            </div>
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">0</dt>
-              <dd className="mt-1 text-xs text-muted">Vendor lock-in</dd>
-            </div>
-          </dl>
         </div>
 
-        <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
-          <div className="relative rounded-xl2 border border-border bg-surface p-5 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.6)]">
-            <div className="flex items-center justify-between border-b border-border pb-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-mint" />
-                <span className="text-sm font-medium text-ink">Revenue overview</span>
-              </div>
-              <span className="text-xs text-mint">+18.3%</span>
-            </div>
-            <div className="mt-5 flex h-28 items-end gap-2">
-              {[38, 52, 44, 64, 58, 78, 70, 92].map((h, i) => (
-                <div
-                  key={i}
-                  style={{ height: `${h}%` }}
-                  className="flex-1 rounded-t-sm bg-gradient-to-t from-mint/20 to-mint"
-                />
-              ))}
-            </div>
-            <div className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5">
-              <div>
-                <p className="text-xs text-muted">Active users</p>
-                <p className="mt-1 font-display text-xl font-semibold text-ink">2,482</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted">Conversations</p>
-                <p className="mt-1 font-display text-xl font-semibold text-ink">1,204</p>
-              </div>
-            </div>
-          </div>
+        <div className="relative mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none">
+          {!imgFailed && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src="/hero-visual.png"
+              alt="MakeMyStore dashboard preview with AI assistant"
+              onError={() => setImgFailed(true)}
+              className="w-full rounded-xl2"
+            />
+          )}
 
-          <div className="absolute -bottom-8 -left-6 w-64 rounded-xl2 border border-border bg-surface2 p-4 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.7)] sm:-left-10">
-            <div className="flex items-center gap-2 border-b border-border pb-3">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-cyan/15 text-xs text-cyan">
-                AI
+          {imgFailed && (
+            <div className="flex aspect-[6/5] w-full flex-col items-center justify-center gap-3 rounded-xl2 border-2 border-dashed border-border bg-surface2 p-8 text-center">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-mint/10 text-mint">
+                <ImagePlus size={22} />
               </span>
-              <span className="text-xs font-medium text-ink">Assistant · online</span>
+              <p className="font-display text-sm font-semibold text-ink">
+                Hero image goes here
+              </p>
+              <p className="max-w-[30ch] text-xs leading-relaxed text-muted">
+                Add your dashboard/robot graphic as{" "}
+                <code className="rounded bg-surface px-1.5 py-0.5 text-ink">
+                  hero-visual.png
+                </code>{" "}
+                to the <code className="rounded bg-surface px-1.5 py-0.5 text-ink">/public</code> folder.
+                Recommended size: 1200×1000px, transparent background.
+              </p>
             </div>
-            <p className="mt-3 text-xs leading-relaxed text-muted">
-              Can you walk me through your pricing for a WhatsApp bot?
-            </p>
-            <p className="mt-2 rounded-lg bg-cyan/10 px-3 py-2 text-xs leading-relaxed text-ink">
-              Sure — it starts at $150, trained on your own FAQs.
-            </p>
-          </div>
+          )}
         </div>
       </div>
     </section>
