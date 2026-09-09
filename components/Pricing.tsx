@@ -9,9 +9,10 @@ function TierGroup({ title, tiers }: { title: string; tiers: Tier[] }) {
         {tiers.map((t) => (
           <div
             key={t.name}
-            className={`rounded-xl2 border p-6 ${
-              t.highlight ? "border-mint/60 bg-mint/[0.04]" : "border-border bg-surface"
+            className={`rounded-xl2 p-6 ${
+              t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
             }`}
+            style={{ ["--card-bg" as string]: t.highlight ? "#F7FBF8" : "#FFFFFF" }}
           >
             <p className="text-sm font-medium text-ink">{t.name}</p>
             <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
