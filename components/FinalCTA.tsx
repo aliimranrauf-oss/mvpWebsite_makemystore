@@ -18,18 +18,18 @@ export default function FinalCTA() {
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.02]"
+            href="/contact"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
           >
-            <Mail size={16} />
-            {CONTACT_EMAIL}
+            Start a project
+            <ArrowRight size={16} />
           </a>
           <a
-            href="#services"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-cyan/60 hover:text-cyan"
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
           >
-            Compare services
-            <ArrowRight size={16} />
+            <Mail size={16} />
+            Or email us directly
           </a>
         </div>
       </div>
