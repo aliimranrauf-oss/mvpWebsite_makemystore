@@ -7,8 +7,15 @@ import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Privacy Policy — MakeMyStore",
   description: "How MakeMyStore collects, uses, and protects your information.",
+  keywords: ["MakeMyStore privacy policy", "data protection", "privacy"],
   alternates: {
     canonical: `${SITE_URL}/privacy`,
+  },
+  openGraph: {
+    title: "Privacy Policy — MakeMyStore",
+    description: "How MakeMyStore collects, uses, and protects your information.",
+    url: `${SITE_URL}/privacy`,
+    type: "website",
   },
   robots: {
     index: true,
