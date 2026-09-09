@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, ImagePlus } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, ShieldCheck, Github, ImagePlus } from "lucide-react";
 import CountUp from "./CountUp";
 
 const container = {
@@ -36,17 +36,41 @@ export default function Hero() {
       />
 
       <div className="relative mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
+        <motion.div variants={container} initial="hidden" animate="show">
+          <motion.span
+            variants={fadeUp}
+            className="mb-5 inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint"
+          >
+            <Sparkles size={12} />
+            AI-Powered Development
+          </motion.span>
+
           <motion.h1
             variants={fadeUp}
             className="text-balance font-display text-4xl font-bold leading-[1.12] text-ink sm:text-5xl lg:text-[3.4rem]"
           >
-            AI chatbots and SaaS MVPs, built with real, production code
+            AI chatbots and SaaS{" "}
+            <span className="relative inline-block text-mint">
+              MVPs
+              <svg
+                className="absolute -bottom-1.5 left-0 w-full"
+                height="8"
+                viewBox="0 0 120 8"
+                fill="none"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 5.5C20 1 40 1 60 4C80 7 100 2 118 3"
+                  stroke="#4CAF50"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+            , built with real, production code
           </motion.h1>
+
           <motion.p
             variants={fadeUp}
             className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted"
@@ -62,14 +86,14 @@ export default function Hero() {
           >
             <a
               href="#contact"
-              className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               Start a project
               <ArrowRight size={16} />
             </a>
             <a
               href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
             >
               See how it works
               <Sparkles size={15} />
@@ -78,25 +102,40 @@ export default function Hero() {
 
           <motion.dl
             variants={fadeUp}
-            className="mt-12 grid grid-cols-3 gap-4 border-t border-border pt-6 sm:max-w-md"
+            className="mt-10 grid grid-cols-3 gap-4 sm:max-w-md"
           >
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">
-                <CountUp prefix="48–" to={72} suffix="h" />
-              </dt>
-              <dd className="mt-1 text-xs text-muted">MVP delivery</dd>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint">
+                <Zap size={16} />
+              </span>
+              <div>
+                <dt className="font-display text-lg font-semibold text-ink">
+                  <CountUp prefix="48–" to={72} suffix="h" />
+                </dt>
+                <dd className="text-xs text-muted">MVP delivery</dd>
+              </div>
             </div>
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">
-                <CountUp to={100} suffix="%" />
-              </dt>
-              <dd className="mt-1 text-xs text-muted">Code ownership</dd>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-mint/10 text-mint">
+                <ShieldCheck size={16} />
+              </span>
+              <div>
+                <dt className="font-display text-lg font-semibold text-ink">
+                  <CountUp to={100} suffix="%" />
+                </dt>
+                <dd className="text-xs text-muted">Code ownership</dd>
+              </div>
             </div>
-            <div>
-              <dt className="font-display text-2xl font-semibold text-ink">
-                <CountUp from={24} to={0} />
-              </dt>
-              <dd className="mt-1 text-xs text-muted">Vendor lock-in</dd>
+            <div className="flex items-center gap-2.5">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface2 text-ink">
+                <Github size={16} />
+              </span>
+              <div>
+                <dt className="font-display text-lg font-semibold text-ink">
+                  <CountUp from={24} to={0} />
+                </dt>
+                <dd className="text-xs text-muted">Vendor lock-in</dd>
+              </div>
             </div>
           </motion.dl>
         </motion.div>
@@ -113,7 +152,7 @@ export default function Hero() {
               src="/hero-visual.png"
               alt="MakeMyStore dashboard preview with AI assistant"
               onError={() => setImgFailed(true)}
-              className="w-full rounded-xl2"
+              className="w-full"
             />
           )}
 
