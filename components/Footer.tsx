@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="mx-auto flex max-w-content flex-col items-center gap-4 px-5 py-10 text-sm text-muted sm:flex-row sm:justify-between sm:px-8">
         <div className="flex items-center gap-2">
           <svg width="20" height="20" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-            <rect width="30" height="30" rx="8" fill="#4CAF50" />
+            <rect width="30" height="30" rx="8" fill="#2E9E48" />
             <path
               d="M8 21V9l7 6 7-6v12"
               stroke="#FFFFFF"
