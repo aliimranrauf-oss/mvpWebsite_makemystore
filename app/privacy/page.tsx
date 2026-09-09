@@ -116,11 +116,25 @@ export default function PrivacyPage() {
                   5. Cookies and analytics
                 </h2>
                 <p className="mt-3">
-                  The Site does not currently use cookies or third-party
-                  analytics tools. If that changes — for example, if
-                  Vercel Analytics or Google Analytics is added in the future
-                  — this section will be updated to disclose what&apos;s
-                  collected and how to opt out.
+                  The Site uses <strong className="text-ink">Google Analytics</strong>{" "}
+                  (GA4) to understand how visitors use the Site — for example,
+                  which pages are viewed and how visitors found us. Google
+                  Analytics uses cookies and collects information such as
+                  your approximate location, device and browser type, and
+                  pages visited. This data is aggregated and does not
+                  directly identify you by name.
+                </p>
+                <p className="mt-3">
+                  You can opt out of Google Analytics tracking using the{" "}
+                  <a
+                    href="https://tools.google.com/dlpage/gaoptout"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="font-medium text-mint hover:underline"
+                  >
+                    Google Analytics Opt-out Browser Add-on
+                  </a>
+                  , or by adjusting your browser's cookie settings.
                 </p>
               </div>
 
