@@ -12,10 +12,10 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
         <a href="#top" className="flex items-center gap-2.5">
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-            <rect width="30" height="30" rx="8" fill="#3CE29A" />
+            <rect width="30" height="30" rx="8" fill="#4CAF50" />
             <path
               d="M8 21V9l7 6 7-6v12"
-              stroke="#070B10"
+              stroke="#FFFFFF"
               strokeWidth="2.4"
               strokeLinecap="round"
               strokeLinejoin="round"
