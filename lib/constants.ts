@@ -4,9 +4,16 @@ export const SITE_NAME = "MakeMyStore";
 export const GA_MEASUREMENT_ID = "G-9GHRBEWJ1J";
 
 export const NAV_LINKS = [
-  { href: "/#services", label: "Services" },
+  { href: "/", label: "Home" },
+  {
+    label: "Services",
+    children: [
+      { href: "/ai-chatbot", label: "AI Chatbot" },
+      { href: "/saas-mvp", label: "SaaS MVP" },
+      { href: "/project-rescue", label: "Project Rescue" },
+    ],
+  },
   { href: "/#pricing", label: "Pricing" },
-  { href: "/#how-it-works", label: "How It Works" },
   { href: "/#faq", label: "FAQ" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
