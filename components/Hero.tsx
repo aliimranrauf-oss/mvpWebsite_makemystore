@@ -35,35 +35,7 @@ export default function Hero() {
         className="pointer-events-none absolute -right-40 top-40 h-[380px] w-[380px] rounded-full bg-cyan/10 blur-[120px]"
       />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-0 left-0 z-0 h-[90px] w-[200px] sm:h-[130px] sm:w-[300px] lg:h-[160px] lg:w-[380px]"
-      >
-        <svg
-          viewBox="0 0 380 160"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-full w-full"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 160V110C50 95 100 105 150 85C200 65 225 40 280 32C310 28 340 38 380 52V160H0Z"
-            fill="#0B2417"
-          />
-          <path
-            d="M0 160V125C45 114 95 120 140 102C185 84 210 60 260 52C290 47 320 56 340 68V160H0Z"
-            fill="#166B34"
-            fillOpacity="0.9"
-          />
-          <path
-            d="M0 160V140C40 133 85 137 125 122C168 105 195 85 235 80C260 76 290 84 310 94V160H0Z"
-            fill="#2E9E48"
-            fillOpacity="0.55"
-          />
-        </svg>
-      </div>
-
-      <div className="relative z-10 mx-auto grid max-w-content items-center gap-14 px-5 pb-24 pt-14 sm:px-8 sm:pb-32 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-36 lg:pt-24">
+      <div className="relative z-10 mx-auto grid max-w-content items-center gap-14 px-5 pb-16 pt-14 sm:px-8 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-24 lg:pt-24">
         <motion.div variants={container} initial="hidden" animate="show">
           <motion.span
             variants={fadeUp}
