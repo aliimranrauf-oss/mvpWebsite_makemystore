@@ -1,11 +1,29 @@
 "use client";
 
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
+
+type NavChild = { href: string; label: string };
+type NavItem = { href?: string; label: string; children?: NavChild[] };
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [desktopDropdown, setDesktopDropdown] = useState<string | null>(null);
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setDesktopDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const links = NAV_LINKS as NavItem[];
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/85 backdrop-blur">
@@ -27,16 +45,52 @@ export default function Navbar() {
           </span>
         </a>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm text-muted transition-colors hover:text-ink"
-            >
-              {link.label}
-            </a>
-          ))}
+        <nav ref={navRef} className="hidden items-center gap-8 md:flex">
+          {links.map((link) =>
+            link.children ? (
+              <div key={link.label} className="relative">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDesktopDropdown((v) => (v === link.label ? null : link.label))
+                  }
+                  aria-expanded={desktopDropdown === link.label}
+                  className="flex items-center gap-1 text-sm text-muted transition-colors hover:text-ink"
+                >
+                  {link.label}
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform ${
+                      desktopDropdown === link.label ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {desktopDropdown === link.label && (
+                  <div className="absolute left-0 top-full mt-2 w-52 rounded-lg border border-border bg-surface py-2 shadow-lg">
+                    {link.children.map((child) => (
+                      <a
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setDesktopDropdown(null)}
+                        className="block px-4 py-2 text-sm text-muted transition-colors hover:bg-surface2 hover:text-ink"
+                      >
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            )
+          )}
         </nav>
 
         <a
@@ -60,17 +114,56 @@ export default function Navbar() {
       {open && (
         <nav className="border-t border-border bg-bg px-5 pb-6 pt-2 md:hidden">
           <ul className="flex flex-col gap-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-md px-2 py-3 text-base text-muted hover:bg-surface hover:text-ink"
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
+            {links.map((link) =>
+              link.children ? (
+                <li key={link.label}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileDropdown((v) => (v === link.label ? null : link.label))
+                    }
+                    aria-expanded={mobileDropdown === link.label}
+                    className="flex w-full items-center justify-between rounded-md px-2 py-3 text-base text-muted hover:bg-surface hover:text-ink"
+                  >
+                    {link.label}
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${
+                        mobileDropdown === link.label ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {mobileDropdown === link.label && (
+                    <ul className="ml-2 flex flex-col gap-1 border-l border-border pl-3">
+                      {link.children.map((child) => (
+                        <li key={child.href}>
+                          <a
+                            href={child.href}
+                            onClick={() => {
+                              setOpen(false);
+                              setMobileDropdown(null);
+                            }}
+                            className="block rounded-md px-2 py-2.5 text-sm text-muted hover:bg-surface hover:text-ink"
+                          >
+                            {child.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ) : (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-md px-2 py-3 text-base text-muted hover:bg-surface hover:text-ink"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              )
+            )}
             <li className="pt-2">
               <a
                 href="/contact"
