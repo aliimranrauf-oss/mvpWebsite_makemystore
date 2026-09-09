@@ -10,6 +10,14 @@ export const metadata: Metadata = {
   title: "About — MakeMyStore",
   description:
     "Why MakeMyStore exists, how projects get built, and the tech stack behind every AI chatbot, SaaS MVP, and project rescue delivered.",
+  keywords: [
+    "about MakeMyStore",
+    "AI chatbot developer",
+    "SaaS MVP developer",
+    "Next.js Supabase developer",
+    "fix stuck AI project",
+    "custom AI development studio",
+  ],
   alternates: {
     canonical: `${SITE_URL}/about`,
   },
@@ -19,6 +27,12 @@ export const metadata: Metadata = {
       "Why MakeMyStore exists, how projects get built, and the tech stack behind every delivery.",
     url: `${SITE_URL}/about`,
     type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "About — MakeMyStore",
+    description:
+      "Why MakeMyStore exists, how projects get built, and the tech stack behind every delivery.",
   },
 };
 
