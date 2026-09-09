@@ -29,17 +29,13 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
         <a href="/" className="flex items-center gap-2.5">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden="true">
-            <rect width="30" height="30" rx="8" fill="#2E9E48" />
-            <path
-              d="M8 21V9l7 6 7-6v12"
-              stroke="#FFFFFF"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              fill="none"
-            />
-          </svg>
+          <img
+            src="/header-logo.png"
+            alt="MakeMyStore logo"
+            width={30}
+            height={30}
+            className="rounded-md"
+          />
           <span className="font-display text-lg font-semibold text-ink">
             makemystore<span className="text-muted">.online</span>
           </span>
