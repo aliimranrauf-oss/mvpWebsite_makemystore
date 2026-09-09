@@ -1,4 +1,5 @@
 import { ArrowRight, Mail } from "lucide-react";
+import { CONTACT_EMAIL } from "@/lib/constants";
 
 export default function FinalCTA() {
   return (
@@ -17,11 +18,11 @@ export default function FinalCTA() {
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href="mailto:info@makemystore.online"
+            href={`mailto:${CONTACT_EMAIL}`}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-mint px-6 py-3.5 text-sm font-semibold text-bg transition-transform hover:scale-[1.02]"
           >
             <Mail size={16} />
-            info@makemystore.online
+            {CONTACT_EMAIL}
           </a>
           <a
             href="#services"
