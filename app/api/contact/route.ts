@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
         from: `MakeMyStore <notifications@makemystore.online>`,
         to: email,
         subject: "Thanks for reaching out to MakeMyStore",
-        text: `Hi ${name},\n\nThanks for getting in touch — I'll get back to you within 24 hours with next steps.\n\nIn the meantime, feel free to reply directly to this email with any extra details.\n\n— MakeMyStore`,
+        text: `Hi ${name},\n\nThanks for getting in touch — we'll get back to you within 24 hours with next steps.\n\nIn the meantime, feel free to reply directly to this email with any extra details.\n\n— MakeMyStore`,
       });
     } catch (err) {
       console.error("Resend email error (lead was still saved):", err);
