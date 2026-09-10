@@ -4,13 +4,14 @@ import { PERSONA } from "@/lib/chatbot/persona";
 
 export const runtime = "nodejs";
 
-// Uses Google's Gemini API (free tier) via plain fetch — no extra npm
-// dependency needed. gemini-2.0-flash was retired; gemini-2.5-flash is the
-// current free-tier-eligible equivalent as of writing. If Google renames
-// models again and you start seeing 404 "model not found" errors, check
-// https://ai.google.dev/gemini-api/docs/models for the current name.
-const GEMINI_MODEL = "gemini-2.5-flash";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+// Uses Groq's free-tier API — OpenAI-compatible format, no npm dependency
+// needed. Switched from Gemini because Google's new "AQ." auth keys are
+// currently broken against the standard REST API for many accounts (an
+// active, unresolved bug on Google's side, not something fixable here —
+// see https://ai.google.dev/gemini-api/docs/api-key and Google's own
+// developer forum for other affected users).
+const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const MAX_HISTORY_MESSAGES = 10;
 const MAX_MESSAGE_LENGTH = 1000;
@@ -91,10 +92,10 @@ function clean(value: unknown, maxLen: number): string {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    console.error("GEMINI_API_KEY is not set");
+    console.error("GROQ_API_KEY is not set");
     return NextResponse.json(
       { reply: "The AI assistant isn't configured yet — please use the contact form instead." },
       { status: 500 }
@@ -142,44 +143,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: "Invalid conversation state." }, { status: 400 });
   }
 
-  // Gemini uses "user"/"model" roles rather than "user"/"assistant".
-  const contents = messages.map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
+  // Groq's API is OpenAI-compatible: plain "system"/"user"/"assistant"
+  // roles in a single messages array — no separate system_instruction field.
+  const groqMessages = [
+    { role: "system", content: SYSTEM_PROMPT },
+    ...messages.map((m) => ({ role: m.role, content: m.content })),
+  ];
 
   try {
-    const geminiRes = await fetch(GEMINI_URL, {
+    const groqRes = await fetch(GROQ_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // New Google AI Studio "auth" keys (AQ. prefix) must be sent as a
-        // header, not a ?key= URL param — that's what the old AIzaSy-style
-        // keys used. See https://ai.google.dev/gemini-api/docs/api-key
-        "x-goog-api-key": apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents,
-        generationConfig: {
-          maxOutputTokens: MAX_OUTPUT_TOKENS,
-          temperature: 0.4,
-        },
+        model: GROQ_MODEL,
+        messages: groqMessages,
+        max_tokens: MAX_OUTPUT_TOKENS,
+        temperature: 0.4,
       }),
     });
 
-    if (!geminiRes.ok) {
-      const errText = await geminiRes.text().catch(() => "");
-      console.error("Gemini API error:", geminiRes.status, errText);
+    if (!groqRes.ok) {
+      const errText = await groqRes.text().catch(() => "");
+      console.error("Groq API error:", groqRes.status, errText);
       return NextResponse.json(
         { reply: "Something went wrong — try again, or use the contact form." },
         { status: 502 }
       );
     }
 
-    const data = await geminiRes.json();
-    const parts: { text?: string }[] = data?.candidates?.[0]?.content?.parts ?? [];
-    const rawReply = parts.map((p) => p.text ?? "").join("").trim();
+    const data = await groqRes.json();
+    const rawReply: string = data?.choices?.[0]?.message?.content?.trim() ?? "";
 
     if (!rawReply) {
       return NextResponse.json(
