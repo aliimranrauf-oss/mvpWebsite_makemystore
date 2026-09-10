@@ -4,9 +4,12 @@ import { PERSONA } from "@/lib/chatbot/persona";
 
 export const runtime = "nodejs";
 
-// Uses Google's Gemini API (free tier: ~1,500 requests/day on gemini-2.0-flash
-// at time of writing) via plain fetch — no extra npm dependency needed.
-const GEMINI_MODEL = "gemini-2.0-flash";
+// Uses Google's Gemini API (free tier) via plain fetch — no extra npm
+// dependency needed. gemini-2.0-flash was retired; gemini-2.5-flash is the
+// current free-tier-eligible equivalent as of writing. If Google renames
+// models again and you start seeing 404 "model not found" errors, check
+// https://ai.google.dev/gemini-api/docs/models for the current name.
+const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 const MAX_HISTORY_MESSAGES = 10;
