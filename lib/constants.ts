@@ -21,5 +21,5 @@ export const NAV_LINKS = [
 
 // Controls which chat widget (if any) renders site-wide.
 // Flip with NEXT_PUBLIC_CHATBOT_MODE in Vercel — no code deploy needed.
-export const CHATBOT_MODE: "faq" | "ai" | "off" =
-  (process.env.NEXT_PUBLIC_CHATBOT_MODE as "faq" | "ai" | "off") || "faq";
+export const CHATBOT_MODE: "faq" | "ai" | "hybrid" | "off" =
+  (process.env.NEXT_PUBLIC_CHATBOT_MODE as "faq" | "ai" | "hybrid" | "off") || "faq";
