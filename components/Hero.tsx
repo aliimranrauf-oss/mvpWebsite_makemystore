@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap, ShieldCheck, Github, ImagePlus } from "lucide-react";
 import CountUp from "./CountUp";
@@ -148,12 +149,15 @@ export default function Hero() {
           className="relative mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none"
         >
           {!imgFailed && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src="/hero-visual.png"
               alt="MakeMyStore dashboard preview with AI assistant"
+              width={1536}
+              height={1024}
+              priority
+              sizes="(min-width: 1024px) 40vw, 90vw"
               onError={() => setImgFailed(true)}
-              className="w-full"
+              className="h-auto w-full"
             />
           )}
 
