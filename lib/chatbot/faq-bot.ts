@@ -7,6 +7,14 @@ import { services, chatbotTiers, mvpTiers, rescueTiers, faqs } from "@/lib/data"
 export type FaqBotReply = {
   text: string;
   suggestQuote?: boolean;
+  /**
+   * True only when a real keyword/topic entry matched (services, pricing,
+   * a specific FAQ, greeting, etc). False for both fallback branches below
+   * (the lead-intent nudge and the generic "didn't catch that" message) —
+   * neither is a real answer, so hybrid mode should escalate to the AI
+   * endpoint in both cases rather than treat them as "handled".
+   */
+  matched: boolean;
 };
 
 type Entry = { keywords: string[]; response: string };
@@ -99,19 +107,26 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
 
   for (const entry of ENTRIES) {
     if (entry.keywords.some((k) => normalized.includes(k))) {
-      return { text: entry.response, suggestQuote: hasLeadIntent };
+      return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
     }
   }
 
+  // Fallback branches below: neither is a real topic match, so both are
+  // matched: false. In hybrid mode this means both escalate to the AI
+  // endpoint instead of showing these canned replies. In pure "faq" mode
+  // (FaqChatBot.tsx) these are still shown as-is — matched is simply
+  // ignored there.
   if (hasLeadIntent) {
     return {
       text: "Sounds like you're ready to start something. Want to leave a few details and we'll follow up within 24 hours?",
       suggestQuote: true,
+      matched: false,
     };
   }
 
   return {
     text: "I didn't quite catch that — I can answer questions about pricing, services, and timelines. For anything else, let's get you to a real person.",
     suggestQuote: true,
+    matched: false,
   };
 }
