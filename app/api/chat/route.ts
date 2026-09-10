@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 // active, unresolved bug on Google's side, not something fixable here —
 // see https://ai.google.dev/gemini-api/docs/api-key and Google's own
 // developer forum for other affected users).
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_MODEL = "openai/gpt-oss-120b";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const MAX_HISTORY_MESSAGES = 10;
