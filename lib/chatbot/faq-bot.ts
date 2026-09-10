@@ -82,6 +82,25 @@ function buildEntries(): Entry[] {
     response: "Hey there! Ask me about pricing, services, or timelines — happy to help.",
   });
 
+  // "What's the process?" is one of the most common follow-ups after
+  // someone asks about a specific service, so it gets its own grounded
+  // entry rather than falling through to the AI every time.
+  entries.push({
+    keywords: [
+      "process",
+      "how it works",
+      "how does it work",
+      "how do you work",
+      "what steps",
+      "what happens next",
+      "how do we start",
+      "how do i start",
+      "getting started",
+    ],
+    response:
+      "Here's how it works:\n\n1. You tell us what you need (right here, or via the contact form).\n2. We confirm scope and send a fixed quote — no surprises later.\n3. We build it — most chatbots and MVPs are delivered within a few days to 72 hours.\n4. You get full ownership: it's deployed on your own GitHub, Vercel, and Supabase accounts.\n5. Small tweaks after launch are free for existing customers.\n\nWant to get started? Share a few details and we'll follow up.",
+  });
+
   return entries;
 }
 
