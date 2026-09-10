@@ -144,6 +144,8 @@ function buildSystemPrompt(): string {
 
 Answer questions about services, pricing, and timelines using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team. Keep answers short: 2 to 4 sentences.
 
+Always respond to the visitor's most recent message specifically — read it carefully before answering. If it asks something different from your previous reply (e.g. they move from pricing to asking about the process, timelines, or how something works), address that new question directly instead of repeating your last answer. Never pad an answer with pricing or service info the visitor didn't ask about in their latest message.
+
 ${PERSONA}
 
 Services:
