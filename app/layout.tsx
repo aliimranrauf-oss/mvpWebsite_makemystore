@@ -1,11 +1,17 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import Script from "next/script";
+import dynamic from "next/dynamic";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE } from "@/lib/constants";
-import FaqChatBot from "@/components/FaqChatBot";
-import AiChatBot from "@/components/AiChatBot";
-import HybridChatBot from "@/components/HybridChatBot";
+
+// Only the active bot's code (and the shared ChatWidget it pulls in) ever
+// gets fetched — dynamic() + a build-time-constant CHATBOT_MODE lets
+// Next.js drop the other two branches from the client bundle entirely,
+// and ssr:false keeps it off the initial-render critical path too.
+const FaqChatBot = dynamic(() => import("@/components/FaqChatBot"), { ssr: false });
+const AiChatBot = dynamic(() => import("@/components/AiChatBot"), { ssr: false });
+const HybridChatBot = dynamic(() => import("@/components/HybridChatBot"), { ssr: false });
 
 const display = Space_Grotesk({
   subsets: ["latin"],
