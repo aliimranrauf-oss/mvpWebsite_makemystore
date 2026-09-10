@@ -82,8 +82,8 @@ export default function HybridChatBot() {
       // delays or AI-style theater are added to the free path to disguise
       // which one served a given answer.
       mode="ai"
-      botName="AI Assistant"
-      greeting="Hi! I'm the AI assistant for MakeMyStore — ask me about services, pricing, or timelines."
+      botName="Store Bot"
+      greeting="Hi! I'm Store Bot, here 24/7 — ask me about services, pricing, or timelines."
       leadSource="ai_chatbot"
       onSend={handleSend}
     />
