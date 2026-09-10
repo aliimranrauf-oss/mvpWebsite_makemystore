@@ -92,3 +92,42 @@ body {
   }
 }
 
+/* Floating chat launcher icon — a gentle bob + a shadow that shrinks and
+   fades as the icon rises, the classic "hovering in mid-air" illusion.
+   Both animations share the same duration/easing so they stay in sync:
+   icon up = shadow smaller & fainter, icon down = shadow back to normal. */
+@keyframes chatbot-icon-float {
+  0%, 100% {
+    transform: translateY(0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+}
+
+@keyframes chatbot-icon-shadow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: translateX(-50%) scaleX(1);
+  }
+  50% {
+    opacity: 0.15;
+    transform: translateX(-50%) scaleX(0.75);
+  }
+}
+
+.chatbot-icon-float {
+  animation: chatbot-icon-float 3.2s ease-in-out infinite;
+}
+
+.chatbot-icon-shadow {
+  animation: chatbot-icon-shadow 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chatbot-icon-float,
+  .chatbot-icon-shadow {
+    animation: none;
+  }
+}
+
