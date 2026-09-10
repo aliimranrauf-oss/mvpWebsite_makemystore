@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { Bot, X, Send, Loader2 } from "lucide-react";
 
 export type ChatBotReply = {
   text: string;
@@ -192,7 +192,13 @@ export default function ChatWidget({
         aria-label={isOpen ? "Close chat" : "Open chat"}
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-mint text-white shadow-lg transition-transform hover:scale-[1.03] sm:bottom-6 sm:right-6"
       >
-        {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
+        {isOpen ? <X size={24} /> : <Bot size={26} />}
+        {!isOpen && (
+          <span
+            aria-hidden="true"
+            className="absolute right-0 top-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-400"
+          />
+        )}
       </button>
 
       {isOpen && (
@@ -201,7 +207,7 @@ export default function ChatWidget({
           <div className="flex items-center justify-between rounded-t-2xl border-b border-border bg-surface2 px-4 py-3 sm:rounded-t-xl2">
             <div className="flex items-center gap-2.5">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-mint/10 text-mint">
-                <MessageCircle size={18} />
+                <Bot size={18} />
               </span>
               <div>
                 <p className="font-display text-sm font-semibold text-ink">{botName}</p>
