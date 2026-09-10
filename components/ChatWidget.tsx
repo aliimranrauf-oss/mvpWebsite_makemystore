@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { Bot, X, Send, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { X, Send, Loader2 } from "lucide-react";
 
 export type ChatBotReply = {
   text: string;
@@ -192,11 +193,38 @@ export default function ChatWidget({
         aria-label={isOpen ? "Close chat" : "Open chat"}
         className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-mint text-white shadow-lg transition-transform hover:scale-[1.03] sm:bottom-6 sm:right-6"
       >
-        {isOpen ? <X size={24} /> : <Bot size={26} />}
+        {isOpen ? (
+          <X size={24} />
+        ) : (
+          <>
+            {/* Soft ellipse "ground shadow" beneath the icon — shrinks and
+                fades as the icon rises, sold together with the bob above
+                it as one hovering object. */}
+            <span
+              aria-hidden="true"
+              className="chatbot-icon-shadow pointer-events-none absolute bottom-0.5 left-1/2 h-2 w-9 rounded-full bg-black/50 blur-[3px]"
+            />
+            <span className="chatbot-icon-float relative block h-full w-full overflow-hidden rounded-full shadow-[0_8px_16px_-2px_rgba(0,0,0,0.35)]">
+              <Image
+                src="/chatbot-icon.jpg"
+                alt="Chat with Store Bot"
+                fill
+                sizes="56px"
+                className="scale-125 object-cover"
+              />
+              {/* Diagonal gloss highlight for a glossy, high-end 3D read
+                  rather than a flat sticker look. */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-tr from-white/0 via-white/30 to-white/0"
+              />
+            </span>
+          </>
+        )}
         {!isOpen && (
           <span
             aria-hidden="true"
-            className="absolute right-0 top-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-400"
+            className="absolute right-0 top-0 z-10 h-3.5 w-3.5 rounded-full border-2 border-white bg-emerald-400"
           />
         )}
       </button>
@@ -206,8 +234,14 @@ export default function ChatWidget({
           {/* Header */}
           <div className="flex items-center justify-between rounded-t-2xl border-b border-border bg-surface2 px-4 py-3 sm:rounded-t-xl2">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-mint/10 text-mint">
-                <Bot size={18} />
+              <span className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-mint/10">
+                <Image
+                  src="/chatbot-icon.jpg"
+                  alt="Store Bot"
+                  fill
+                  sizes="36px"
+                  className="scale-125 object-cover"
+                />
               </span>
               <div>
                 <p className="font-display text-sm font-semibold text-ink">{botName}</p>
