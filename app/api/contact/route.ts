@@ -1,26 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
-import { services, chatbotTiers, mvpTiers, rescueTiers, faqs, benefits, type Tier } from "@/lib/data";
-import { PERSONA } from "@/lib/chatbot/persona";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 
-// Uses Groq's free-tier API — OpenAI-compatible format, no npm dependency
-// needed. llama-3.3-70b-versatile was decommissioned by Groq on 2026-08-16;
-// openai/gpt-oss-120b is their recommended replacement. Check
-// https://console.groq.com/docs/deprecations if this ever 404s again.
-const GROQ_MODEL = "openai/gpt-oss-120b";
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+// This is the shared lead-capture endpoint. Two different callers post here:
+//   - components/ContactForm.tsx (the standalone /contact page)
+//   - components/ChatWidget.tsx (the inline "Get a quote" form inside any
+//     of the three chat widgets — FAQ, AI, or Hybrid)
+// Both expect back { success: true } or { success: false, error, fieldErrors? }.
 
-const MAX_HISTORY_MESSAGES = 10;
-const MAX_MESSAGE_LENGTH = 1000;
-const MAX_OUTPUT_TOKENS = 300;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_FIELD_LENGTH = 200;
+const MAX_MESSAGE_LENGTH = 2000;
+
+const VALID_SOURCES = ["faq_chatbot", "ai_chatbot", "contact_page"] as const;
+type LeadSource = (typeof VALID_SOURCES)[number];
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per window
+const RATE_LIMIT_MAX_REQUESTS = 10; // per IP, per window — leads are rarer than chat messages
 
-// In-memory only: this resets on cold start and isn't shared across
-// serverless instances. Fine for current traffic on a single Vercel
-// deployment — revisit with Redis/Upstash if traffic grows.
+// In-memory only: resets on cold start, not shared across serverless
+// instances. Same caveat as the chat route's limiter — fine for current
+// traffic, revisit with Redis/Upstash if it grows.
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function isRateLimited(ip: string): boolean {
@@ -31,58 +32,10 @@ function isRateLimited(ip: string): boolean {
     rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
     return false;
   }
-
-  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) {
-    return true;
-  }
-
+  if (entry.count >= RATE_LIMIT_MAX_REQUESTS) return true;
   entry.count += 1;
   return false;
 }
-
-function formatTiers(label: string, tiers: Tier[]): string {
-  const lines = tiers.map((t) => `  - ${t.name}: ${t.price} — ${t.desc}`).join("\n");
-  return `${label}:\n${lines}`;
-}
-
-function buildSystemPrompt(): string {
-  const servicesText = services.map((s) => `- ${s.title}: ${s.desc} (${s.price})`).join("\n");
-
-  const pricingText = [
-    formatTiers("Chatbots", chatbotTiers),
-    formatTiers("SaaS MVPs", mvpTiers),
-    formatTiers("Project Rescue", rescueTiers),
-  ].join("\n");
-
-  const faqText = faqs.map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
-  const benefitsText = benefits.map((b) => `- ${b.title}: ${b.desc}`).join("\n");
-
-  // Generated from lib/data.ts at module load, so pricing/service changes
-  // there flow into the bot's knowledge automatically — nothing to keep in sync by hand.
-  return `You are the assistant for MakeMyStore.online, a company that builds AI chatbots, AI-powered SaaS MVPs, and rescues stuck AI-generated projects.
-
-Answer questions about services, pricing, and timelines using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team. Keep answers short: 2 to 4 sentences.
-
-${PERSONA}
-
-Services:
-${servicesText}
-
-Pricing:
-${pricingText}
-
-FAQs:
-${faqText}
-
-Why clients choose us:
-${benefitsText}
-
-If the user expresses interest in starting a project, hiring the team, or getting a quote, ask for their name and email so the team can follow up. The moment you send a reply that asks for their name and email, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
-}
-
-const SYSTEM_PROMPT = buildSystemPrompt();
-
-type IncomingMessage = { role: "user" | "assistant"; content: string };
 
 function clean(value: unknown, maxLen: number): string {
   if (typeof value !== "string") return "";
@@ -90,16 +43,6 @@ function clean(value: unknown, maxLen: number): string {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.GROQ_API_KEY;
-
-  if (!apiKey) {
-    console.error("GROQ_API_KEY is not set");
-    return NextResponse.json(
-      { reply: "The AI assistant isn't configured yet — please use the contact form instead." },
-      { status: 500 }
-    );
-  }
-
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
     req.headers.get("x-real-ip") ??
@@ -107,90 +50,81 @@ export async function POST(req: NextRequest) {
 
   if (isRateLimited(ip)) {
     return NextResponse.json(
-      { reply: "You've hit the message limit for now — please try again later or use the contact form." },
+      { success: false, error: "Too many submissions — please try again later." },
       { status: 429 }
     );
   }
 
-  let body: { messages?: unknown };
+  let body: Record<string, unknown>;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json({ reply: "Invalid request." }, { status: 400 });
+    return NextResponse.json({ success: false, error: "Invalid request." }, { status: 400 });
   }
 
-  const rawMessages = Array.isArray(body.messages) ? body.messages : [];
-
-  const messages: IncomingMessage[] = rawMessages
-    .filter(
-      (m): m is IncomingMessage =>
-        !!m &&
-        typeof m === "object" &&
-        (m.role === "user" || m.role === "assistant") &&
-        typeof m.content === "string"
-    )
-    .map((m) => ({ role: m.role, content: clean(m.content, MAX_MESSAGE_LENGTH) }))
-    .filter((m) => m.content.length > 0)
-    .slice(-MAX_HISTORY_MESSAGES);
-
-  if (messages.length === 0) {
-    return NextResponse.json({ reply: "Say something and I'll do my best to help!" }, { status: 400 });
+  // Honeypot: a real visitor never fills this hidden field. Bots that
+  // blindly fill every input do. Pretend success so the bot doesn't learn
+  // anything, but skip the actual DB insert.
+  const honeypot = clean(body.company_website, MAX_FIELD_LENGTH);
+  if (honeypot) {
+    return NextResponse.json({ success: true });
   }
 
-  if (messages[messages.length - 1].role !== "user") {
-    return NextResponse.json({ reply: "Invalid conversation state." }, { status: 400 });
-  }
+  const name = clean(body.name, MAX_FIELD_LENGTH);
+  const email = clean(body.email, MAX_FIELD_LENGTH);
+  const phone = clean(body.phone, MAX_FIELD_LENGTH);
+  const service = clean(body.service, MAX_FIELD_LENGTH) || "other";
+  const budget = clean(body.budget, MAX_FIELD_LENGTH);
+  const message = clean(body.message, MAX_MESSAGE_LENGTH);
 
-  // Groq's API is OpenAI-compatible: plain "system"/"user"/"assistant"
-  // roles in a single messages array — no separate system_instruction field.
-  const groqMessages = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...messages.map((m) => ({ role: m.role, content: m.content })),
-  ];
+  const rawSource = clean(body.source, MAX_FIELD_LENGTH);
+  const source: LeadSource = (VALID_SOURCES as readonly string[]).includes(rawSource)
+    ? (rawSource as LeadSource)
+    : "contact_page"; // ContactForm.tsx doesn't send a source field — default it here.
+
+  const fieldErrors: Record<string, string> = {};
+  if (!name) fieldErrors.name = "Name is required.";
+  if (!email) {
+    fieldErrors.email = "Email is required.";
+  } else if (!EMAIL_RE.test(email)) {
+    fieldErrors.email = "Enter a valid email address.";
+  }
+  if (!message) fieldErrors.message = "Message is required.";
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return NextResponse.json(
+      { success: false, error: "Please fix the highlighted fields.", fieldErrors },
+      { status: 400 }
+    );
+  }
 
   try {
-    const groqRes = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: groqMessages,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.4,
-      }),
+    const supabase = getSupabaseServerClient();
+
+    const { error } = await supabase.from("leads").insert({
+      name,
+      email,
+      phone: phone || null,
+      service,
+      budget: budget || null,
+      message,
+      source,
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text().catch(() => "");
-      console.error("Groq API error:", groqRes.status, errText);
+    if (error) {
+      console.error("Supabase insert error:", error);
       return NextResponse.json(
-        { reply: "Something went wrong — try again, or use the contact form." },
+        { success: false, error: "Something went wrong saving your message. Please try again." },
         { status: 502 }
       );
     }
 
-    const data = await groqRes.json();
-    const rawReply: string = data?.choices?.[0]?.message?.content?.trim() ?? "";
-
-    if (!rawReply) {
-      return NextResponse.json(
-        { reply: "Something went wrong — try again, or use the contact form." },
-        { status: 502 }
-      );
-    }
-
-    const suggestQuote = rawReply.includes("[[COLLECT_CONTACT]]");
-    const reply = rawReply.replace("[[COLLECT_CONTACT]]", "").trim();
-
-    return NextResponse.json({ reply, suggestQuote });
+    return NextResponse.json({ success: true });
   } catch (err) {
-    console.error("Chat route error:", err);
+    console.error("Contact route error:", err);
     return NextResponse.json(
-      { reply: "Something went wrong — try again, or use the contact form." },
-      { status: 502 }
+      { success: false, error: "Something went wrong. Please try again, or email us directly." },
+      { status: 500 }
     );
   }
 }
