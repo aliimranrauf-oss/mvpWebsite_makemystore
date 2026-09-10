@@ -40,55 +40,68 @@ body {
 
 /* Animated card borders — spinning gradient outline so card/form edges
    are always clearly visible instead of relying on the very light
-   default border color. Works on any solid-white-background container. */
-@property --border-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
+   default border color. Works on any solid-white-background container.
 
+   Implementation note: the ring is rotated with `transform` on a pseudo-
+   element instead of animating the conic-gradient's `from` angle (or a
+   custom @property) directly. Animating background/gradient properties
+   forces a full repaint on the main thread every frame; rotating with
+   `transform` is compositor-only, so it's just as smooth but doesn't
+   cost main-thread time. The visual result is identical — rotating the
+   whole gradient ring around its own center is equivalent to shifting
+   its start angle. */
 .card-glow-border {
   --card-bg: #FFFFFF;
   position: relative;
+  isolation: isolate;
   border: 1.5px solid transparent;
-  background:
-    linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-    conic-gradient(
-        from var(--border-angle),
-        #E6EAE8 0deg,
-        #2E9E48 90deg,
-        #0EA5E9 180deg,
-        #E6EAE8 270deg,
-        #E6EAE8 360deg
-      )
-      border-box;
-  animation: card-border-spin 7s linear infinite;
+  background: var(--card-bg);
 }
 
-.card-glow-border--accent {
-  background:
-    linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-    conic-gradient(
-        from var(--border-angle),
-        #2E9E48 0deg,
-        #0EA5E9 180deg,
-        #2E9E48 360deg
-      )
-      border-box;
+.card-glow-border::before {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  z-index: -2;
+  border-radius: inherit;
+  background: conic-gradient(
+    #E6EAE8 0deg,
+    #2E9E48 90deg,
+    #0EA5E9 180deg,
+    #E6EAE8 270deg,
+    #E6EAE8 360deg
+  );
+  animation: card-border-spin 7s linear infinite;
+  will-change: transform;
+}
+
+.card-glow-border::after {
+  content: "";
+  position: absolute;
+  inset: 1.5px;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--card-bg);
+}
+
+.card-glow-border--accent::before {
+  background: conic-gradient(
+    #2E9E48 0deg,
+    #0EA5E9 180deg,
+    #2E9E48 360deg
+  );
 }
 
 @keyframes card-border-spin {
   to {
-    --border-angle: 360deg;
+    transform: rotate(360deg);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card-glow-border {
+  .card-glow-border::before {
     animation: none;
-    background:
-      linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-      linear-gradient(#2E9E48, #0EA5E9) border-box;
+    background: linear-gradient(#2E9E48, #0EA5E9);
   }
 }
 
