@@ -5,6 +5,7 @@ import "./globals.css";
 import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE } from "@/lib/constants";
 import FaqChatBot from "@/components/FaqChatBot";
 import AiChatBot from "@/components/AiChatBot";
+import HybridChatBot from "@/components/HybridChatBot";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -118,6 +119,7 @@ export default function RootLayout({
 
         {CHATBOT_MODE === "faq" && <FaqChatBot />}
         {CHATBOT_MODE === "ai" && <AiChatBot />}
+        {CHATBOT_MODE === "hybrid" && <HybridChatBot />}
       </body>
     </html>
   );
