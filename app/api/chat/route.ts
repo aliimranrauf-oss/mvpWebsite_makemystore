@@ -146,9 +146,15 @@ export async function POST(req: NextRequest) {
   }));
 
   try {
-    const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
+    const geminiRes = await fetch(GEMINI_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        // New Google AI Studio "auth" keys (AQ. prefix) must be sent as a
+        // header, not a ?key= URL param — that's what the old AIzaSy-style
+        // keys used. See https://ai.google.dev/gemini-api/docs/api-key
+        "x-goog-api-key": apiKey,
+      },
       body: JSON.stringify({
         system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents,
