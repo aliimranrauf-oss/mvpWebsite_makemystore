@@ -20,9 +20,20 @@ const MAX_OUTPUT_TOKENS = 300;
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per window
 
-// In-memory only: this resets on cold start and isn't shared across
-// serverless instances. Fine for current traffic on a single Vercel
-// deployment — revisit with Redis/Upstash if traffic grows.
+const GLOBAL_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // 1 day
+const GLOBAL_RATE_LIMIT_MAX_REQUESTS = 300; // whole site, per day — adjust to taste
+
+const RESPONSE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+const CIRCUIT_BREAKER_FAILURE_THRESHOLD = 3; // consecutive Groq failures
+const CIRCUIT_BREAKER_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+
+// In-memory only, all of it: every map/counter below resets on cold start
+// and isn't shared across serverless instances/regions. Fine for current
+// traffic on a single Vercel deployment (same caveat as the original
+// per-IP limiter) — revisit with Redis/Upstash if traffic grows enough
+// that cold starts or multi-instance scaling start undercounting these.
+
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function isRateLimited(ip: string): boolean {
@@ -40,6 +51,74 @@ function isRateLimited(ip: string): boolean {
 
   entry.count += 1;
   return false;
+}
+
+// Global (site-wide, not per-IP) daily cap — a backstop against a burst
+// of requests spread across many different visitors/IPs at once, which
+// the per-IP limiter above can't catch on its own.
+let globalRateState = { count: 0, resetAt: Date.now() + GLOBAL_RATE_LIMIT_WINDOW_MS };
+
+function isGloballyRateLimited(): boolean {
+  const now = Date.now();
+  if (now > globalRateState.resetAt) {
+    globalRateState = { count: 1, resetAt: now + GLOBAL_RATE_LIMIT_WINDOW_MS };
+    return false;
+  }
+  if (globalRateState.count >= GLOBAL_RATE_LIMIT_MAX_REQUESTS) {
+    return true;
+  }
+  globalRateState.count += 1;
+  return false;
+}
+
+// Response cache for repeat questions: keyed on a normalized version of
+// the latest user message, so near-identical questions from different
+// visitors reuse one Groq call instead of paying for it twice within the
+// TTL window. Note this intentionally ignores prior conversation history
+// as part of the cache key — if that becomes a problem (e.g. the same
+// question means something different mid-conversation), key on the full
+// message list instead, at the cost of a much lower cache hit rate.
+const responseCache = new Map<string, { reply: string; suggestQuote: boolean; expiresAt: number }>();
+
+function normalizeForCache(message: string): string {
+  return message.toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function getCachedResponse(message: string) {
+  const key = normalizeForCache(message);
+  const entry = responseCache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    responseCache.delete(key);
+    return null;
+  }
+  return entry;
+}
+
+function setCachedResponse(message: string, reply: string, suggestQuote: boolean) {
+  const key = normalizeForCache(message);
+  responseCache.set(key, { reply, suggestQuote, expiresAt: Date.now() + RESPONSE_CACHE_TTL_MS });
+}
+
+// Circuit breaker: if Groq starts failing repeatedly (rate limit, outage,
+// a deprecated model 404ing — all of which have happened before), stop
+// hammering it on every visitor request and show a friendly message for
+// a cooldown window instead. Resets to closed the moment a call succeeds.
+let circuitBreakerState = { consecutiveFailures: 0, openUntil: 0 };
+
+function isCircuitOpen(): boolean {
+  return Date.now() < circuitBreakerState.openUntil;
+}
+
+function recordGroqFailure() {
+  circuitBreakerState.consecutiveFailures += 1;
+  if (circuitBreakerState.consecutiveFailures >= CIRCUIT_BREAKER_FAILURE_THRESHOLD) {
+    circuitBreakerState.openUntil = Date.now() + CIRCUIT_BREAKER_COOLDOWN_MS;
+  }
+}
+
+function recordGroqSuccess() {
+  circuitBreakerState = { consecutiveFailures: 0, openUntil: 0 };
 }
 
 function formatTiers(label: string, tiers: Tier[]): string {
@@ -114,6 +193,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  if (isGloballyRateLimited()) {
+    return NextResponse.json(
+      { reply: "We're getting a lot of questions right now — please try again later or use the contact form." },
+      { status: 429 }
+    );
+  }
+
+  if (isCircuitOpen()) {
+    return NextResponse.json(
+      { reply: "We're experiencing high demand right now — please try again in a few minutes, or use the contact form." },
+      { status: 503 }
+    );
+  }
+
   let body: { messages?: unknown };
   try {
     body = await req.json();
@@ -143,6 +236,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: "Invalid conversation state." }, { status: 400 });
   }
 
+  const latestUserMessage = messages[messages.length - 1].content;
+  const cached = getCachedResponse(latestUserMessage);
+  if (cached) {
+    return NextResponse.json({ reply: cached.reply, suggestQuote: cached.suggestQuote });
+  }
+
   // Groq's API is OpenAI-compatible: plain "system"/"user"/"assistant"
   // roles in a single messages array — no separate system_instruction field.
   const groqMessages = [
@@ -168,6 +267,7 @@ export async function POST(req: NextRequest) {
     if (!groqRes.ok) {
       const errText = await groqRes.text().catch(() => "");
       console.error("Groq API error:", groqRes.status, errText);
+      recordGroqFailure();
       return NextResponse.json(
         { reply: "Something went wrong — try again, or use the contact form." },
         { status: 502 }
@@ -178,18 +278,24 @@ export async function POST(req: NextRequest) {
     const rawReply: string = data?.choices?.[0]?.message?.content?.trim() ?? "";
 
     if (!rawReply) {
+      recordGroqFailure();
       return NextResponse.json(
         { reply: "Something went wrong — try again, or use the contact form." },
         { status: 502 }
       );
     }
 
+    recordGroqSuccess();
+
     const suggestQuote = rawReply.includes("[[COLLECT_CONTACT]]");
     const reply = rawReply.replace("[[COLLECT_CONTACT]]", "").trim();
+
+    setCachedResponse(latestUserMessage, reply, suggestQuote);
 
     return NextResponse.json({ reply, suggestQuote });
   } catch (err) {
     console.error("Chat route error:", err);
+    recordGroqFailure();
     return NextResponse.json(
       { reply: "Something went wrong — try again, or use the contact form." },
       { status: 502 }
