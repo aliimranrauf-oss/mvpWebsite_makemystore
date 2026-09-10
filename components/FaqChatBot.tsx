@@ -17,8 +17,8 @@ export default function FaqChatBot() {
   return (
     <ChatWidget
       mode="faq"
-      botName="Instant Answers"
-      greeting="Hi! I can answer quick questions about pricing, services, and timelines. For anything else, I'll get you to a real person."
+      botName="Store Bot"
+      greeting="Hi! I'm Store Bot, here 24/7 for quick questions about pricing, services, and timelines. For anything else, I'll get you to a real person."
       leadSource="faq_chatbot"
       onSend={handleSend}
     />
