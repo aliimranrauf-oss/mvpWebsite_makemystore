@@ -143,8 +143,8 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 40, scale: 0.96 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
+          initial={{ x: 40, scale: 0.96 }}
+          animate={{ x: 0, scale: 1 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.25 }}
           className="relative mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none"
         >
