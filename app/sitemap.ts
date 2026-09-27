@@ -68,8 +68,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Best-effort: if Supabase isn't reachable at build time, the sitemap
-  // still returns every static page rather than failing the whole build.
+  // Best-effort: if Supabase isn't reachable/configured at build time, the
+  // sitemap still returns every static page rather than failing the build.
+  if (!supabase) return staticRoutes;
+
   try {
     const { data: posts } = await supabase
       .from("blogs")
