@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/constants";
+import { supabase } from "@/lib/supabaseClient";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date();
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${SITE_URL}/`,
       lastModified,
@@ -36,6 +37,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${SITE_URL}/blog`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
       url: `${SITE_URL}/about`,
       lastModified,
       changeFrequency: "monthly",
@@ -60,4 +67,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
+
+  // Best-effort: if Supabase isn't reachable at build time, the sitemap
+  // still returns every static page rather than failing the whole build.
+  try {
+    const { data: posts } = await supabase
+      .from("blogs")
+      .select("slug, updated_at")
+      .eq("is_live", true);
+
+    const postRoutes: MetadataRoute.Sitemap =
+      posts?.map((post) => ({
+        url: `${SITE_URL}/blog/${post.slug}`,
+        lastModified: post.updated_at ? new Date(post.updated_at) : lastModified,
+        changeFrequency: "monthly",
+        priority: 0.6,
+      })) ?? [];
+
+    return [...staticRoutes, ...postRoutes];
+  } catch {
+    return staticRoutes;
+  }
 }
