@@ -173,7 +173,7 @@ export default function ChatWidget({
         {
           id: nextId(),
           role: "bot",
-          text: "Thanks — that's been sent, you'll hear back within 24 hours.",
+          text: "Thanks — that's been sent, you'll hear back soon.",
         },
       ]);
       setLeadName("");
