@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { services, chatbotTiers, mvpTiers, rescueTiers, faqs, benefits, type Tier } from "@/lib/data";
+import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, benefits, type Tier } from "@/lib/data";
 import { PERSONA } from "@/lib/chatbot/persona";
 
 export const runtime = "nodejs";
@@ -132,15 +132,16 @@ function buildSystemPrompt(): string {
   const pricingText = [
     formatTiers("Chatbots", chatbotTiers),
     formatTiers("SaaS MVPs", mvpTiers),
+    formatTiers("POS & Shop Management", posTiers),
     formatTiers("Project Rescue", rescueTiers),
   ].join("\n");
 
-  const faqText = faqs.map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
+  const faqText = [...faqs, ...posFaqs].map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
   const benefitsText = benefits.map((b) => `- ${b.title}: ${b.desc}`).join("\n");
 
   // Generated from lib/data.ts at module load, so pricing/service changes
   // there flow into the bot's knowledge automatically — nothing to keep in sync by hand.
-  return `You are the assistant for MakeMyStore.online, a company that builds AI chatbots, AI-powered SaaS MVPs, and rescues stuck AI-generated projects.
+  return `You are the assistant for MakeMyStore.online, a company that builds AI chatbots, AI-powered SaaS MVPs, custom POS & shop management systems, and rescues stuck AI-generated projects.
 
 Answer questions about services, pricing, and timelines using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team. Keep answers short: 2 to 4 sentences.
 
