@@ -6,6 +6,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Defensive: nothing on this site is meant to scroll horizontally. Without
+   this, any element that pokes even 1-2px past the right edge (e.g. the
+   -1.5px negative inset on .card-glow-border::before below, or one of the
+   absolute-positioned decorative blur shapes) makes the document wider
+   than the viewport and triggers a horizontal scrollbar — which then eats
+   into the same bottom strip of screen as the fixed chat button, making it
+   jump up and down as the scrollbar appears/disappears. */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
