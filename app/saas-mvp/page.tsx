@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "AI-Powered SaaS MVP Development — MakeMyStore",
   description:
-    "A working SaaS product built on Next.js and Supabase, delivered in 48–72 hours. Production code, user accounts, a real database, and an optional AI chatbot built in — you own everything.",
+    "A working SaaS product on Next.js and Supabase, delivered in 48–72 hours — user accounts, a real database, an optional AI chatbot, and full code ownership.",
   keywords: [
     "SaaS MVP development",
     "build a SaaS MVP fast",
