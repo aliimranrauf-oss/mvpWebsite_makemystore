@@ -10,6 +10,7 @@ export const NAV_LINKS = [
     children: [
       { href: "/ai-chatbot", label: "AI Chatbot" },
       { href: "/saas-mvp", label: "SaaS MVP" },
+      { href: "/pos-system", label: "POS System" },
       { href: "/project-rescue", label: "Project Rescue" },
     ],
   },
