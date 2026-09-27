@@ -1,124 +1,63 @@
-import { MetadataRoute } from 'next';
-import { supabase } from '@/lib/supabaseClient';
+import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/constants";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  const staticPages: MetadataRoute.Sitemap = [
-    // Core & High-Priority Pages
+  return [
     {
-      url: 'https://www.makemystore.online/',
+      url: `${SITE_URL}/`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 1.0,
     },
     {
-      // ── NEW: Website Speed Optimization service page ──────────────────
-      url: 'https://www.makemystore.online/website-speed-optimization',
+      url: `${SITE_URL}/ai-chatbot`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.9,
     },
     {
-      // ── NEW: POS & Shop Management System service page ────────────────
-      url: 'https://www.makemystore.online/pos-system',
+      url: `${SITE_URL}/saas-mvp`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.9,
     },
-
-    // Service Pages (0.8)
     {
-      url: 'https://www.makemystore.online/how-it-works',
+      url: `${SITE_URL}/pos-system`,
       lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: "monthly",
+      priority: 0.9,
     },
     {
-      url: 'https://www.makemystore.online/space',
+      url: `${SITE_URL}/project-rescue`,
       lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: "monthly",
+      priority: 0.9,
     },
     {
-      // ── NEW: Solar Meta Ads service page ───────────────────────────────
-      url: 'https://www.makemystore.online/solar-meta-ads',
+      url: `${SITE_URL}/about`,
       lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://www.makemystore.online/tools',
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://www.makemystore.online/pricing',
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://www.makemystore.online/blog',
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-    {
-      url: 'https://www.makemystore.online/careers',
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.8,
-    },
-
-    // Core Pages (0.5)
-    {
-      url: 'https://www.makemystore.online/about',
-      lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.5,
     },
     {
-      url: 'https://www.makemystore.online/contact',
+      url: `${SITE_URL}/contact`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.5,
     },
-
-    // Legal Pages (0.3)
     {
-      url: 'https://www.makemystore.online/privacy',
+      url: `${SITE_URL}/privacy`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "yearly",
       priority: 0.3,
     },
     {
-      url: 'https://www.makemystore.online/terms',
+      url: `${SITE_URL}/terms`,
       lastModified,
-      changeFrequency: 'monthly',
+      changeFrequency: "yearly",
       priority: 0.3,
     },
   ];
-
-  // Dynamic blog post pages — pulled from Supabase, same `blogs` table /
-  // `is_live` filter used in app/blog/page.tsx and app/blog/[slug]/page.tsx.
-  const { data: posts, error } = await supabase
-    .from('blogs')
-    .select('slug, updated_at, published_at')
-    .eq('is_live', true);
-
-  if (error) {
-    console.error('Supabase Error (sitemap):', error.message);
-  }
-
-  const blogPages: MetadataRoute.Sitemap =
-    posts?.map((post) => ({
-      url: `https://www.makemystore.online/blog/${post.slug}`,
-      lastModified: post.updated_at ?? post.published_at ?? lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    })) ?? [];
-
-  return [...staticPages, ...blogPages];
 }
