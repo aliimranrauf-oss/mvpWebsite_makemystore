@@ -19,15 +19,26 @@ const fadeUp = {
   },
 };
 
+type HeroImage = {
+  src: string;
+  alt: string;
+  /** Defaults to 1200. Match the real file's aspect ratio to avoid distortion. */
+  width?: number;
+  /** Defaults to 750 (a 16:10 ratio). */
+  height?: number;
+};
+
 export default function PageHeader({
   eyebrow,
   title,
   description,
+  image,
   children,
 }: {
   eyebrow?: string;
   title: ReactNode;
   description?: string;
+  image?: HeroImage;
   children?: ReactNode;
 }) {
   return (
@@ -67,6 +78,28 @@ export default function PageHeader({
           )}
           {children && <motion.div variants={fadeUp}>{children}</motion.div>}
         </motion.div>
+
+        {image && (
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            className="relative mx-auto mt-14 max-w-4xl"
+          >
+            <div className="overflow-hidden rounded-xl2 border border-border shadow-[0_20px_60px_-15px_rgba(16,36,30,0.15)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={image.src}
+                alt={image.alt}
+                width={image.width ?? 1200}
+                height={image.height ?? 750}
+                className="w-full h-auto"
+                loading="eager"
+                fetchPriority="high"
+              />
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );
