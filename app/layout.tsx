@@ -29,9 +29,9 @@ const body = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
+  title: "MakeMyStore — AI Chatbots, SaaS MVPs & POS Systems",
   description:
-    "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects. Real production code, delivered on Next.js, Supabase, and Vercel — you own everything.",
+    "Custom AI chatbots, SaaS MVPs & POS systems built on Next.js & Supabase, plus fixes for stuck AI-generated projects. Real code, delivered fast, you own it all.",
   keywords: [
     "AI chatbot development",
     "SaaS MVP development",
@@ -63,7 +63,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
     apple: "/apple-touch-icon.png",
   },
