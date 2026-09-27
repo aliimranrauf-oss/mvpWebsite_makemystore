@@ -78,8 +78,9 @@ export default function AiChatbotPage() {
           eyebrow="AI Chatbot Development"
           title="A chatbot that actually knows your business"
           description="From a simple scripted FAQ bot to a full AI assistant with memory — trained on your own data, deployed on your website, WhatsApp, or Telegram."
+          image={{ src: "/images/hero/ai-chatbot.png", alt: "Custom AI chatbot conversation interface" }}
         >
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
             <a
               href="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
