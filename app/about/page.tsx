@@ -9,11 +9,13 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "About — MakeMyStore",
   description:
-    "Why MakeMyStore exists, how projects get built, and the tech stack behind every AI chatbot, SaaS MVP, and project rescue delivered.",
+    "Why MakeMyStore exists, how projects get built, and the tech stack behind every AI chatbot, SaaS MVP, POS system, and project rescue delivered.",
   keywords: [
     "about MakeMyStore",
     "AI chatbot developer",
     "SaaS MVP developer",
+    "POS system developer",
+    "shop management system developer",
     "Next.js Supabase developer",
     "fix stuck AI project",
     "custom AI development studio",
@@ -102,11 +104,12 @@ export default function AboutPage() {
                     owned entirely by the client, and ready to keep growing.
                   </p>
                   <p>
-                    The work spans three lanes — custom AI chatbots, full SaaS
-                    MVPs, and rescuing projects that stalled out on another
-                    platform — but the standard is the same across all three:
-                    clean code, a fixed quote before anything starts, and full
-                    ownership handed over on delivery.
+                    The work spans four lanes — custom AI chatbots, full SaaS
+                    MVPs, POS &amp; shop management systems, and rescuing
+                    projects that stalled out on another platform — but the
+                    standard is the same across all four: clean code, a fixed
+                    quote before anything starts, and full ownership handed
+                    over on delivery.
                   </p>
                 </div>
               </div>
