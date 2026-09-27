@@ -13,8 +13,8 @@ export default function FinalCTA() {
           Ready to get this built?
         </h2>
         <p className="mx-auto mt-4 max-w-md text-muted">
-          Tell us what you need — a chatbot, a new MVP, or a rescue job — and
-          get a fixed quote back.
+          Tell us what you need — a chatbot, a new MVP, a shop system, or a
+          rescue job — and get a fixed quote back.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a

@@ -49,9 +49,9 @@ export default function Hero() {
             variants={fadeUp}
             className="text-balance font-display text-4xl font-bold leading-[1.12] text-ink sm:text-5xl lg:text-[3.4rem]"
           >
-            AI chatbots and SaaS{" "}
+            AI-powered{" "}
             <span className="relative inline-block text-mint">
-              MVPs
+              software
               <svg
                 className="absolute -bottom-1.5 left-0 w-full"
                 height="8"
@@ -76,9 +76,10 @@ export default function Hero() {
             className="mt-6 max-w-[52ch] text-lg leading-relaxed text-muted"
           >
             Get a custom AI chatbot — that works with any website or
-            framework — a full SaaS MVP, or a proper fix for the
-            AI-generated project you&apos;re stuck on. Built on Next.js,
-            Supabase, and Vercel, with full code ownership from day one.
+            framework — a full SaaS MVP, a POS &amp; shop management system,
+            or a proper fix for the AI-generated project you&apos;re stuck
+            on. Built on Next.js, Supabase, and Vercel, with full code
+            ownership from day one.
           </motion.p>
 
           <motion.div
