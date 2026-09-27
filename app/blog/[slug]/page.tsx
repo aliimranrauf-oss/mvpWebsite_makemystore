@@ -14,6 +14,7 @@ export const revalidate = 0;
 // on-demand rendering (via revalidate = 0 above) for anything published
 // after the last deploy — so a brand-new post is live immediately.
 export async function generateStaticParams() {
+  if (!supabase) return [];
   const { data: posts } = await supabase.from("blogs").select("slug").eq("is_live", true);
   return posts?.map((post) => ({ slug: post.slug })) ?? [];
 }
@@ -24,6 +25,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  if (!supabase) return { title: "Post Not Found" };
+
   const { data: post } = await supabase
     .from("blogs")
     .select("title, excerpt, image_url, published_at, updated_at")
@@ -75,6 +78,7 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (!supabase) notFound();
 
   const { data: post } = await supabase
     .from("blogs")
