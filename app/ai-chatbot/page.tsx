@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Custom AI Chatbot Development — MakeMyStore",
   description:
-    "Custom AI chatbots trained on your business data — from a simple scripted FAQ bot to a full GPT/Claude-powered assistant with memory. Deployed on your website, WhatsApp, or Telegram.",
+    "Custom AI chatbots trained on your data — from a simple FAQ bot to a full GPT/Claude assistant with memory, on your website, WhatsApp, or Telegram.",
   keywords: [
     "AI chatbot development",
     "custom chatbot for business",
