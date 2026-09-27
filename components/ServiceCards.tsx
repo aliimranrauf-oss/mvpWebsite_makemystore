@@ -1,9 +1,10 @@
-import { MessageSquare, Rocket, Wrench, ArrowRight } from "lucide-react";
+import { MessageSquare, Rocket, Wrench, Store, ArrowRight } from "lucide-react";
 import { services as serviceData } from "@/lib/data";
 
 const icons = {
   "ai-chatbot": MessageSquare,
   "saas-mvp": Rocket,
+  "pos-system": Store,
   "project-rescue": Wrench,
 };
 
@@ -18,15 +19,15 @@ export default function ServiceCards() {
       <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
         <div className="max-w-xl">
           <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-            Three ways to get AI live
+            Four ways to build with AI
           </h2>
           <p className="mt-4 text-muted">
-            Pick the one that matches where you are — building fresh, or
-            picking up where another tool left off.
+            Pick the one that matches where you are — building fresh, running a
+            shop, or picking up where another tool left off.
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
           {services.map((s) => {
             const Icon = s.icon;
             const ring = s.accent === "mint" ? "text-mint" : "text-cyan";
