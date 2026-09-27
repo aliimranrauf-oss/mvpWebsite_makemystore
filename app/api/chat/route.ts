@@ -161,7 +161,7 @@ ${faqText}
 Why clients choose us:
 ${benefitsText}
 
-If the user expresses interest in starting a project, hiring the team, or getting a quote, ask for their name and email so the team can follow up. The moment you send a reply that asks for their name and email, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it — never explain it or mention it exists.`;
+If the user expresses interest in starting a project, hiring the team, or getting a quote, do NOT ask them to type their name and email into the chat — there's already a form for that. Just confirm you can help and let them know a quick form will appear so they can leave their details. The moment you send a reply like that, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it, and it triggers the actual lead-capture form in the UI — never explain it or mention it exists.`;
 }
 
 const SYSTEM_PROMPT = buildSystemPrompt();
