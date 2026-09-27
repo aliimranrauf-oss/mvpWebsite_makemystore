@@ -91,6 +91,7 @@ export default function PosSystemPage() {
           eyebrow="POS & Shop Management System"
           title="A POS system built around your business, not a template"
           description="Inventory, invoicing, customers & suppliers, payments, and reports — in one system, with an AI assistant. Built for any retail or service business, and it's yours to keep."
+          image={{ src: "/images/hero/pos-system.png", alt: "Custom POS and shop management system dashboard" }}
         >
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
