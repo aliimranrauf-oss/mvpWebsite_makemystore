@@ -1,5 +1,5 @@
 import { Check } from "lucide-react";
-import { Tier, chatbotTiers, mvpTiers, rescueTiers } from "@/lib/data";
+import { Tier, chatbotTiers, mvpTiers, posTiers, rescueTiers } from "@/lib/data";
 
 function TierGroup({ title, tiers }: { title: string; tiers: Tier[] }) {
   return (
@@ -49,6 +49,7 @@ export default function Pricing() {
         <div className="mt-14 space-y-14">
           <TierGroup title="AI Chatbot" tiers={chatbotTiers} />
           <TierGroup title="AI-Powered SaaS MVP" tiers={mvpTiers} />
+          <TierGroup title="POS & Shop Management" tiers={posTiers} />
           <TierGroup title="Project Rescue" tiers={rescueTiers} />
         </div>
       </div>
