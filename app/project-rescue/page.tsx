@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Project Rescue — Fix a Stuck AI-Built Project — MakeMyStore",
   description:
-    "Stuck on a project from Lovable, Bolt, or another AI builder? We review it, fix what's broken, rebuild it cleanly on Next.js, and deploy it to your own GitHub and Vercel.",
+    "Stuck on a project from Lovable, Bolt, or another AI builder? We review it, fix what's broken, and deploy it cleanly to your own GitHub and Vercel.",
   keywords: [
     "fix Lovable project",
     "fix Bolt.new project",
