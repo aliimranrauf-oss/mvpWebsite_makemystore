@@ -29,21 +29,24 @@ const body = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "MakeMyStore — AI Chatbots, SaaS MVPs & Project Rescue",
+  title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
   description:
-    "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects. Real production code, delivered on Next.js, Supabase, and Vercel — you own everything.",
+    "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects. Real production code, delivered on Next.js, Supabase, and Vercel — you own everything.",
   keywords: [
     "AI chatbot development",
     "SaaS MVP development",
+    "POS system development",
+    "shop management system",
+    "inventory management software",
     "Next.js developer",
     "fix Lovable project",
     "AI app development",
     "WhatsApp chatbot",
   ],
   openGraph: {
-    title: "MakeMyStore — AI Chatbots, SaaS MVPs & Project Rescue",
+    title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
     description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
+      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
     url: SITE_URL,
     siteName: SITE_NAME,
     images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
@@ -52,9 +55,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "MakeMyStore — AI Chatbots, SaaS MVPs & Project Rescue",
+    title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
     description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
+      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
     images: ["/images/og-image.png"],
   },
   icons: {
@@ -86,13 +89,14 @@ export default function RootLayout({
     name: SITE_NAME,
     url: SITE_URL,
     description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
+      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
     email: "info@makemystore.online",
     areaServed: "Worldwide",
     priceRange: "$150-$1600+",
     knowsAbout: [
       "AI Chatbot Development",
       "SaaS MVP Development",
+      "POS & Shop Management Systems",
       "Next.js",
       "Supabase",
       "Project Rescue",
