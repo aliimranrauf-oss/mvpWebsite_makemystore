@@ -1,191 +1,177 @@
-'use client'
+"use client";
 
-import { Fragment, useState, useEffect, useCallback } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Menu, X } from 'lucide-react'
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
+import { NAV_LINKS } from "@/lib/constants";
 
-const navLinks = [
-  { label: 'Home', href: '/' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'POS System', href: '/pos-system' },
-  { label: 'Site Speed', href: '/website-speed-optimization' },
-  { label: 'Space & Aerospace', href: '/space' },
-  { label: 'Solar Ads', href: '/solar-meta-ads' },
-  { label: 'Careers', href: '/careers' },
-  { label: 'Pricing', href: '/pricing' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-]
-
-const CONTACT_URL = '/contact'
-
-// Used only to visually group "POS System" + "Site Speed" + "Space &
-// Aerospace" + "Solar Ads" under a "Services" label in the mobile menu —
-// navLinks itself (order/items) is untouched so desktop nav and behavior
-// stay exactly as-is.
-const SERVICE_HREFS = ['/pos-system', '/website-speed-optimization', '/space', '/solar-meta-ads']
+type NavChild = { href: string; label: string };
+type NavItem = { href?: string; label: string; children?: NavChild[] };
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
-
-  // Throttle scroll listener for performance
-  const handleScroll = useCallback(() => {
-    setScrolled(window.scrollY > 20)
-  }, [])
+  const [open, setOpen] = useState(false);
+  const [desktopDropdown, setDesktopDropdown] = useState<string | null>(null);
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    function handleClickOutside(e: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setDesktopDropdown(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  const closeMenu = useCallback(() => setOpen(false), [])
+  const links = NAV_LINKS as NavItem[];
 
   return (
-    <nav
-      dir="ltr"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass shadow-lg' : 'bg-transparent'
-      }`}
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-
-        <Link href="/" className="flex items-center gap-2 group min-w-0" aria-label="MakeMyStore home">
-          {/*
-            ── CLS fix ───────────────────────────────────────────────────────
-            Added explicit width/height attributes AND inline style dimensions.
-            Without these the browser doesn't know the image size until it loads,
-            causing layout shift (CLS penalty). The preload in layout.tsx ensures
-            the image is already cached before render.
-          */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+    <header className="sticky top-0 z-50 border-b border-border/80 bg-bg/85 backdrop-blur">
+      <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 sm:px-8">
+        <a href="/" className="flex items-center gap-2.5">
           <img
-            src="/logo.png"
+            src="/header-logo.png"
             alt="MakeMyStore logo"
-            width={36}
-            height={36}
-            fetchPriority="high"
-            decoding="async"
-            className="rounded-lg object-contain shrink-0"
-            style={{ mixBlendMode: 'lighten', width: 36, height: 36 }}
+            width={30}
+            height={30}
+            className="rounded-md"
           />
-          <span
-            className="font-bold text-lg sm:text-xl truncate"
-            style={{ fontFamily: 'var(--font-syne), Syne, sans-serif' }}
-          >
-            <span className="text-gradient">MakeMyStore</span>
-            <span className="text-gray-400">.online</span>
+          <span className="font-display text-lg font-semibold text-ink">
+            makemystore<span className="text-muted">.online</span>
           </span>
-        </Link>
+        </a>
 
-        {/* Desktop nav */}
-        <div className="hidden xl:flex items-center gap-0.5">
-          {navLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={`whitespace-nowrap text-sm font-semibold px-2.5 py-2 rounded-lg transition-all duration-200 border border-transparent ${
-                pathname === l.href
-                  ? 'text-[#00d4ff] border-[#00d4ff]/20 bg-[#00d4ff]/[0.06]'
-                  : 'text-white/75 hover:text-white hover:border-[#00d4ff]/20 hover:bg-[#00d4ff]/[0.06]'
-              }`}
-              style={{ textShadow: '0 0 8px rgba(0,212,255,0.4)' }}
-            >
-              {l.label}
-            </Link>
-          ))}
+        <nav ref={navRef} className="hidden items-center gap-8 md:flex">
+          {links.map((link) =>
+            link.children ? (
+              <div key={link.label} className="relative">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDesktopDropdown((v) => (v === link.label ? null : link.label))
+                  }
+                  aria-expanded={desktopDropdown === link.label}
+                  className="flex items-center gap-1 text-sm text-muted transition-colors hover:text-ink"
+                >
+                  {link.label}
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform ${
+                      desktopDropdown === link.label ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
 
-          {/* Order Now → /contact */}
-          <Link
-            href={CONTACT_URL}
-            className="btn-primary whitespace-nowrap ml-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00d4ff]"
-          >
-            Order Now
-          </Link>
-        </div>
+                {desktopDropdown === link.label && (
+                  <div className="absolute left-0 top-full mt-2 w-52 rounded-lg border border-border bg-surface py-2 shadow-lg">
+                    {link.children.map((child) => (
+                      <a
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setDesktopDropdown(null)}
+                        className="block px-4 py-2 text-sm text-muted transition-colors hover:bg-surface2 hover:text-ink"
+                      >
+                        {child.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm text-muted transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            )
+          )}
+        </nav>
 
-        {/* Mobile hamburger
-            ── contrast fix (v2, inline style) ──────────────────────────
-            Previously this only got a background once `scrolled` was
-            true. Near the top of the page (transparent navbar), a plain
-            white icon can get lost against a light/bright hero photo
-            behind it. First attempt used Tailwind opacity utilities
-            (bg-black/20, backdrop-blur-sm) for the fix — switched to
-            plain inline styles here instead, so the contrast chip is
-            guaranteed to render regardless of whether those specific
-            utility classes make it into the production CSS build. This
-            has nothing to do with language — it renders identically for
-            EN and AR. */}
-        <button
-          onClick={() => setOpen(!open)}
-          className="xl:hidden p-2 rounded-lg transition-colors shrink-0"
-          style={{
-            color: '#ffffff',
-            backgroundColor: 'rgba(0,0,0,0.35)',
-            WebkitBackdropFilter: 'blur(6px)',
-            backdropFilter: 'blur(6px)',
-            border: '1px solid rgba(255,255,255,0.12)',
-          }}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
+        <a
+          href="/contact"
+          className="hidden rounded-lg bg-mint px-4 py-2 text-sm font-semibold text-bg transition-transform hover:scale-[1.03] md:inline-block"
         >
-          {open ? <X size={22} /> : <Menu size={22} />}
+          Start a project
+        </a>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label="Toggle menu"
+          className="inline-flex items-center justify-center rounded-lg border border-border p-2 text-ink md:hidden"
+        >
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div
-          id="mobile-menu"
-          className="xl:hidden max-h-[calc(100vh-4rem)] overflow-y-auto bg-[#0b0f1a]/98 backdrop-blur-xl border-t border-white/10"
-        >
-          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-2">
-            {navLinks.map((l) => (
-              <Fragment key={l.href}>
-                {/* "Services" divider — inserted right before POS System so
-                    it and the other service pages read as a grouped set
-                    instead of getting lost among the other flat items. */}
-                {l.href === '/pos-system' && (
-                  <div className="flex items-center gap-2 px-4 pt-3 pb-1" aria-hidden="true">
-                    <span className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
-                    <span className="text-xs font-semibold text-[#00d4ff]/80 uppercase tracking-widest">
-                      Services
-                    </span>
-                    <span className="h-px flex-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
-                  </div>
-                )}
-                <Link
-                  href={l.href}
-                  onClick={closeMenu}
-                  className={`text-sm font-semibold px-4 py-3 rounded-lg text-white/80 hover:text-[#00d4ff] hover:bg-[#00d4ff]/[0.07] transition-all ${
-                    SERVICE_HREFS.includes(l.href)
-                      ? 'ml-3 border-l-2'
-                      : ''
-                  }`}
-                  style={SERVICE_HREFS.includes(l.href) ? { borderColor: 'rgba(0,212,255,0.25)' } : undefined}
-                >
-                  {l.label}
-                </Link>
-              </Fragment>
-            ))}
-
-            {/* Order Now → /contact */}
-            <Link
-              href={CONTACT_URL}
-              onClick={closeMenu}
-              className="btn-primary text-center text-sm mt-2"
-            >
-              Order Now
-            </Link>
-          </div>
-        </div>
+        <nav className="border-t border-border bg-bg px-5 pb-6 pt-2 md:hidden">
+          <ul className="flex flex-col gap-1">
+            {links.map((link) =>
+              link.children ? (
+                <li key={link.label}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileDropdown((v) => (v === link.label ? null : link.label))
+                    }
+                    aria-expanded={mobileDropdown === link.label}
+                    className="flex w-full items-center justify-between rounded-md px-2 py-3 text-base text-muted hover:bg-surface hover:text-ink"
+                  >
+                    {link.label}
+                    <ChevronDown
+                      size={16}
+                      className={`transition-transform ${
+                        mobileDropdown === link.label ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {mobileDropdown === link.label && (
+                    <ul className="ml-2 flex flex-col gap-1 border-l border-border pl-3">
+                      {link.children.map((child) => (
+                        <li key={child.href}>
+                          <a
+                            href={child.href}
+                            onClick={() => {
+                              setOpen(false);
+                              setMobileDropdown(null);
+                            }}
+                            className="block rounded-md px-2 py-2.5 text-sm text-muted hover:bg-surface hover:text-ink"
+                          >
+                            {child.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ) : (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-md px-2 py-3 text-base text-muted hover:bg-surface hover:text-ink"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              )
+            )}
+            <li className="pt-2">
+              <a
+                href="/contact"
+                onClick={() => setOpen(false)}
+                className="block rounded-lg bg-mint px-4 py-3 text-center text-sm font-semibold text-bg"
+              >
+                Start a project
+              </a>
+            </li>
+          </ul>
+        </nav>
       )}
-    </nav>
-  )
+    </header>
+  );
 }
