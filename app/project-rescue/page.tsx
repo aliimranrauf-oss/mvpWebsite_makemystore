@@ -87,8 +87,9 @@ export default function ProjectRescuePage() {
           eyebrow="Project Rescue"
           title="Stuck on an AI-generated project? We'll finish it properly."
           description="Broken features, no real backend, or a build that never quite worked — reviewed, fixed, and deployed cleanly on Next.js, Supabase, and Vercel."
+          image={{ src: "/images/hero/project-rescue.png", alt: "Rebuilding a broken AI-generated app cleanly on Next.js" }}
         >
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
             <a
               href="/contact"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
