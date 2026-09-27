@@ -2,7 +2,7 @@
 // content that already exists in lib/data.ts, so it can never say something
 // inconsistent with the rest of the site — and it never claims to be AI.
 
-import { services, chatbotTiers, mvpTiers, rescueTiers, faqs } from "@/lib/data";
+import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
 
 export type FaqBotReply = {
   text: string;
@@ -58,6 +58,25 @@ function buildEntries(): Entry[] {
     }
   );
 
+  // POS-specific FAQs, reused verbatim from lib/data.ts (posFaqs), same
+  // pattern as the generic faqs entries above. Kept to the 3 most likely
+  // visitor questions rather than all 6, to avoid a noisy keyword list
+  // that collides with the generic entries.
+  entries.push(
+    {
+      keywords: ["solar", "battery shop", "only for", "specific business", "my type of shop", "my type of business"],
+      response: posFaqs[0].a,
+    },
+    {
+      keywords: ["work offline", "without internet", "no internet", "offline mode", "no connection"],
+      response: posFaqs[3].a,
+    },
+    {
+      keywords: ["ai assistant safe", "is the ai safe", "ai save automatically", "ai save on its own", "ai assistant work", "how does the ai"],
+      response: posFaqs[2].a,
+    }
+  );
+
   // Services summary, generated from the same data the Services section uses.
   const servicesSummary = services
     .map((s) => `• ${s.title} (${s.price}) — ${s.desc}`)
@@ -70,10 +89,11 @@ function buildEntries(): Entry[] {
   // Pricing summary, generated from the same tier data used on /#pricing.
   const chatbotSummary = chatbotTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   const mvpSummary = mvpTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
+  const posSummary = posTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   const rescueSummary = rescueTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   entries.push({
     keywords: ["price", "pricing", "cost", "how much", "rates", "budget"],
-    response: `Quick pricing overview:\n• Chatbots: ${chatbotSummary}\n• SaaS MVPs: ${mvpSummary}\n• Project Rescue: ${rescueSummary}\n\nSee full details at /#pricing.`,
+    response: `Quick pricing overview:\n• Chatbots: ${chatbotSummary}\n• SaaS MVPs: ${mvpSummary}\n• POS & Shop Management: ${posSummary}\n• Project Rescue: ${rescueSummary}\n\nSee full details at /#pricing.`,
   });
 
   // Small talk.
