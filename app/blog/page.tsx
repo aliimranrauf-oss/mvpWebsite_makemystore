@@ -54,12 +54,14 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function BlogPage() {
-  const { data: posts, error } = await supabase
-    .from("blogs")
-    .select("id, slug, title, excerpt, category, published_at, image_url, author_name")
-    .eq("is_live", true)
-    .eq("lang", "en")
-    .order("published_at", { ascending: false });
+  const { data: posts, error } = supabase
+    ? await supabase
+        .from("blogs")
+        .select("id, slug, title, excerpt, category, published_at, image_url, author_name")
+        .eq("is_live", true)
+        .eq("lang", "en")
+        .order("published_at", { ascending: false })
+    : { data: null, error: null };
 
   if (error) {
     console.error("Supabase blog fetch error:", error.message);
