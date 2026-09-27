@@ -100,13 +100,26 @@ export default async function BlogPostPage({
     </figure>
   `;
 
-  renderedContent = post.image_url_2
-    ? renderedContent.replaceAll("{{IMAGE_2}}", buildFigure(post.image_url_2, post.title))
-    : renderedContent.replaceAll("{{IMAGE_2}}", "");
+  // If an editor sets image_url_2 / image_url_3 in Supabase but forgets to
+  // drop the matching {{IMAGE_2}} / {{IMAGE_3}} token into `content`, don't
+  // silently lose the image — append it to the end of the post instead.
+  if (post.image_url_2) {
+    const figure2 = buildFigure(post.image_url_2, post.title);
+    renderedContent = renderedContent.includes("{{IMAGE_2}}")
+      ? renderedContent.replaceAll("{{IMAGE_2}}", figure2)
+      : renderedContent + figure2;
+  } else {
+    renderedContent = renderedContent.replaceAll("{{IMAGE_2}}", "");
+  }
 
-  renderedContent = post.image_url_3
-    ? renderedContent.replaceAll("{{IMAGE_3}}", buildFigure(post.image_url_3, post.title))
-    : renderedContent.replaceAll("{{IMAGE_3}}", "");
+  if (post.image_url_3) {
+    const figure3 = buildFigure(post.image_url_3, post.title);
+    renderedContent = renderedContent.includes("{{IMAGE_3}}")
+      ? renderedContent.replaceAll("{{IMAGE_3}}", figure3)
+      : renderedContent + figure3;
+  } else {
+    renderedContent = renderedContent.replaceAll("{{IMAGE_3}}", "");
+  }
 
   // BlogPosting structured data — this is what lets Google show rich
   // article results (author, dates, image) and target this page for
