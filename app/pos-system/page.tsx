@@ -10,9 +10,9 @@ import { posTiers, posFaqs } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Custom POS & Shop Management System with AI Assistant — MakeMyStore",
+  title: "Custom POS & Shop Management System — MakeMyStore",
   description:
-    "Custom-built POS and shop management software for any business — inventory, invoicing, customers & suppliers, payments, reports, offline mode, and a built-in AI assistant. One-time build, source code is yours.",
+    "Custom POS and shop management software with an AI assistant — inventory, invoicing, customers, payments, and reports. One-time build, source code is yours.",
   keywords: [
     "pos system development",
     "shop management software",
