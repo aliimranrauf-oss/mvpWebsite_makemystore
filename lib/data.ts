@@ -35,6 +35,18 @@ export const services = [
     accent: "cyan" as const,
   },
   {
+    slug: "pos-system",
+    title: "POS & Shop Management System",
+    desc: "Inventory, invoicing, customers, suppliers, and reports — with a built-in AI assistant. Custom-built for any business.",
+    points: [
+      "Inventory, billing, customers & suppliers in one system",
+      "AI assistant proposes changes, you confirm",
+      "Works offline, syncs automatically",
+    ],
+    price: "From $400",
+    accent: "mint" as const,
+  },
+  {
     slug: "project-rescue",
     title: "Project Rescue",
     desc: "Stuck on a project from Lovable, Bolt, or another AI builder? We finish it properly and deploy it right.",
@@ -44,7 +56,7 @@ export const services = [
       "Deployed to your GitHub + Vercel",
     ],
     price: "From $150",
-    accent: "mint" as const,
+    accent: "cyan" as const,
   },
 ];
 
@@ -109,6 +121,44 @@ export const rescueTiers: Tier[] = [
     price: "From $1,000",
     desc: "The project needs to be largely rebuilt. Priced after a quick review.",
     features: ["Free scope review first", "Rebuilt on Next.js", "Fixed quote before we start"],
+  },
+];
+
+export const posTiers: Tier[] = [
+  {
+    name: "Starter POS",
+    price: "From $400",
+    desc: "Core billing and stock for a single shop.",
+    features: [
+      "Inventory with stock history",
+      "Sales & invoicing (print, PDF, WhatsApp)",
+      "Customer ledger (cash & credit)",
+      "Basic sales reports",
+    ],
+  },
+  {
+    name: "Business POS + AI",
+    price: "From $900",
+    desc: "Everything in Starter, plus suppliers, payments, and the AI assistant.",
+    features: [
+      "Everything in Starter POS",
+      "Suppliers, purchases & payments",
+      "Expense tracking & profit reports",
+      "AI assistant (propose → confirm)",
+      "Offline mode with auto-sync",
+    ],
+    highlight: true,
+  },
+  {
+    name: "Custom / Multi-Branch",
+    price: "Priced after a call",
+    desc: "Multiple branches, industry-specific modules, or integrations.",
+    features: [
+      "Everything in Business POS + AI",
+      "Multiple branches / multi-store",
+      "Industry-specific modules",
+      "Custom integrations & reporting",
+    ],
   },
 ];
 
@@ -269,6 +319,33 @@ export const rescueFaqs = [
   {
     q: "How fast can a rescue be done?",
     a: "Quick fixes and standard rescues are often turned around in a few days. Full rebuilds depend on the size of the existing project, and you'll get a timeline with the quote.",
+  },
+];
+
+export const posFaqs = [
+  {
+    q: "Is this only for solar or battery shops?",
+    a: "No. It's shown with a battery/solar shop build as a real, working example — not a limit on what's offered. The same system (inventory, invoicing, customers, suppliers, payments, reports, AI assistant) is rebuilt around your own products for grocery stores, pharmacies, electronics and mobile shops, hardware stores, garment shops, wholesale distributors, or any other business.",
+  },
+  {
+    q: "What's included in a shop management system build?",
+    a: "Inventory with stock history, sales and invoicing with PDF/WhatsApp sharing, a customer ledger for cash and credit sales, a supplier ledger for purchases and payments, expense tracking, dashboards and reports, staff logins with roles, and an optional AI assistant that proposes an action for you to confirm before anything is saved.",
+  },
+  {
+    q: "How does the AI assistant work, and is it safe?",
+    a: "You type or speak a request in plain language, such as adding stock or creating a bill. The assistant shows a proposal summarizing exactly what it's about to do, and nothing is saved until you confirm it. It never writes to your data directly — it uses the same save logic as the regular forms.",
+  },
+  {
+    q: "Does it work without internet?",
+    a: "Yes. Bills, stock changes, and customer records can be created while offline. Everything is queued on the device and synced automatically the moment the connection returns.",
+  },
+  {
+    q: "Do I own the app and the source code?",
+    a: "Yes. This is a one-time custom build, not a rented license. The source code and database are yours, set up under your own accounts.",
+  },
+  {
+    q: "How long does it take to build?",
+    a: "A focused Starter build typically takes a few weeks. Adding the AI assistant, multi-branch support, or industry-specific modules extends the timeline — an exact estimate is given after a short discovery call about your workflow.",
   },
 ];
 
