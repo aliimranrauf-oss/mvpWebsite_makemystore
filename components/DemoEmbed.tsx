@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, Monitor, Smartphone, Download } from "lucide-react";
 
-const DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.makemystore.online";
+const DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo-battery-pos.vercel.app";
 
 type Device = "unknown" | "desktop" | "mobile";
 
