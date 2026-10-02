@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import DemoEmbed from "@/components/DemoEmbed";
 import PageHeader from "@/components/PageHeader";
 import { posTiers, posFaqs } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
@@ -102,6 +103,12 @@ export default function PosSystemPage() {
               <ArrowRight size={16} />
             </a>
             <a
+              href="#demo"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-mint/60 bg-surface px-6 py-3.5 text-sm font-semibold text-mint transition-colors hover:bg-mint/10"
+            >
+              Try the live demo
+            </a>
+            <a
               href="#pricing"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
             >
@@ -136,7 +143,24 @@ export default function PosSystemPage() {
           </div>
         </section>
 
-        <section className="border-b border-border bg-surface/40">
+        <section id="demo" className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
+                Try it yourself
+              </h2>
+              <p className="mt-4 text-muted">
+                A live demo with sample data. No sign-up: click Log in and explore. Please
+                don&apos;t enter real business information; the demo resets every hour.
+              </p>
+            </div>
+            <div className="mt-10">
+              <DemoEmbed />
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border">
           <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
