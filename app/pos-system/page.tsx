@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {
-  ArrowRight, Check, Plus, Play, Package, Receipt, Bot, Users, ShieldCheck,
+  ArrowRight, Check, Plus, Package, Receipt, Bot, Users, ShieldCheck,
   Store, Pill, ShoppingCart, Smartphone, Wrench, Shirt, Car,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -96,18 +96,17 @@ export default function PosSystemPage() {
         >
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
             <a
-              href="#demo"
-              className="inline-flex items-center justify-center gap-3 rounded-full bg-mint px-9 py-5 text-lg font-bold text-white shadow-lg ring-4 ring-mint/25 transition-transform hover:scale-[1.04]"
-            >
-              <Play size={22} fill="currentColor" />
-              Try the live demo
-            </a>
-            <a
               href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
             >
               Get a free consultation
               <ArrowRight size={16} />
+            </a>
+            <a
+              href="#demo"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-mint/60 bg-surface px-6 py-3.5 text-sm font-semibold text-mint transition-colors hover:bg-mint/10"
+            >
+              Try the live demo
             </a>
             <a
               href="#pricing"
@@ -116,9 +115,6 @@ export default function PosSystemPage() {
               See pricing
             </a>
           </div>
-          <p className="mt-3 text-center text-sm text-muted lg:text-left">
-            No sign-up. One click to open a working POS with sample data.
-          </p>
         </PageHeader>
 
         <section className="border-b border-border">
