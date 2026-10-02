@@ -10,7 +10,7 @@ type Device = "unknown" | "desktop" | "mobile";
 function detectDevice(): Device {
   const ua = navigator.userAgent;
   const mobileUa = /android|iphone|ipod|ipad|mobile/i.test(ua);
-  // iPadOS reports as a Mac, so also treatttt touch-only wide screens as mobile
+  // iPadOS reports as a Mac, so also treat touch-only wide screens as mobile
   const ipadOs = /macintosh/i.test(ua) && navigator.maxTouchPoints > 1;
   return mobileUa || ipadOs || window.innerWidth < 900 ? "mobile" : "desktop";
 }
