@@ -9,6 +9,7 @@ import DemoEmbed from "@/components/DemoEmbed";
 import PageHeader from "@/components/PageHeader";
 import { posTiers, posFaqs } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
+import { liveDemos } from "@/lib/demos";
 
 export const metadata: Metadata = {
   title: "Custom POS & Shop Management System — MakeMyStore",
@@ -21,6 +22,10 @@ export const metadata: Metadata = {
     "ai pos system",
     "billing software for small business",
     "retail management system developer",
+    "custom pos software",
+    "pharmacy pos software",
+    "grocery store pos software",
+    "mobile shop pos software",
   ],
   alternates: {
     canonical: `${SITE_URL}/pos-system`,
@@ -31,9 +36,11 @@ export const metadata: Metadata = {
       "Inventory, invoicing, customers, suppliers, payments, and reports — in one custom-built system, with an AI assistant that proposes changes for you to confirm.",
     url: `${SITE_URL}/pos-system`,
     type: "website",
+    images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
+    images: ["/images/og-image.png"],
     title: "Custom POS & Shop Management System with AI Assistant — MakeMyStore",
     description:
       "Inventory, invoicing, customers, suppliers, payments, and reports — in one custom-built system, for any business.",
@@ -58,8 +65,8 @@ const included = [
   },
 ];
 
-const verticals = [
-  { icon: Store, name: "Battery & Solar Shops" },
+const verticals: { icon: typeof Store; name: string; href?: string }[] = [
+  { icon: Store, name: "Battery & Solar Shops", href: "/pos-system/battery-solar-shop" },
   { icon: ShoppingCart, name: "Grocery & General Stores" },
   { icon: Pill, name: "Pharmacies" },
   { icon: Smartphone, name: "Electronics & Mobile Shops" },
@@ -147,15 +154,17 @@ export default function PosSystemPage() {
           <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-                Try it yourself
+                Try an example build
               </h2>
               <p className="mt-4 text-muted">
-                A live demo with sample data. No sign-up: click Log in and explore. Please
-                don&apos;t enter real business information; the demo resets every hour.
+                This demo is one example, a battery and solar shop. Your system is built
+                around your own business and the features you need. Sample data only, no
+                sign-up: click Log in and explore. Please don&apos;t enter real business
+                information; the demo resets every hour.
               </p>
             </div>
             <div className="mt-10">
-              <DemoEmbed />
+              <DemoEmbed demoUrl={liveDemos[0].demoUrl} title="POS system live demo" />
             </div>
           </div>
         </section>
@@ -173,20 +182,55 @@ export default function PosSystemPage() {
               </p>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {verticals.map(({ icon: Icon, name }) => (
-                <div
-                  key={name}
-                  className="flex flex-col items-center gap-2 rounded-xl2 card-glow-border p-5 text-center"
-                >
-                  <Icon size={22} className="text-mint" />
-                  <span className="text-sm font-medium text-ink">{name}</span>
-                </div>
-              ))}
+              {verticals.map(({ icon: Icon, name, href }) => {
+                const inner = (
+                  <>
+                    <Icon size={22} className="text-mint" />
+                    <span className="text-sm font-medium text-ink">{name}</span>
+                    {href && <span className="text-xs font-semibold text-mint">Live demo →</span>}
+                  </>
+                );
+                const cls = "flex flex-col items-center gap-2 rounded-xl2 card-glow-border p-5 text-center";
+                return href ? (
+                  <a key={name} href={href} className={`${cls} transition-transform hover:scale-[1.02]`}>
+                    {inner}
+                  </a>
+                ) : (
+                  <div key={name} className={cls}>
+                    {inner}
+                  </div>
+                );
+              })}
             </div>
             <p className="mt-8 text-center text-sm text-muted">
               Don&apos;t see your business listed? If you sell, stock, or invoice
               anything, this system can be built around it.
             </p>
+          </div>
+        </section>
+
+        <section className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
+                Your features, not a fixed template
+              </h2>
+              <p className="mt-4 text-muted">
+                Every system is custom. Tell us how your business works and we build
+                around it: your own stock structure, billing flow, reports, staff
+                roles, multiple branches or an AI assistant. Keep what you need and
+                drop what you don&apos;t.
+              </p>
+            </div>
+            <div className="mt-8">
+              <a
+                href="/contact?service=pos-system"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                Tell us what you need
+                <ArrowRight size={16} />
+              </a>
+            </div>
           </div>
         </section>
 
