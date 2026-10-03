@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, Monitor, Smartphone, Download } from "lucide-react";
 
-const DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo-battery-pos.vercel.app";
+const DEFAULT_DEMO_URL = process.env.NEXT_PUBLIC_DEMO_URL ?? "https://demo.makemystore.online";
 
 type Device = "unknown" | "desktop" | "mobile";
 
@@ -15,7 +15,13 @@ function detectDevice(): Device {
   return mobileUa || ipadOs || window.innerWidth < 900 ? "mobile" : "desktop";
 }
 
-export default function DemoEmbed() {
+export default function DemoEmbed({
+  demoUrl = DEFAULT_DEMO_URL,
+  title = "Live POS demo",
+}: {
+  demoUrl?: string;
+  title?: string;
+}) {
   const [device, setDevice] = useState<Device>("unknown");
 
   useEffect(() => {
@@ -33,7 +39,7 @@ export default function DemoEmbed() {
             <Monitor size={16} className="text-mint" /> Live demo: desktop app
           </span>
           <a
-            href={DEMO_URL}
+            href={demoUrl}
             target="_blank"
             rel="noopener"
             className="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-mint"
@@ -42,8 +48,8 @@ export default function DemoEmbed() {
           </a>
         </div>
         <iframe
-          src={`${DEMO_URL}/demo-start`}
-          title="Live POS demo"
+          src={`${demoUrl}/demo-start`}
+          title={title}
           loading="lazy"
           allow="clipboard-write; microphone; fullscreen"
           className="block h-[640px] w-full bg-white lg:h-[720px]"
@@ -64,7 +70,7 @@ export default function DemoEmbed() {
           Open the demo, tap Log in, then install it to your home screen. It works like a normal app, even offline.
         </p>
         <a
-          href={DEMO_URL}
+          href={demoUrl}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white"
         >
           Open demo app <ExternalLink size={16} />

@@ -20,6 +20,7 @@ export default function Footer() {
         </div>
         <nav className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
           <a href="/#services" className="hover:text-ink">Services</a>
+          <a href="/pos-system" className="hover:text-ink">POS Systems</a>
           <a href="/#pricing" className="hover:text-ink">Pricing</a>
           <a href="/#faq" className="hover:text-ink">FAQ</a>
           <a href="/about" className="hover:text-ink">About</a>

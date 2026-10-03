@@ -16,7 +16,13 @@ const budgetOptions = [
   "$2,000+",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({
+  defaultService = "other",
+  defaultMessage = "",
+}: {
+  defaultService?: string;
+  defaultMessage?: string;
+}) {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -188,7 +194,7 @@ export default function ContactForm() {
           <select
             id="service"
             name="service"
-            defaultValue="other"
+            defaultValue={defaultService}
             className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-mint"
           >
             {services.map((s) => (
@@ -229,6 +235,7 @@ export default function ContactForm() {
         <textarea
           id="message"
           name="message"
+          defaultValue={defaultMessage}
           required
           rows={5}
           placeholder="Tell us what you're trying to build or fix..."
