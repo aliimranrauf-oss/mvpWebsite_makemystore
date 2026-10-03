@@ -48,7 +48,18 @@ const reassurances = [
   },
 ];
 
-export default function ContactPage() {
+const REF_MESSAGES: Record<string, string> = {
+  "battery-solar-shop":
+    "I tried the Battery & Solar Shop POS demo and I'd like a quote. My shop sells: ",
+};
+
+export default function ContactPage({
+  searchParams,
+}: {
+  searchParams: { service?: string; ref?: string };
+}) {
+  const defaultService = searchParams.service === "pos-system" ? "pos-system" : "other";
+  const defaultMessage = (searchParams.ref && REF_MESSAGES[searchParams.ref]) || "";
   return (
     <>
       <Navbar />
@@ -101,7 +112,7 @@ export default function ContactPage() {
               </div>
 
               <div className="rounded-xl2 card-glow-border p-6 sm:p-8">
-                <ContactForm />
+                <ContactForm defaultService={defaultService} defaultMessage={defaultMessage} />
               </div>
             </div>
           </div>
