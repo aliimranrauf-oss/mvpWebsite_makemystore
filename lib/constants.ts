@@ -1,4 +1,4 @@
-export const SITE_URL = "https://makemystore.online";
+export const SITE_URL = "https://www.makemystore.online";
 export const CONTACT_EMAIL = "info@makemystore.online";
 export const SITE_NAME = "MakeMyStore";
 export const GA_MEASUREMENT_ID = "G-9GHRBEWJ1J";
