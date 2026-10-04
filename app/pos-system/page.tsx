@@ -8,42 +8,46 @@ import Footer from "@/components/Footer";
 import DemoEmbed from "@/components/DemoEmbed";
 import PageHeader from "@/components/PageHeader";
 import { posTiers, posFaqs } from "@/lib/data";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 import { liveDemos } from "@/lib/demos";
 
+const POS_TITLE = "Custom POS & Inventory Software for Shops | Live Demo";
+const POS_DESC =
+  "Custom POS, billing and inventory software for pharmacies, grocery, mobile, hardware and battery shops. Udhaar ledger, offline mode, AI assistant. One-time build, you own the code.";
+
 export const metadata: Metadata = {
-  title: "Custom POS & Shop Management System — MakeMyStore",
-  description:
-    "Custom POS and shop management software with an AI assistant — inventory, invoicing, customers, payments, and reports. One-time build, source code is yours.",
+  title: { absolute: `${POS_TITLE} | ${SITE_NAME}` },
+  description: POS_DESC,
   keywords: [
     "pos system development",
+    "custom pos software",
     "shop management software",
-    "custom inventory system",
-    "ai pos system",
+    "inventory management software for small business",
     "billing software for small business",
     "retail management system developer",
-    "custom pos software",
+    "ai pos system",
+    "offline pos software",
+    "udhaar ledger software",
     "pharmacy pos software",
     "grocery store pos software",
     "mobile shop pos software",
+    "hardware store pos software",
+    "pos software pakistan",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/pos-system`,
-  },
+  alternates: { canonical: `${SITE_URL}/pos-system` },
   openGraph: {
-    title: "Custom POS & Shop Management System with AI Assistant — MakeMyStore",
-    description:
-      "Inventory, invoicing, customers, suppliers, payments, and reports — in one custom-built system, with an AI assistant that proposes changes for you to confirm.",
+    title: `${POS_TITLE} | ${SITE_NAME}`,
+    description: POS_DESC,
     url: `${SITE_URL}/pos-system`,
+    siteName: SITE_NAME,
     type: "website",
-    images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
+    images: [{ ...DEFAULT_OG_IMAGE, alt: "Custom POS and shop management system by MakeMyStore" }],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/images/og-image.png"],
-    title: "Custom POS & Shop Management System with AI Assistant — MakeMyStore",
-    description:
-      "Inventory, invoicing, customers, suppliers, payments, and reports — in one custom-built system, for any business.",
+    title: `${POS_TITLE} | ${SITE_NAME}`,
+    description: POS_DESC,
+    images: [DEFAULT_OG_IMAGE.url],
   },
 };
 
@@ -87,11 +91,40 @@ export default function PosSystemPage() {
     })),
   };
 
+  const url = `${SITE_URL}/pos-system`;
+  const pageJsonLd = [
+    faqJsonLd,
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Custom POS & Shop Management System Development",
+      serviceType: "POS and inventory software development",
+      description: POS_DESC,
+      url,
+      areaServed: "Worldwide",
+      provider: { "@id": `${SITE_URL}/#organization` },
+      offers: posTiers.map((t) => ({
+        "@type": "Offer",
+        name: t.name,
+        description: t.desc,
+        url: `${url}#pricing`,
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "POS System", item: url },
+      ],
+    },
+  ];
+
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pageJsonLd) }}
       />
       <Navbar />
       <main>
