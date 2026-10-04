@@ -25,8 +25,8 @@ export type Demo = {
   /** Short steps telling a visitor what to try inside the demo */
   tryIt: string[];
   audience: string[];
-  /** Roman Urdu paragraph shown on the page, for local searches */
-  romanUrdu: { title: string; body: string };
+  /** Optional local-language paragraph (hidden when omitted) */
+  romanUrdu?: { title: string; body: string };
   faqs: { q: string; a: string }[];
 };
 
@@ -40,25 +40,26 @@ export const demos: Demo[] = [
     live: true,
     metaTitle: "Battery & Solar Shop POS Software — Live Demo | MakeMyStore",
     metaDescription:
-      "POS & inventory software for battery and solar shops: billing with udhaar, low-stock alerts, warranty claims, scrap trade-in. Try the free live demo.",
+      "POS & inventory software for battery and solar shops: customer credit billing, low-stock alerts, warranty claims, core and scrap trade-in. Works offline. Try the free live demo.",
     keywords: [
       "car battery shop pos software",
       "battery shop inventory software",
       "battery shop management system",
       "solar shop pos",
       "battery warranty claim tracking",
-      "udhaar ledger software",
-      "old battery scrap software",
+      "customer credit ledger software",
+      "battery core and scrap trade-in software",
+      "automotive battery retailer inventory",
     ],
     eyebrow: "POS for Battery & Solar Shops",
-    h1: "Battery & solar shop POS with inventory, udhaar and warranty claims",
+    h1: "Battery & solar shop POS with inventory, customer credit and warranty claims",
     intro:
       "Billing, battery stock, warranty claims, charging jobs and old-battery scrap in one system. Try the real working demo below with sample data.",
     features: [
       {
         icon: Receipt,
         title: "Fast billing",
-        desc: "Make a bill and take cash, card or credit (udhaar) in a few taps.",
+        desc: "Make a bill and take cash, card or store credit in a few taps.",
       },
       {
         icon: Package,
@@ -98,7 +99,7 @@ export const demos: Demo[] = [
     ],
     tryIt: [
       "Click Log in to demo. No sign-up or typing needed.",
-      "Make a bill and choose cash, card or udhaar.",
+      "Make a bill and choose cash, card or store credit.",
       "Check battery stock and low-stock alerts.",
       "Open warranty claims, charging jobs and scrap.",
       "Ask the AI assistant a question about the shop.",
@@ -106,13 +107,9 @@ export const demos: Demo[] = [
     audience: [
       "Car battery shops",
       "Battery and solar retailers",
-      "Shops that sell on udhaar",
+      "Shops that sell on store credit or customer accounts",
       "Shops that buy or take in old batteries",
     ],
-    romanUrdu: {
-      title: "Roman Urdu mein",
-      body: "Battery aur solar dukan ke liye POS aur inventory software: bill, stock, udhaar, warranty claim, charging jobs aur purani battery (scrap) ka record ek hi app mein. Internet na ho tab bhi chalta hai aur phone mein app ki tarah install hota hai. Neeche live demo khud try karein: Log in to demo dabayein aur dekhein.",
-    },
     faqs: [
       {
         q: "Does it track old batteries and scrap?",
@@ -123,7 +120,7 @@ export const demos: Demo[] = [
         a: "Yes. Warranty claims and charging jobs are both part of the demo.",
       },
       {
-        q: "Can I sell on credit (udhaar)?",
+        q: "Can I sell on credit or customer accounts?",
         a: "Yes. Bills can be cash, card or credit, and customer ledgers show what each customer still owes.",
       },
       {
