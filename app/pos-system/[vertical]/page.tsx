@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import DemoEmbed from "@/components/DemoEmbed";
 import { liveDemos, getDemo } from "@/lib/demos";
-import { SITE_URL, SITE_NAME } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
 type Props = { params: { vertical: string } };
 
@@ -21,7 +21,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const d = getDemo(params.vertical);
   if (!d) return {};
   const url = `${SITE_URL}/pos-system/${d.slug}`;
-  const image = { url: "/images/og-image.png", width: 1200, height: 630 };
+  const image = { ...DEFAULT_OG_IMAGE, alt: `${d.name} POS software demo` };
   return {
     title: d.metaTitle,
     description: d.metaDescription,
