@@ -3,7 +3,7 @@ import { Space_Grotesk, Inter } from "next/font/google";
 import Script from "next/script";
 import dynamic from "next/dynamic";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS } from "@/lib/constants";
 
 // Only the active bot's code (and the shared ChatWidget it pulls in) ever
 // gets fetched — dynamic() + a build-time-constant CHATBOT_MODE lets
@@ -29,7 +29,30 @@ const body = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "MakeMyStore — AI Chatbots, SaaS MVPs & POS Systems",
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "technology",
+  formatDetection: { email: false, address: false, telephone: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  // After adding the site in Google Search Console / Bing Webmaster, paste the
+  // verification codes here (or verify via DNS and leave this out).
+  // verification: { google: "YOUR_GOOGLE_CODE", other: { "msvalidate.01": "YOUR_BING_CODE" } },
+  title: {
+    default: "MakeMyStore — AI Chatbots, SaaS MVPs & POS Systems",
+    template: "%s",
+  },
   description:
     "Custom AI chatbots, SaaS MVPs & POS systems built on Next.js & Supabase, plus fixes for stuck AI-generated projects. Real code, delivered fast, you own it all.",
   keywords: [
@@ -49,7 +72,7 @@ export const metadata: Metadata = {
       "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
     url: SITE_URL,
     siteName: SITE_NAME,
-    images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
+    images: [DEFAULT_OG_IMAGE],
     locale: "en_US",
     type: "website",
   },
@@ -68,13 +91,11 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-  alternates: {
-    canonical: SITE_URL,
-  },
 };
 
 export const viewport: Viewport = {
   themeColor: "#FFFFFF",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
 };
@@ -84,32 +105,54 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ProfessionalService",
-    name: SITE_NAME,
-    url: SITE_URL,
-    description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
-    email: "info@makemystore.online",
-    areaServed: "Worldwide",
-    priceRange: "$150-$1600+",
-    knowsAbout: [
-      "AI Chatbot Development",
-      "SaaS MVP Development",
-      "POS & Shop Management Systems",
-      "Next.js",
-      "Supabase",
-      "Project Rescue",
-    ],
-  };
+  const siteJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": ["ProfessionalService", "Organization"],
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/header-logo.png` },
+      image: `${SITE_URL}/images/og-image.png`,
+      description:
+        "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
+      email: "info@makemystore.online",
+      areaServed: "Worldwide",
+      priceRange: "$150-$1600+",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: "info@makemystore.online",
+        availableLanguage: ["English", "Urdu"],
+      },
+      ...(SOCIAL_LINKS.length ? { sameAs: SOCIAL_LINKS } : {}),
+      knowsAbout: [
+        "AI Chatbot Development",
+        "SaaS MVP Development",
+        "POS & Shop Management Systems",
+        "Inventory Management Software",
+        "Next.js",
+        "Supabase",
+        "Project Rescue",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: SITE_NAME,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+  ];
 
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
       <body className="font-body antialiased">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
 
         {/* Google Analytics (GA4) */}

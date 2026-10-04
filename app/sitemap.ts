@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, SITE_LAST_UPDATED } from "@/lib/constants";
 import { supabase } from "@/lib/supabaseClient";
 import { liveDemos } from "@/lib/demos";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const lastModified = new Date();
+  // Fixed date: a new Date() on every build tells Google nothing changed meaningfully.
+  const lastModified = new Date(SITE_LAST_UPDATED);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
