@@ -169,6 +169,7 @@ export default function VerticalPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
+              {d.romanUrdu && (
               <div className="mt-8 rounded-xl2 card-glow-border p-5">
                 <p className="flex items-center gap-2 text-sm font-semibold text-ink">
                   <Languages size={16} className="text-mint" />
@@ -176,6 +177,7 @@ export default function VerticalPage({ params }: Props) {
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{d.romanUrdu.body}</p>
               </div>
+              )}
             </div>
           </div>
         </section>
