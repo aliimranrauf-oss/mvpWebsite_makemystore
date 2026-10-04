@@ -13,7 +13,7 @@ import { liveDemos } from "@/lib/demos";
 
 const POS_TITLE = "Custom POS & Inventory Software for Shops | Live Demo";
 const POS_DESC =
-  "Custom POS, billing and inventory software for pharmacies, grocery, mobile, hardware and battery shops. Udhaar ledger, offline mode, AI assistant. One-time build, you own the code.";
+  "Custom POS, billing and inventory software for retail shops, pharmacies, convenience, hardware and auto parts stores in the US, UK, Europe, Australia and UAE. Offline mode, AI assistant, you own the code.";
 
 export const metadata: Metadata = {
   title: { absolute: `${POS_TITLE} | ${SITE_NAME}` },
@@ -27,12 +27,17 @@ export const metadata: Metadata = {
     "retail management system developer",
     "ai pos system",
     "offline pos software",
-    "udhaar ledger software",
+    "customer credit ledger software",
+    "custom retail pos software",
+    "pos software for small business usa",
+    "pos software uk",
+    "pos system australia",
+    "pos software uae",
+    "inventory software for convenience store",
     "pharmacy pos software",
     "grocery store pos software",
     "mobile shop pos software",
     "hardware store pos software",
-    "pos software pakistan",
   ],
   alternates: { canonical: `${SITE_URL}/pos-system` },
   openGraph: {
@@ -101,7 +106,7 @@ export default function PosSystemPage() {
       serviceType: "POS and inventory software development",
       description: POS_DESC,
       url,
-      areaServed: "Worldwide",
+      areaServed: ["United States", "United Kingdom", "European Union", "Australia", "United Arab Emirates", "Canada"],
       provider: { "@id": `${SITE_URL}/#organization` },
       offers: posTiers.map((t) => ({
         "@type": "Offer",
