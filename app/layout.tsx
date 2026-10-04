@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   category: "technology",
+  alternates: { languages: { "en": SITE_URL, "x-default": SITE_URL } },
   formatDetection: { email: false, address: false, telephone: false },
   robots: {
     index: true,
@@ -117,13 +118,20 @@ export default function RootLayout({
       description:
         "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
       email: "info@makemystore.online",
-      areaServed: "Worldwide",
+      areaServed: [
+        { "@type": "Country", name: "United States" },
+        { "@type": "Country", name: "United Kingdom" },
+        { "@type": "Country", name: "Australia" },
+        { "@type": "Country", name: "United Arab Emirates" },
+        { "@type": "Country", name: "Canada" },
+        { "@type": "AdministrativeArea", name: "European Union" },
+      ],
       priceRange: "$150-$1600+",
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "sales",
         email: "info@makemystore.online",
-        availableLanguage: ["English", "Urdu"],
+        availableLanguage: ["English"],
       },
       ...(SOCIAL_LINKS.length ? { sameAs: SOCIAL_LINKS } : {}),
       knowsAbout: [

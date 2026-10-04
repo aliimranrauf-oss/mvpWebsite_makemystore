@@ -15,7 +15,7 @@ import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
 const HOME_TITLE = "MakeMyStore: Custom AI Chatbots, SaaS MVPs & POS Systems";
 const HOME_DESC =
-  "Hire a developer for a custom AI chatbot, SaaS MVP, or POS & inventory system on Next.js and Supabase. Fixed quotes, fast delivery, you own the code. Try the live POS demo.";
+  "Hire a developer for a custom AI chatbot, SaaS MVP, or POS & inventory system on Next.js and Supabase. Serving clients in the US, UK, Europe, Australia & UAE. Fixed quotes, you own the code.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
