@@ -28,6 +28,7 @@ export const NAV_LINKS = [
       { href: "/cv-writing", label: "CV & LinkedIn Writing" },
     ],
   },
+  { href: "/cv-writing", label: "CV Writing" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
   { href: "/blog", label: "Blog" },
