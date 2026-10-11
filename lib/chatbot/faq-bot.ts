@@ -3,6 +3,7 @@
 // inconsistent with the rest of the site — and it never claims to be AI.
 
 import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
+import { content as cvContent } from "@/lib/cv-data";
 
 export type FaqBotReply = {
   text: string;
@@ -17,7 +18,13 @@ export type FaqBotReply = {
   matched: boolean;
 };
 
-type Entry = { keywords: string[]; response: string };
+type Entry = {
+  keywords: string[];
+  /** Optional extra condition: at least one of these must ALSO appear. Lets short words
+   *  like "price" or "how long" match only when the topic (e.g. a CV) is mentioned. */
+  requires?: string[];
+  response: string;
+};
 
 function normalize(input: string): string {
   return input
@@ -29,6 +36,80 @@ function normalize(input: string): string {
 
 function buildEntries(): Entry[] {
   const entries: Entry[] = [];
+
+  // ---- CV, LinkedIn & career documents (page: /cv-writing) -------------------
+  // Built from lib/cv-data.ts so prices/features stay in sync with the page.
+  // These go FIRST, but each one also needs a CV-related word (or a CV-specific
+  // phrase), so they never steal questions about the other services.
+  const cvList = cvContent.en.packages.items.map((p) => `• ${p.name} — ${p.price}`).join("\n");
+  const CV_TERMS = ["cv", "resume", "linkedin", "cover letter", "biography", "curriculum vitae"];
+  const LINK = "/cv-writing#order";
+
+  entries.push(
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget"],
+      requires: CV_TERMS,
+      response: `Our CV & Cover Letter package starts from £40, with the cover letter included free. LinkedIn, Complete and Biography packages are quoted individually based on seniority and scope — you always get a fixed price before any work starts.\n\nPrices are listed in GBP. Tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent in your quote.\n\nGet your exact price: ${LINK}`,
+    },
+    {
+      keywords: ["how long", "delivery", "turnaround", "how fast", "timeline", "deadline", "urgent"],
+      requires: CV_TERMS,
+      response: `Delivery time depends on the package and how quickly you send us your details. We confirm a delivery date in your quote and we deliver on time. If it's urgent, choose "Urgent (24–48 hrs)" in the order form: ${LINK}`,
+    },
+    {
+      keywords: ["pay", "payment", "currency", "sar", "aed", "usd", "dollar", "riyal", "dirham"],
+      requires: CV_TERMS,
+      response: `Prices are listed in GBP. In the order form you can pick your preferred currency (SAR, AED, QAR, KWD, USD or GBP) and we'll confirm the equivalent and the payment options in your quote. No payment is taken until you've seen and accepted the fixed quote.`,
+    },
+    {
+      keywords: ["revision", "revisions", "edits", "update my", "changes after", "free updates", "11 months"],
+      requires: [...CV_TERMS, "11 months"],
+      response: `Every package comes with 11 months of free revisions. New job, new certification or new achievement? Send us the updates and we'll refresh your documents at no cost.`,
+    },
+    {
+      keywords: ["sample", "samples", "example", "examples", "template"],
+      requires: CV_TERMS,
+      response: `Yes — tick "Send me CV samples for my industry" on the order form and we'll send samples relevant to your field: ${LINK}`,
+    },
+    {
+      keywords: ["applicant tracking", "ats friendly", "ats compatible", "ats cv", "ats resume", "pass ats"],
+      response: `Yes — every CV is formatted to pass applicant tracking systems (ATS) and uses the right keywords from your target role and industry, so it reaches a human recruiter.`,
+    },
+    {
+      keywords: ["arabic cv", "cv in arabic", "arabic resume", "resume in arabic", "bilingual", "translate my cv", "arabic and english cv"],
+      response: `Our CV, LinkedIn and bio packages are written in English. If you need an Arabic or bilingual version, mention it in the order form and the team will confirm whether they can do it and what it costs: ${LINK}`,
+    },
+    {
+      keywords: ["cover letter"],
+      response: `A tailored cover letter is included free with our CV packages — no extra charge. We also include a free interview follow-up email. See the packages: /cv-writing#packages`,
+    },
+    {
+      keywords: ["linkedin", "linked in"],
+      response: `We write and optimise LinkedIn profiles: an SEO-friendly headline and About section, experience and skills rewritten for recruiter search, plus tips on photo, banner and URL — with 11 months of free revisions. LinkedIn is quoted individually, or bundled in the Complete Package (CV + cover letter + LinkedIn). Get your price: ${LINK}`,
+    },
+    {
+      keywords: ["biography", "professional bio", "personal bio", "speaker bio"],
+      response: `We write professional biographies for websites, conferences, company profiles, boards and press — in first or third person, in short, medium or long versions. It's quoted individually: ${LINK}`,
+    },
+    {
+      keywords: ["academic cv", "academic resume", "research cv", "lecturer cv", "phd cv"],
+      response: `Yes, we write academic CVs covering research, publications, teaching, grants and conferences. Mention it in the order form: ${LINK}`,
+    },
+    {
+      keywords: ["saudi", "ksa", "gulf", "gcc", "dubai", "uae", "emirates", "riyadh", "jeddah", "abu dhabi", "qatar", "doha", "kuwait", "bahrain", "oman", "vision 2030", "saudization", "nationality"],
+      requires: [...CV_TERMS, "job", "jobs", "career", "hiring", "recruiter"],
+      response: `Yes — our CV service is built for the Gulf job market (KSA, UAE, Qatar, Kuwait, Bahrain, Oman). We structure your CV the way GCC recruiters scan it, include Gulf details like nationality, visa status and notice period only where they help, and position your experience for sectors like construction, energy, tourism, healthcare, tech and finance. We also help expats translate overseas experience into terms Gulf employers trust. Details: /cv-writing`,
+    },
+    {
+      keywords: ["arabic version", "in arabic", "arabic language", "arabic page", "arabic website", "arabic site", "speak arabic"],
+      response: `Our CV & LinkedIn page (/cv-writing) has an Arabic version — tap the Arabic language button at the top of the page to switch (English is the default). Our CV packages themselves are written in English; for an Arabic or bilingual CV, mention it in the order form and the team will confirm.`,
+    },
+    {
+      // General CV overview — keep LAST among the CV entries (it's the catch-all).
+      keywords: CV_TERMS,
+      response: `We write professional CVs, cover letters, LinkedIn profiles and bios — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Services start from £40. See details and get a fixed quote: /cv-writing`,
+    }
+  );
 
   // FAQs, reused verbatim from lib/data.ts.
   entries.push(
@@ -83,7 +164,7 @@ function buildEntries(): Entry[] {
     .join("\n");
   entries.push({
     keywords: ["service", "services", "what do you offer", "what do you do", "what can you build"],
-    response: `Here's what we offer:\n\n${servicesSummary}\n\nWant details on one? Just ask.`,
+    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (from £40) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n\nWant details on one? Just ask.`,
   });
 
   // Pricing summary, generated from the same tier data used on /#pricing.
@@ -145,9 +226,9 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => normalized.includes(k));
 
   for (const entry of ENTRIES) {
-    if (entry.keywords.some((k) => normalized.includes(k))) {
-      return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
-    }
+    if (!entry.keywords.some((k) => normalized.includes(k))) continue;
+    if (entry.requires && !entry.requires.some((r) => normalized.includes(r))) continue;
+    return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
   }
 
   // Fallback branches below: neither is a real topic match, so both are
@@ -164,7 +245,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   }
 
   return {
-    text: "I didn't quite catch that — I can answer questions about pricing, services, and timelines. For anything else, let's get you to a real person.",
+    text: "I didn't quite catch that — I can answer questions about pricing, services, timelines and our CV & LinkedIn writing. For anything else, let's get you to a real person.",
     suggestQuote: true,
     matched: false,
   };
