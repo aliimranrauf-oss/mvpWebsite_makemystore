@@ -40,3 +40,7 @@ export const NAV_LINKS = [
 // Flip with NEXT_PUBLIC_CHATBOT_MODE in Vercel — no code deploy needed.
 export const CHATBOT_MODE: "faq" | "ai" | "hybrid" | "off" =
   (process.env.NEXT_PUBLIC_CHATBOT_MODE as "faq" | "ai" | "hybrid" | "off") || "faq";
+
+// Your WhatsApp number in international format without + or spaces (e.g. "447700900123").
+// Leave empty to hide the "Chat on WhatsApp" buttons.
+export const WHATSAPP_NUMBER = "";

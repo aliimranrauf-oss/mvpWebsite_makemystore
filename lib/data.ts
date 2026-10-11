@@ -64,21 +64,36 @@ export const chatbotTiers: Tier[] = [
   {
     name: "Basic FAQ Bot",
     price: "$150–$250",
-    desc: "Scripted replies, no AI. Good for straightforward, repeatable questions.",
-    features: ["Rule-based Q&A flow", "Website popup widget", "1 revision round"],
+    desc: "Instant answers to the questions your customers ask every day: hours, prices, location, policies.",
+    features: [
+      "Answers from a Q&A list you approve",
+      "Chat widget on your website",
+      "Lead capture form (name, phone, email)",
+      "Delivered in a few days",
+      "1 revision round",
+    ],
   },
   {
     name: "AI-Powered Bot",
-    price: "$500–$900",
-    desc: "GPT, Claude, or Grok — trained on your own business data.",
+    price: "$600–$1,200",
+    desc: "Understands any question and replies in your customer's own language, using your real business information.",
     features: [
-      "Real memory + RAG on your data",
+      "Answers from your menu, services, prices and policies",
+      "Replies in the customer's language (Arabic, English, Urdu and more)",
+      "Remembers the conversation",
+      "Takes booking and enquiry details",
       "Website widget included",
       "WhatsApp / Telegram: +$120 / +$100",
     ],
     highlight: true,
   },
 ];
+
+export const chatbotCarePlan = {
+  name: "Care plan",
+  price: "$30–$50 / month",
+  desc: "Hosting, updates to your information, monitoring and quick fixes, so your bot stays accurate.",
+};
 
 export const mvpTiers: Tier[] = [
   {
@@ -240,31 +255,35 @@ export const trustPoints = [
 export const chatbotFaqs = [
   {
     q: "What's the difference between a Basic bot and an AI-Powered bot?",
-    a: "A Basic bot answers from a fixed script you provide — reliable for simple, repeated questions like hours, pricing, or FAQs. An AI-Powered bot (GPT, Claude, or Grok) understands open-ended questions and answers from your actual business data, with real memory across a conversation.",
+    a: "A Basic bot answers from a fixed list of questions and answers you approve. It's reliable for simple, repeated questions like hours, pricing or location. An AI-Powered bot understands open-ended questions, replies in the customer's own language, and answers from your actual business information.",
+  },
+  {
+    q: "Does the chatbot reply in my customers' language?",
+    a: "Yes. The AI-Powered bot replies in whatever language the customer writes in, including Arabic and English, and switches when they do. Try the live demo above and type in any language.",
   },
   {
     q: "Can the chatbot connect to WhatsApp or Telegram?",
-    a: "Yes. Every bot ships with a website widget by default. WhatsApp and Telegram integrations are available as add-ons (+$120 and +$100) on the AI-Powered tier.",
+    a: "Yes. Every bot comes with a website chat widget. WhatsApp and Telegram connections are available as add-ons (+$120 and +$100) on the AI-Powered tier.",
   },
   {
-    q: "What data can the AI bot be trained on?",
-    a: "Your own business content — product info, FAQs, docs, or policies — using retrieval (RAG) so answers stay grounded in what you actually offer, instead of generic AI responses.",
+    q: "What information does the bot use to answer?",
+    a: "Only your own business content: menu, services, prices, opening hours, policies and FAQs. If a customer asks something outside that, the bot says it isn't sure and offers to pass them to you, instead of guessing.",
   },
   {
     q: "How long does a chatbot take to build?",
-    a: "Basic FAQ bots are usually the quickest to deliver. AI-Powered bots take a bit longer to set up memory and train on your data, but most are still delivered within a few days.",
+    a: "Basic FAQ bots are usually the quickest to deliver. AI-Powered bots take a little longer because we load and test your business information, but most are delivered within a few days.",
   },
   {
     q: "Do I own the chatbot afterward?",
-    a: "Yes. It's deployed on your own accounts — no dependency on a third-party platform or a subscription you don't control.",
+    a: "Yes. It's deployed on your own accounts, with no dependency on a third-party platform or a subscription you don't control. The optional care plan is only for hosting and updates.",
   },
   {
     q: "Can I add it to my existing website?",
-    a: "Yes. It works with any website or framework — WordPress, Wix, Shopify, Webflow, or a custom build — added with a simple script or iframe embed, no rebuild required.",
+    a: "Yes. It works with any website: WordPress, Wix, Shopify, Webflow or a custom build. It's added with a simple script or embed, no rebuild needed.",
   },
   {
     q: "What if I need help or changes after it's live?",
-    a: "For existing customers, small tweaks and quick help are provided free whenever needed. Bigger requests — new features or major changes — are treated as separate, paid work with their own quote.",
+    a: "For existing customers, small tweaks and quick help are provided free whenever needed. Bigger requests, like new features or major changes, are separate paid work with their own quote. The care plan covers ongoing updates.",
   },
 ];
 
