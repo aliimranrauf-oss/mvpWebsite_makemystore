@@ -25,6 +25,7 @@ export const NAV_LINKS = [
       { href: "/saas-mvp", label: "SaaS MVP" },
       { href: "/pos-system", label: "POS System" },
       { href: "/project-rescue", label: "Project Rescue" },
+      { href: "/cv-writing", label: "CV & LinkedIn Writing" },
     ],
   },
   { href: "/#pricing", label: "Pricing" },
