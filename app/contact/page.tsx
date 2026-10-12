@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/ContactForm";
 import { CONTACT_EMAIL, SITE_URL } from "@/lib/constants";
+import { services, chatbotTiers } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Contact — MakeMyStore",
@@ -56,10 +57,23 @@ const REF_MESSAGES: Record<string, string> = {
 export default function ContactPage({
   searchParams,
 }: {
-  searchParams: { service?: string; ref?: string };
+  searchParams: { service?: string; ref?: string; package?: string };
 }) {
-  const defaultService = searchParams.service === "pos-system" ? "pos-system" : "other";
-  const defaultMessage = (searchParams.ref && REF_MESSAGES[searchParams.ref]) || "";
+  const defaultService =
+    searchParams.service && services.some((s) => s.slug === searchParams.service)
+      ? (searchParams.service as string)
+      : "other";
+
+  // Chatbot package chosen on /ai-chatbot (e.g. ?service=ai-chatbot&package=ai-bot-dashboard)
+  const chosenTier = searchParams.package
+    ? chatbotTiers.find((t) => t.slug === searchParams.package)
+    : undefined;
+
+  const defaultMessage =
+    (searchParams.ref && REF_MESSAGES[searchParams.ref]) ||
+    (chosenTier
+      ? `I'm interested in the ${chosenTier.name} package (${chosenTier.price}). My business is: `
+      : "");
   return (
     <>
       <Navbar />
@@ -112,6 +126,19 @@ export default function ContactPage({
               </div>
 
               <div className="rounded-xl2 card-glow-border p-6 sm:p-8">
+                {chosenTier && (
+                  <div className="mb-6 flex items-start justify-between gap-3 rounded-lg border border-mint/30 bg-mint/10 px-4 py-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-mint">You selected</p>
+                      <p className="mt-0.5 text-sm font-semibold text-ink">
+                        AI Chatbot: {chosenTier.name} <span className="font-normal text-muted">({chosenTier.price})</span>
+                      </p>
+                    </div>
+                    <a href="/ai-chatbot#pricing" className="shrink-0 py-1 text-xs font-medium text-mint underline underline-offset-2">
+                      Change
+                    </a>
+                  </div>
+                )}
                 <ContactForm defaultService={defaultService} defaultMessage={defaultMessage} />
               </div>
             </div>

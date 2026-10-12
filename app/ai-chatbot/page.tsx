@@ -281,17 +281,26 @@ export default function AiChatbotPage() {
             </div>
             <div className="mt-10 grid gap-5 lg:grid-cols-3">
               {chatbotTiers.map((t) => (
-                <div
+                <a
                   key={t.name}
-                  className={`rounded-xl2 p-6 ${
-                    t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
+                  href={`/contact?service=ai-chatbot&package=${t.slug}`}
+                  aria-label={`Choose ${t.name}, ${t.price}`}
+                  className={`group flex flex-col rounded-xl2 p-6 transition-all hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint ${
+                    t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border hover:!border-mint/60"
                   }`}
                   style={{ ["--card-bg" as string]: t.highlight ? "#F7FBF8" : "#FFFFFF" }}
                 >
-                  <p className="text-sm font-medium text-ink">{t.name}</p>
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-medium text-ink">{t.name}</p>
+                    {t.highlight && (
+                      <span className="rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-semibold text-mint">
+                        Most popular
+                      </span>
+                    )}
+                  </div>
                   <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
                   <p className="mt-3 text-sm leading-relaxed text-muted">{t.desc}</p>
-                  <ul className="mt-5 space-y-2.5">
+                  <ul className="mt-5 flex-1 space-y-2.5">
                     {t.features.map((f) => (
                       <li key={f} className="flex items-start gap-2 text-sm text-muted">
                         <Check size={15} className="mt-0.5 shrink-0 text-mint" />
@@ -299,7 +308,17 @@ export default function AiChatbotPage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                  <span
+                    className={`mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full text-sm font-semibold transition-colors ${
+                      t.highlight
+                        ? "bg-mint text-white"
+                        : "border border-border bg-surface text-ink group-hover:border-mint/60 group-hover:text-mint"
+                    }`}
+                  >
+                    Choose this plan
+                    <ArrowRight size={16} />
+                  </span>
+                </a>
               ))}
             </div>
             <div className="mt-6 grid gap-5 lg:grid-cols-2">

@@ -7,6 +7,7 @@ export type Tier = {
   desc: string;
   features: string[];
   highlight?: boolean;
+  slug?: string; // used to pre-fill the contact form when the card is clicked
 };
 
 export const services = [
@@ -63,6 +64,7 @@ export const services = [
 export const chatbotTiers: Tier[] = [
   {
     name: "Basic FAQ Bot",
+    slug: "basic-faq-bot",
     price: "$150–$250",
     desc: "Instant answers to the questions customers ask every day: hours, prices, location, policies.",
     features: [
@@ -74,6 +76,7 @@ export const chatbotTiers: Tier[] = [
   },
   {
     name: "AI Bot",
+    slug: "ai-bot",
     price: "$600–$1,200",
     desc: "Understands any question and replies in your customer's language, using your real business information.",
     features: [
@@ -87,6 +90,7 @@ export const chatbotTiers: Tier[] = [
   },
   {
     name: "AI Bot + Dashboard",
+    slug: "ai-bot-dashboard",
     price: "from $1,200",
     desc: "Run your bot yourself. Change stock, prices and hours in a private dashboard, and the bot updates instantly.",
     features: [
