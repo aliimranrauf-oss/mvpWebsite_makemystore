@@ -112,20 +112,21 @@ export default function DemoChat() {
   }
 
   const chatPanel = (
-    <div className="flex flex-col overflow-hidden rounded-xl2 border border-border bg-surface shadow-lg">
-      <div className="flex items-center justify-between border-b border-border px-4 py-3.5">
+    <div className="flex flex-col overflow-hidden rounded-[1.5rem] border border-[#CBD9EE] bg-white shadow-xl">
+      {/* App-style header */}
+      <div className="flex items-center justify-between bg-[#2563EB] px-4 py-3.5 text-white">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-mint/10 text-mint">
-            <MessageCircle size={18} />
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 font-display text-sm font-semibold">
+            {niche.initials}
           </span>
           <div>
-            <p className="text-sm font-semibold text-ink">{niche.businessName}</p>
-            <p className="text-xs text-muted">Customer chat. Replies in any language</p>
+            <p className="text-sm font-semibold">{niche.businessName}</p>
+            <p className="text-xs text-white/80">Online · replies in any language</p>
           </div>
         </div>
         <button
           onClick={() => reset(nicheId)}
-          className="inline-flex h-10 items-center gap-1.5 px-2 text-xs text-muted transition-colors hover:text-mint"
+          className="inline-flex h-10 items-center gap-1.5 px-2 text-xs text-white/80 transition-colors hover:text-white"
           aria-label="Restart demo"
         >
           <RotateCcw size={14} /> Restart
@@ -134,13 +135,14 @@ export default function DemoChat() {
 
       <div
         ref={scrollRef}
-        className="h-[380px] space-y-3 overflow-y-auto bg-surface2 px-4 py-4 sm:h-[420px]"
+        className="h-[380px] space-y-3 overflow-y-auto bg-[#EAF1FB] px-4 py-4 sm:h-[420px]"
         aria-live="polite"
       >
         {messages.map((m, i) =>
           m.role === "system" ? (
             <div key={i} className="flex justify-center">
-              <span className="rounded-full border border-mint/30 bg-mint/10 px-3 py-1 text-center text-[11px] font-medium text-mint">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#DDD6FE] bg-[#EDE9FE] px-3 py-1 text-center text-[11px] font-medium text-[#6D28D9]">
+                <LayoutDashboard size={11} aria-hidden />
                 Dashboard: {m.content}
               </span>
             </div>
@@ -148,8 +150,10 @@ export default function DemoChat() {
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               <p
                 dir="auto"
-                className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                  m.role === "user" ? "bg-mint text-white" : "border border-border bg-surface text-ink"
+                className={`max-w-[85%] whitespace-pre-wrap px-4 py-2.5 text-sm leading-relaxed ${
+                  m.role === "user"
+                    ? "rounded-2xl rounded-br-md bg-[#2563EB] text-white"
+                    : "rounded-2xl rounded-bl-md border border-[#D6E2F3] bg-white text-[#0F172A]"
                 }`}
               >
                 {m.content}
@@ -159,7 +163,7 @@ export default function DemoChat() {
         )}
         {loading && (
           <div className="flex justify-start">
-            <span className="rounded-2xl border border-border bg-surface px-4 py-2.5 text-sm text-muted">
+            <span className="rounded-2xl rounded-bl-md border border-[#D6E2F3] bg-white px-4 py-2.5 text-sm text-slate-500">
               Typing...
             </span>
           </div>
@@ -167,13 +171,13 @@ export default function DemoChat() {
       </div>
 
       {userCount === 0 && (
-        <div className="flex gap-2 overflow-x-auto border-t border-border px-4 py-3">
+        <div className="flex gap-2 overflow-x-auto border-t border-[#D6E2F3] bg-white px-4 py-3">
           {niche.suggestions.map((s) => (
             <button
               key={s}
               onClick={() => send(s)}
               dir="auto"
-              className="shrink-0 rounded-full border border-border bg-surface px-3.5 py-2 text-xs text-ink transition-colors hover:border-mint/60 hover:text-mint"
+              className="shrink-0 rounded-full border border-[#BFD3F2] bg-[#F3F8FF] px-3.5 py-2 text-xs font-medium text-[#1D4ED8] transition-colors hover:bg-[#E3EEFF]"
             >
               {s}
             </button>
@@ -182,7 +186,7 @@ export default function DemoChat() {
       )}
 
       {limitReached ? (
-        <div className="border-t border-border px-4 py-5 text-center">
+        <div className="border-t border-[#D6E2F3] bg-white px-4 py-5 text-center">
           <p className="text-sm text-muted">That's the end of the demo. Want one built for your business?</p>
           <a
             href="/contact"
@@ -192,7 +196,7 @@ export default function DemoChat() {
           </a>
         </div>
       ) : (
-        <div className="flex items-center gap-2 border-t border-border px-3 py-3">
+        <div className="flex items-center gap-2 border-t border-[#D6E2F3] bg-white px-3 py-3">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -201,13 +205,13 @@ export default function DemoChat() {
             dir="auto"
             placeholder="Type a message in any language..."
             aria-label="Message"
-            className="h-12 min-w-0 flex-1 rounded-full border border-border bg-surface px-4 text-base text-ink outline-none focus:border-mint sm:text-sm"
+            className="h-12 min-w-0 flex-1 rounded-full border border-[#BFD3F2] bg-white px-4 text-base text-[#0F172A] outline-none focus:border-[#2563EB] sm:text-sm"
           />
           <button
             onClick={() => send(input)}
             disabled={loading || !input.trim()}
             aria-label="Send"
-            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-mint text-white transition-opacity disabled:opacity-40"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#2563EB] text-white transition-opacity disabled:opacity-40"
           >
             <Send size={17} />
           </button>
@@ -252,7 +256,7 @@ export default function DemoChat() {
           aria-selected={tab === "chat"}
           onClick={() => setTab("chat")}
           className={`inline-flex h-11 items-center justify-center gap-2 rounded-full text-sm font-medium transition-colors ${
-            tab === "chat" ? "bg-mint text-white" : "text-muted"
+            tab === "chat" ? "bg-[#2563EB] text-white" : "text-muted"
           }`}
         >
           <MessageCircle size={16} /> Customer chat
@@ -265,18 +269,18 @@ export default function DemoChat() {
             setChanged(false);
           }}
           className={`relative inline-flex h-11 items-center justify-center gap-2 rounded-full text-sm font-medium transition-colors ${
-            tab === "dashboard" ? "bg-mint text-white" : "text-muted"
+            tab === "dashboard" ? "bg-[#0F172A] text-white" : "text-muted"
           }`}
         >
           <LayoutDashboard size={16} /> Owner dashboard
-          {changed && tab !== "dashboard" && <span className="absolute right-4 top-2.5 h-2 w-2 rounded-full bg-mint" />}
+          {changed && tab !== "dashboard" && <span className="absolute right-4 top-2.5 h-2 w-2 rounded-full bg-[#8B5CF6]" />}
         </button>
       </div>
 
       <div className="mt-4 grid gap-6 lg:grid-cols-2 lg:items-start">
         <div className={tab === "dashboard" ? "block" : "hidden lg:block"}>
-          <p className="mb-2 hidden px-1 text-xs font-semibold uppercase tracking-wide text-muted lg:block">
-            What the owner sees
+          <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#6D28D9] lg:flex">
+            <LayoutDashboard size={14} aria-hidden /> Owner view: manage stock and prices
           </p>
           <DemoDashboard
             niche={niche}
@@ -288,8 +292,8 @@ export default function DemoChat() {
           />
         </div>
         <div className={tab === "chat" ? "block" : "hidden lg:block"}>
-          <p className="mb-2 hidden px-1 text-xs font-semibold uppercase tracking-wide text-muted lg:block">
-            What the customer sees
+          <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#1D4ED8] lg:flex">
+            <MessageCircle size={14} aria-hidden /> Customer view: chat on your website
           </p>
           {chatPanel}
         </div>
