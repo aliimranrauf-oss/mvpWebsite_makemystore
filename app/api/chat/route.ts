@@ -16,10 +16,11 @@ const MAX_MESSAGE_LENGTH = 1000;
 const MAX_OUTPUT_TOKENS = 700;
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per window
+// Adjust without a code change via CHAT_IP_MAX / CHAT_DAILY_MAX in Vercel.
+const RATE_LIMIT_MAX_REQUESTS = Number(process.env.CHAT_IP_MAX) || 40; // per IP, per window
 
 const GLOBAL_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // 1 day
-const GLOBAL_RATE_LIMIT_MAX_REQUESTS = 300; // whole site, per day — adjust to taste
+const GLOBAL_RATE_LIMIT_MAX_REQUESTS = Number(process.env.CHAT_DAILY_MAX) || 400; // whole site, per day
 
 const RESPONSE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 

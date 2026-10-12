@@ -14,9 +14,11 @@ const MAX_MESSAGE_LENGTH = 500;
 const MAX_OUTPUT_TOKENS = 700;
 
 const IP_WINDOW_MS = 60 * 60 * 1000;
-const IP_MAX = 25; // messages per IP per hour
+// Visitors explore the dashboard and chat a lot, so keep the per-visitor limit generous.
+// Adjust without a code change via DEMO_IP_MAX / DEMO_DAILY_MAX in Vercel.
+const IP_MAX = Number(process.env.DEMO_IP_MAX) || 100; // messages per IP per hour
 const DAY_MS = 24 * 60 * 60 * 1000;
-const GLOBAL_MAX = 400; // demo messages per day, whole site
+const GLOBAL_MAX = Number(process.env.DEMO_DAILY_MAX) || 1000; // demo messages per day, whole site
 
 // In-memory limiters (reset on cold start) — fine for a demo; use Upstash if traffic grows.
 const ipMap = new Map<string, { count: number; resetAt: number }>();
@@ -70,7 +72,7 @@ export async function POST(req: NextRequest) {
       {
         reply:
           hit === "ip"
-            ? "You've reached the demo message limit for now. Get a free quote to see a bot built for your business."
+            ? "You've tried the demo a lot — thank you! Please come back in a little while, or get a free quote to see a bot built for your business."
             : "The demo is very busy today. Please try again tomorrow or use the contact form.",
       },
       { status: 429 }
