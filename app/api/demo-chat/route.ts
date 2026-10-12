@@ -113,7 +113,10 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.4,
+        // Haiku 5.5 rejects temperature/top_p/top_k (400 error), so none are sent.
+        // Thinking is off and effort is low: fast, cheap replies for a chat widget.
+        thinking: { type: "disabled" },
+        output_config: { effort: "low" },
         system: systemPrompt(getNiche(body.niche)),
         messages,
       }),

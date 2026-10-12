@@ -311,6 +311,10 @@ export default function AiChatbotPage() {
                 Not sure which one? Ask us <ArrowRight size={14} />
               </a>
             </div>
+            <p className="mt-4 text-center text-xs text-muted">
+              AI usage is billed by volume and is typically only a few dollars a month for a small business.
+              The care plan covers up to 3,000 customer replies a month.
+            </p>
           </div>
         </section>
 

@@ -92,7 +92,7 @@ export const chatbotTiers: Tier[] = [
 export const chatbotCarePlan = {
   name: "Care plan",
   price: "$30–$50 / month",
-  desc: "Hosting, updates to your information, monitoring and quick fixes, so your bot stays accurate.",
+  desc: "Hosting, updates to your information, monitoring and quick fixes, so your bot stays accurate. Includes the AI usage for up to 3,000 customer replies a month.",
 };
 
 export const mvpTiers: Tier[] = [
@@ -272,6 +272,10 @@ export const chatbotFaqs = [
   {
     q: "How long does a chatbot take to build?",
     a: "Basic FAQ bots are usually the quickest to deliver. AI-Powered bots take a little longer because we load and test your business information, but most are delivered within a few days.",
+  },
+  {
+    q: "What does it cost to run the AI?",
+    a: "The AI is billed by usage, and for a small business it is usually only a few dollars a month. One customer reply costs a fraction of a cent. The care plan includes up to 3,000 AI replies a month. Busier bots pay a small extra amount for each additional 5,000 replies (about $10), or you can connect your own AI account and pay the provider directly.",
   },
   {
     q: "Do I own the chatbot afterward?",
