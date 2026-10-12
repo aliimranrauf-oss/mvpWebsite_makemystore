@@ -97,3 +97,22 @@ or cyan (`#37D0E8`) accents so nothing looks inconsistent when it's added.
 - When you add real images to `public/images/`, use Next's `<Image />`
   component (not a plain `<img>`) so they're automatically resized and
   lazy-loaded — ask when you're ready to wire those in.
+
+## AI chatbots (Gemini)
+
+Both chatbots run on **Gemini 3.5 Flash-Lite** through one shared helper (`lib/gemini.ts`):
+
+- Site chat widget: `app/api/chat/route.ts`
+- Live demo on `/ai-chatbot`: `app/api/demo-chat/route.ts`
+
+Environment variables (Vercel → Project → Settings → Environment Variables):
+
+| Name | Required | Notes |
+| --- | --- | --- |
+| `GEMINI_API_KEY` | Yes | From https://aistudio.google.com/apikey. Mark it **Sensitive** in Vercel. |
+| `GEMINI_MODEL` | No | Switch both bots, e.g. `gemini-3.8-flash`. Defaults to `gemini-3.5-flash-lite`. |
+| `DEMO_CHAT_MODEL` | No | Override the model for the `/ai-chatbot` demo only. |
+| `DEMO_IP_MAX` / `DEMO_DAILY_MAX` | No | Demo limits: per visitor per hour (default 100) / whole site per day (default 1000). |
+| `CHAT_IP_MAX` / `CHAT_DAILY_MAX` | No | Widget limits: per visitor per hour (default 40) / whole site per day (default 400). |
+
+After adding or changing a variable, **redeploy** — running deployments don't pick up new values.
