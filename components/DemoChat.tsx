@@ -7,7 +7,8 @@ import DemoDashboard, { type DashboardActions } from "@/components/DemoDashboard
 
 type Msg = { role: "user" | "assistant" | "system"; content: string };
 
-const MAX_USER_MESSAGES = 12;
+// Per demo conversation. Generous so prospects can really explore the dashboard + chat.
+const MAX_USER_MESSAGES = 40;
 
 const NICHE_ICONS = {
   restaurant: UtensilsCrossed,

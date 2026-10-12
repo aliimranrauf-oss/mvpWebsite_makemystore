@@ -2,7 +2,7 @@
 // content that already exists in lib/data.ts, so it can never say something
 // inconsistent with the rest of the site — and it never claims to be AI.
 
-import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
+import { services, chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
 import { content as cvContent } from "@/lib/cv-data";
 
 export type FaqBotReply = {
@@ -36,6 +36,81 @@ function normalize(input: string): string {
 
 function buildEntries(): Entry[] {
   const entries: Entry[] = [];
+
+  // ---- AI chatbot service (page: /ai-chatbot) ---------------------------------
+  // Built from lib/data.ts so it matches the page. These go BEFORE the CV and
+  // generic entries but each one needs a chatbot word, so they never steal other topics.
+  // ("bot" alone is avoided on purpose: it would match "about".)
+  const CB_TERMS = ["chatbot", "chat bot", "ai bot", "faq bot", "whatsapp bot"];
+  const cbTierList = chatbotTiers.map((t) => `• ${t.name}: ${t.price}. ${t.desc}`).join("\n");
+
+  entries.push(
+    {
+      keywords: ["demo", "try it", "try the", "try out", "test it", "see it", "example"],
+      requires: CB_TERMS,
+      response: "Yes, there's a live demo on our AI chatbot page: /ai-chatbot#demo. You see both sides: the owner's dashboard (mark items out of stock, change prices and hours) and the customer's chat. Pick a sample business (restaurant, clinic or salon) and ask anything, in any language.",
+    },
+    {
+      keywords: ["care plan", "monthly", "per month", "running cost", "ongoing", "hosting", "maintenance", "ai cost", "usage"],
+      requires: CB_TERMS,
+      response: `${chatbotCarePlan.desc} AI Bot: $30–$50 per month; AI Bot + Dashboard: $50–$80 per month.\n\n${chatbotFaqs[6].a}`,
+    },
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget", "packages", "plans"],
+      requires: CB_TERMS,
+      response: `Chatbot packages:\n${cbTierList}\n\nAdd-ons: ${chatbotAddons.map((a) => `${a.name} (${a.price})`).join("; ")}.\n\nYou get a fixed quote before anything starts. Full details: /ai-chatbot#pricing`,
+    },
+    {
+      keywords: ["which option", "which plan", "which package", "which one", "should i choose", "which tier"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[0].a,
+    },
+    {
+      keywords: ["language", "languages", "arabic", "urdu", "multilingual", "hindi", "french"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[1].a,
+    },
+    {
+      keywords: ["wix", "squarespace", "wordpress", "shopify", "webflow", "my website", "my site", "install", "embed"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[2].a,
+    },
+    {
+      keywords: ["dashboard", "log in", "login", "out of stock", "change prices", "update prices", "edit prices", "update menu"],
+      requires: CB_TERMS,
+      response: `${chatbotFaqs[3].a}\n\n${chatbotFaqs[4].a}`,
+    },
+    {
+      keywords: ["what information", "what data", "trained on", "answer from", "doesn't know", "does not know", "make things up", "hallucinate"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[5].a,
+    },
+    {
+      keywords: ["whatsapp", "telegram"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[7].a,
+    },
+    {
+      keywords: ["how long", "how fast", "timeline", "delivery", "turnaround", "how soon"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[8].a,
+    },
+    {
+      keywords: ["own my", "do i own", "my data", "ownership", "move it"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[9].a,
+    },
+    {
+      keywords: ["after it's live", "after its live", "after launch", "changes after", "support", "help after"],
+      requires: CB_TERMS,
+      response: chatbotFaqs[10].a,
+    },
+    {
+      // General chatbot overview, keep LAST among the chatbot entries (it's the catch-all).
+      keywords: CB_TERMS,
+      response: `We build AI chatbots that answer your customers 24/7 in their own language (Arabic, English, Urdu and more), capture leads and bookings, and run on your website and WhatsApp.\n\n${cbTierList}\n\nTry the live demo, including the owner dashboard: /ai-chatbot#demo`,
+    }
+  );
 
   // ---- CV, LinkedIn & career documents (page: /cv-writing) -------------------
   // Built from lib/cv-data.ts so prices/features stay in sync with the page.
