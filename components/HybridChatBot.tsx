@@ -42,7 +42,7 @@ export default function HybridChatBot() {
     const faqReply = getFaqResponse(userMessage);
 
     if (faqReply.matched) {
-      // Real topic match — answer instantly, no Groq call made.
+      // Real topic match — answer instantly, no AI call made.
       // (Temporary logging during testing; remove before shipping.)
       console.log("[hybrid] answered via FAQ, no API call:", userMessage);
       return { text: faqReply.text, suggestQuote: faqReply.suggestQuote };

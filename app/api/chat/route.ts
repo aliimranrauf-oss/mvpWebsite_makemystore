@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, benefits, type Tier } from "@/lib/data";
 import { PERSONA } from "@/lib/chatbot/persona";
+import { callGemini, DEFAULT_GEMINI_MODEL } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 
-// Uses Groq's free-tier API — OpenAI-compatible format, no npm dependency
-// needed. Switched from Gemini because Google's new "AQ." auth keys are
-// currently broken against the standard REST API for many accounts (an
-// active, unresolved bug on Google's side, not something fixable here —
-// see https://ai.google.dev/gemini-api/docs/api-key and Google's own
-// developer forum for other affected users).
-const GROQ_MODEL = "openai/gpt-oss-120b";
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+// Site-wide chat widget, powered by Gemini 3.5 Flash-Lite (same provider and
+// key as the /ai-chatbot demo). Override the model with GEMINI_MODEL
+// (e.g. "gemini-3.8-flash") without touching code.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
 
 const MAX_HISTORY_MESSAGES = 10;
 const MAX_MESSAGE_LENGTH = 1000;
-const MAX_OUTPUT_TOKENS = 300;
+// Includes Gemini thinking tokens, so keep headroom above the 2-4 sentence target.
+const MAX_OUTPUT_TOKENS = 700;
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_REQUESTS = 20; // per IP, per window
@@ -25,7 +23,7 @@ const GLOBAL_RATE_LIMIT_MAX_REQUESTS = 300; // whole site, per day — adjust to
 
 const RESPONSE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-const CIRCUIT_BREAKER_FAILURE_THRESHOLD = 3; // consecutive Groq failures
+const CIRCUIT_BREAKER_FAILURE_THRESHOLD = 3; // consecutive Gemini failures
 const CIRCUIT_BREAKER_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
 // In-memory only, all of it: every map/counter below resets on cold start
@@ -73,7 +71,7 @@ function isGloballyRateLimited(): boolean {
 
 // Response cache for repeat questions: keyed on a normalized version of
 // the latest user message, so near-identical questions from different
-// visitors reuse one Groq call instead of paying for it twice within the
+// visitors reuse one Gemini call instead of paying for it twice within the
 // TTL window. Note this intentionally ignores prior conversation history
 // as part of the cache key — if that becomes a problem (e.g. the same
 // question means something different mid-conversation), key on the full
@@ -100,7 +98,7 @@ function setCachedResponse(message: string, reply: string, suggestQuote: boolean
   responseCache.set(key, { reply, suggestQuote, expiresAt: Date.now() + RESPONSE_CACHE_TTL_MS });
 }
 
-// Circuit breaker: if Groq starts failing repeatedly (rate limit, outage,
+// Circuit breaker: if Gemini starts failing repeatedly (rate limit, outage,
 // a deprecated model 404ing — all of which have happened before), stop
 // hammering it on every visitor request and show a friendly message for
 // a cooldown window instead. Resets to closed the moment a call succeeds.
@@ -110,14 +108,14 @@ function isCircuitOpen(): boolean {
   return Date.now() < circuitBreakerState.openUntil;
 }
 
-function recordGroqFailure() {
+function recordFailure() {
   circuitBreakerState.consecutiveFailures += 1;
   if (circuitBreakerState.consecutiveFailures >= CIRCUIT_BREAKER_FAILURE_THRESHOLD) {
     circuitBreakerState.openUntil = Date.now() + CIRCUIT_BREAKER_COOLDOWN_MS;
   }
 }
 
-function recordGroqSuccess() {
+function recordSuccess() {
   circuitBreakerState = { consecutiveFailures: 0, openUntil: 0 };
 }
 
@@ -174,10 +172,10 @@ function clean(value: unknown, maxLen: number): string {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.GROQ_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
-    console.error("GROQ_API_KEY is not set");
+    console.error("GEMINI_API_KEY is not set");
     return NextResponse.json(
       { reply: "The AI assistant isn't configured yet — please use the contact form instead." },
       { status: 500 }
@@ -245,63 +243,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply: cached.reply, suggestQuote: cached.suggestQuote });
   }
 
-  // Groq's API is OpenAI-compatible: plain "system"/"user"/"assistant"
-  // roles in a single messages array — no separate system_instruction field.
-  const groqMessages = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...messages.map((m) => ({ role: m.role, content: m.content })),
-  ];
+  const result = await callGemini({
+    apiKey,
+    model: GEMINI_MODEL,
+    system: SYSTEM_PROMPT,
+    messages,
+    maxOutputTokens: MAX_OUTPUT_TOKENS,
+    thinkingLevel: "minimal",
+  });
 
-  try {
-    const groqRes = await fetch(GROQ_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: groqMessages,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        temperature: 0.4,
-      }),
-    });
-
-    if (!groqRes.ok) {
-      const errText = await groqRes.text().catch(() => "");
-      console.error("Groq API error:", groqRes.status, errText);
-      recordGroqFailure();
-      return NextResponse.json(
-        { reply: "Something went wrong — try again, or use the contact form." },
-        { status: 502 }
-      );
-    }
-
-    const data = await groqRes.json();
-    const rawReply: string = data?.choices?.[0]?.message?.content?.trim() ?? "";
-
-    if (!rawReply) {
-      recordGroqFailure();
-      return NextResponse.json(
-        { reply: "Something went wrong — try again, or use the contact form." },
-        { status: 502 }
-      );
-    }
-
-    recordGroqSuccess();
-
-    const suggestQuote = rawReply.includes("[[COLLECT_CONTACT]]");
-    const reply = rawReply.replace("[[COLLECT_CONTACT]]", "").trim();
-
-    setCachedResponse(latestUserMessage, reply, suggestQuote);
-
-    return NextResponse.json({ reply, suggestQuote });
-  } catch (err) {
-    console.error("Chat route error:", err);
-    recordGroqFailure();
+  if (!result.ok) {
+    console.error("Gemini API error:", result.status, result.error);
+    recordFailure();
     return NextResponse.json(
       { reply: "Something went wrong — try again, or use the contact form." },
       { status: 502 }
     );
   }
+
+  recordSuccess();
+
+  const rawReply = result.reply;
+  const suggestQuote = rawReply.includes("[[COLLECT_CONTACT]]");
+  const reply = rawReply.replace("[[COLLECT_CONTACT]]", "").trim();
+
+  setCachedResponse(latestUserMessage, reply, suggestQuote);
+
+  return NextResponse.json({ reply, suggestQuote });
 }

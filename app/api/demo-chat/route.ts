@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getNiche, buildLiveKnowledge } from "@/lib/demo-bots";
+import { callGemini, DEFAULT_GEMINI_MODEL, type ChatMsg } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 
-// Live demo bot for /ai-chatbot, powered by the Claude API.
-// Needs ANTHROPIC_API_KEY in Vercel. Optionally set DEMO_CHAT_MODEL to change model.
-const MODEL = process.env.DEMO_CHAT_MODEL || "claude-haiku-5-5";
-const API_URL = "https://api.anthropic.com/v1/messages";
+// Live demo bot for /ai-chatbot, powered by Gemini 3.5 Flash-Lite.
+// Needs GEMINI_API_KEY in Vercel. Optionally set DEMO_CHAT_MODEL (or GEMINI_MODEL) to change model.
+const MODEL = process.env.DEMO_CHAT_MODEL || process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL;
 
 const MAX_HISTORY = 8;
 const MAX_MESSAGE_LENGTH = 500;
-const MAX_OUTPUT_TOKENS = 350;
+// Includes Gemini thinking tokens, so keep headroom above the 1-4 sentence target.
+const MAX_OUTPUT_TOKENS = 700;
 
 const IP_WINDOW_MS = 60 * 60 * 1000;
 const IP_MAX = 25; // messages per IP per hour
@@ -50,10 +51,10 @@ BUSINESS INFORMATION:
 ${buildLiveKnowledge(niche, state)}`;
 }
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = ChatMsg;
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
       { reply: "The live demo isn't switched on yet. Please use the contact form and we'll show you one." },
@@ -96,50 +97,24 @@ export async function POST(req: NextRequest) {
     .filter((m) => m.content.length > 0)
     .slice(-MAX_HISTORY);
 
-  // Claude requires the first message to be from the user.
+  // Keep the conversation starting with a user turn.
   while (messages.length && messages[0].role !== "user") messages = messages.slice(1);
   if (!messages.length || messages[messages.length - 1].role !== "user") {
     return NextResponse.json({ reply: "Say something and I'll help!" }, { status: 400 });
   }
 
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_OUTPUT_TOKENS,
-        // Haiku 5.5 rejects temperature/top_p/top_k (400 error), so none are sent.
-        // Thinking is off and effort is low: fast, cheap replies for a chat widget.
-        thinking: { type: "disabled" },
-        output_config: { effort: "low" },
-        system: systemPrompt(getNiche(body.niche), body.state),
-        messages,
-      }),
-    });
+  const result = await callGemini({
+    apiKey,
+    model: MODEL,
+    system: systemPrompt(getNiche(body.niche), body.state),
+    messages,
+    maxOutputTokens: MAX_OUTPUT_TOKENS,
+    thinkingLevel: "minimal",
+  });
 
-    if (!res.ok) {
-      console.error("Claude demo error:", res.status, await res.text().catch(() => ""));
-      return NextResponse.json({ reply: "Something went wrong. Please try again in a moment." }, { status: 502 });
-    }
-
-    const data = await res.json();
-    const reply: string = (data?.content ?? [])
-      .filter((b: { type: string }) => b.type === "text")
-      .map((b: { text: string }) => b.text)
-      .join("\n")
-      .trim();
-
-    if (!reply) {
-      return NextResponse.json({ reply: "Something went wrong. Please try again." }, { status: 502 });
-    }
-    return NextResponse.json({ reply });
-  } catch (err) {
-    console.error("Demo chat route error:", err);
+  if (!result.ok) {
+    console.error("Gemini demo error:", result.status, result.error);
     return NextResponse.json({ reply: "Something went wrong. Please try again in a moment." }, { status: 502 });
   }
+  return NextResponse.json({ reply: result.reply });
 }
