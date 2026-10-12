@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { ArrowRight, Check, MessageSquare, Languages, Clock, UserPlus, Stethoscope, UtensilsCrossed, Scissors, Home, ShoppingBag, Dumbbell } from "lucide-react";
+import { ArrowRight, Check, Languages, Clock, UserPlus, Stethoscope, UtensilsCrossed, Scissors, Home, ShoppingBag, Dumbbell, SlidersHorizontal, Plug } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import DemoChat from "@/components/DemoChat";
-import { chatbotTiers, chatbotFaqs, chatbotCarePlan } from "@/lib/data";
+import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons } from "@/lib/data";
 import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AI Chatbot for Business: WhatsApp & Website, 24/7 — MakeMyStore",
     description:
-      "A chatbot trained on your business — from a simple FAQ bot to a full AI assistant with memory, on your website, WhatsApp, or Telegram.",
+      "Answer customers 24/7 in their own language. Try the live demo, including the owner dashboard, then get a fixed-price chatbot from $150.",
     url: `${SITE_URL}/ai-chatbot`,
     type: "website",
   },
@@ -55,7 +55,14 @@ const included = [
     title: "Captures leads and bookings",
     desc: "It collects names, phone numbers and booking details and passes them to you.",
   },
+  {
+    icon: SlidersHorizontal,
+    title: "You stay in control",
+    desc: "With the dashboard, you mark items out of stock and change prices yourself. The bot updates instantly.",
+  },
 ];
+
+const builders = ["WordPress", "Shopify", "Wix", "Squarespace", "Webflow", "Custom websites"];
 
 const niches = [
   { icon: Stethoscope, title: "Clinics and dentists", ask: "“Do you take my insurance? How much is a check-up?”" },
@@ -125,14 +132,14 @@ export default function AiChatbotPage() {
         </PageHeader>
 
         <section id="demo" className="border-b border-border bg-surface/40">
-          <div className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-24">
+          <div className="mx-auto max-w-content px-5 py-12 sm:px-8 sm:py-24">
             <div className="mx-auto max-w-xl text-center">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
                 Try it yourself
               </h2>
               <p className="mt-4 text-muted">
-                Pick a sample business and ask anything, in any language. This is exactly how a bot built for
-                your business would reply.
+                See both sides: the dashboard the owner uses, and the chat the customer sees. Pick a sample
+                business and ask anything, in any language.
               </p>
             </div>
             <div className="mt-10">
@@ -151,7 +158,7 @@ export default function AiChatbotPage() {
         </section>
 
         <section className="border-b border-border">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
                 Who it's for
@@ -178,7 +185,7 @@ export default function AiChatbotPage() {
         </section>
 
         <section className="border-b border-border">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
                 What you get
@@ -188,7 +195,7 @@ export default function AiChatbotPage() {
                 generic template.
               </p>
             </div>
-            <div className="mt-12 grid gap-8 sm:grid-cols-3">
+            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               {included.map((item) => {
                 const Icon = item.icon;
                 return (
@@ -208,47 +215,37 @@ export default function AiChatbotPage() {
         </section>
 
         <section className="border-b border-border bg-surface/40">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-                Basic bot vs. AI-powered bot
+                Works with your website
               </h2>
               <p className="mt-4 text-muted">
-                Pick whichever matches what your customers actually ask. Not sure? We'll
-                recommend one after a quick chat.
+                Whatever you built your site with, the chatbot is added with one small piece of code. We add
+                it for you, or send you simple steps to paste it yourself.
               </p>
             </div>
-            <div className="mt-10 grid gap-6 sm:grid-cols-2">
-              <div className="rounded-xl2 card-glow-border p-7">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-mint/10 text-mint">
-                  <MessageSquare size={20} />
-                </span>
-                <h3 className="mt-5 font-display text-lg font-semibold text-ink">
-                  Basic FAQ Bot
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Replies from a list of questions and answers you approve. Best for
-                  simple, repeated questions like hours, prices and location.
-                </p>
-              </div>
-              <div className="rounded-xl2 card-glow-border card-glow-border--accent p-7" style={{ ["--card-bg" as string]: "#F7FBF8" }}>
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-mint/10 text-mint">
-                  <MessageSquare size={20} />
-                </span>
-                <h3 className="mt-5 font-display text-lg font-semibold text-ink">
-                  AI-Powered Bot
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  Understands any question, replies in your customer's language, and
-                  answers from your real business information.
-                </p>
-              </div>
-            </div>
+            <ul className="mt-8 flex flex-wrap gap-2.5">
+              {builders.map((b) => (
+                <li
+                  key={b}
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-border bg-surface px-5 text-sm font-medium text-ink"
+                >
+                  <Plug size={14} className="text-mint" aria-hidden />
+                  {b}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted">
+              Your dashboard is a private page on our site, with your own login. It works on your phone, and
+              there is nothing to install. A few website builders only allow custom code on a paid plan. If
+              yours doesn't, we can connect the bot to your WhatsApp instead.
+            </p>
           </div>
         </section>
 
         <section className="border-b border-border">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">How it works</h2>
               <p className="mt-4 text-muted">Three simple steps, and you stay in control throughout.</p>
@@ -268,16 +265,21 @@ export default function AiChatbotPage() {
         </section>
 
         <section id="pricing" className="border-b border-border">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
                 Pricing
               </h2>
               <p className="mt-4 text-muted">
-                Fixed quote before anything starts — no surprises later.
+                Fixed quote before anything starts, with no surprises later.
               </p>
+              <ul className="mt-4 space-y-1.5 text-sm text-muted">
+                <li><span className="font-medium text-ink">Basic:</span> a few simple, repeated questions.</li>
+                <li><span className="font-medium text-ink">AI Bot:</span> any question, in any language.</li>
+                <li><span className="font-medium text-ink">AI Bot + Dashboard:</span> you manage stock, prices and hours yourself.</li>
+              </ul>
             </div>
-            <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            <div className="mt-10 grid gap-5 lg:grid-cols-3">
               {chatbotTiers.map((t) => (
                 <div
                   key={t.name}
@@ -300,26 +302,44 @@ export default function AiChatbotPage() {
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex flex-col gap-3 rounded-xl2 border border-border bg-surface p-6 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-sm font-medium text-ink">
-                  Optional: {chatbotCarePlan.name} <span className="text-muted">({chatbotCarePlan.price})</span>
-                </p>
-                <p className="mt-1 text-sm text-muted">{chatbotCarePlan.desc}</p>
+            <div className="mt-6 grid gap-5 lg:grid-cols-2">
+              <div className="rounded-xl2 border border-border bg-surface p-6">
+                <p className="text-sm font-semibold text-ink">Add-ons</p>
+                <ul className="mt-3 divide-y divide-border">
+                  {chatbotAddons.map((a) => (
+                    <li key={a.name} className="flex items-start justify-between gap-4 py-3 text-sm">
+                      <span className="text-muted">{a.name}</span>
+                      <span className="shrink-0 font-medium text-ink">{a.price}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <a href="/contact" className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-mint">
-                Not sure which one? Ask us <ArrowRight size={14} />
+              <div className="rounded-xl2 border border-border bg-surface p-6">
+                <p className="text-sm font-semibold text-ink">{chatbotCarePlan.name} (optional)</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{chatbotCarePlan.desc}</p>
+                <ul className="mt-4 space-y-1.5 text-sm">
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot</span><span className="font-medium text-ink">$30–$50 / month</span></li>
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot + Dashboard</span><span className="font-medium text-ink">$50–$80 / month</span></li>
+                </ul>
+                <p className="mt-4 text-xs leading-relaxed text-muted">
+                  The AI itself is billed by usage and is typically only a few dollars a month for a small business.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 text-center">
+              <a
+                href="/contact"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-mint px-7 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                Not sure which one? Get a free quote
+                <ArrowRight size={16} />
               </a>
             </div>
-            <p className="mt-4 text-center text-xs text-muted">
-              AI usage is billed by volume and is typically only a few dollars a month for a small business.
-              The care plan covers up to 3,000 customer replies a month.
-            </p>
           </div>
         </section>
 
         <section className="border-b border-border bg-surface/40">
-          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-24">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">
                 Frequently asked questions

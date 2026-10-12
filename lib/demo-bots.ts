@@ -1,62 +1,220 @@
 // Sample businesses for the live demo on /ai-chatbot.
-// These are FICTIONAL businesses — the demo shows prospects what a bot built
-// for their own business would feel like. Edit freely.
+// These are FICTIONAL businesses. The demo shows prospects both sides of the product:
+// the owner's dashboard (stock toggles, prices, hours) and the customer's chat.
+// The dashboard state is sent with every chat message, so the bot always answers
+// from the latest values. Edit freely.
 
-export type DemoNicheId = "clinic" | "restaurant" | "salon";
+export type DemoNicheId = "restaurant" | "clinic" | "salon";
+
+export type DemoItem = { id: string; name: string; price: number; available: boolean };
+export type DemoToggle = {
+  id: string;
+  label: string;
+  hint: string;
+  on: boolean;
+  onFact: string; // what the bot should know when ON
+  offFact: string; // what the bot should know when OFF
+};
 
 export type DemoNiche = {
   id: DemoNicheId;
   label: string;
   businessName: string;
+  initials: string;
+  currency: string;
+  itemsTitle: string;
+  availableLabel: string;
+  unavailableLabel: string;
   greeting: string;
   suggestions: string[];
-  knowledge: string;
+  about: string; // fixed facts that the owner does not change in the demo
+  hours: string;
+  items: DemoItem[];
+  toggles: DemoToggle[];
+};
+
+export type DemoState = {
+  items: Record<string, { price: number; available: boolean }>;
+  toggles: Record<string, boolean>;
+  hours: string;
 };
 
 export const DEMO_NICHES: DemoNiche[] = [
   {
-    id: "clinic",
-    label: "Dental clinic",
-    businessName: "BrightSmile Dental (sample)",
-    greeting:
-      "Hi! I'm the BrightSmile Dental assistant. Ask me about treatments, prices or booking — in any language.",
-    suggestions: ["How much is teeth whitening?", "Are you open on Fridays?", "كم سعر تنظيف الأسنان؟"],
-    knowledge: `Business: BrightSmile Dental, a family dental clinic (SAMPLE business for a demo).
-Hours: Sat–Thu 9:00–21:00. Friday 14:00–20:00. Emergency line 24/7.
-Treatments & prices: Check-up and cleaning 150 AED; whitening 800 AED; filling from 250 AED; braces consultation free; root canal from 900 AED; emergency visit 200 AED.
-Insurance: accepts most major insurance; direct billing with Daman and Thiqa.
-Booking: ask for name, preferred day/time and phone number, then say the team will confirm by WhatsApp within an hour.
-Location: Dubai, Jumeirah Lake Towers. Parking available. Languages: English, Arabic, Urdu, Hindi.`,
-  },
-  {
     id: "restaurant",
     label: "Restaurant",
-    businessName: "Olive & Ember (sample)",
+    businessName: "Olive & Ember",
+    initials: "OE",
+    currency: "AED",
+    itemsTitle: "Menu",
+    availableLabel: "In stock",
+    unavailableLabel: "Out of stock",
     greeting:
-      "Welcome to Olive & Ember! Ask about the menu, opening hours or reserving a table — in any language.",
-    suggestions: ["Do you have vegetarian dishes?", "Can I book a table for 6?", "Do you deliver?"],
-    knowledge: `Business: Olive & Ember, a Mediterranean restaurant (SAMPLE business for a demo).
-Hours: daily 12:00–23:30.
-Menu highlights: grilled chicken souvlaki 48; lamb kofta 62; mezze platter for two 85; falafel bowl (vegan) 38; mushroom risotto (vegetarian) 52; baklava 24. Prices in AED.
-Dietary: vegan, vegetarian and gluten-free options marked on the menu. Halal certified.
-Reservations: tables for 1–10 guests; ask for name, date, time, party size and phone, then say the team will confirm. Groups over 10 need a call.
-Delivery: yes, within 8 km, 30–45 minutes, free over 100 AED.`,
+      "Welcome to Olive & Ember! Ask about the menu, opening hours or reserving a table, in any language.",
+    suggestions: ["Is the lamb kofta available?", "Do you have vegetarian dishes?", "Can I book a table for 6?"],
+    about: `Business: Olive & Ember, a Mediterranean restaurant (SAMPLE business for a demo). Prices in AED.
+Dietary: vegan, vegetarian and gluten-free options exist; the falafel bowl is vegan and the mushroom risotto is vegetarian. Halal certified.
+Reservations: tables for 1-10 guests; ask for name, date, time, party size and phone, then say the team will confirm. Groups over 10 need a call.`,
+    hours: "Daily 12:00-23:30",
+    items: [
+      { id: "souvlaki", name: "Grilled chicken souvlaki", price: 48, available: true },
+      { id: "kofta", name: "Lamb kofta", price: 62, available: true },
+      { id: "mezze", name: "Mezze platter for two", price: 85, available: true },
+      { id: "falafel", name: "Falafel bowl (vegan)", price: 38, available: true },
+      { id: "risotto", name: "Mushroom risotto (vegetarian)", price: 52, available: true },
+      { id: "baklava", name: "Baklava", price: 24, available: true },
+    ],
+    toggles: [
+      {
+        id: "delivery",
+        label: "Delivery",
+        hint: "Within 8 km",
+        on: true,
+        onFact: "Delivery is available within 8 km, 30-45 minutes, free over 100 AED.",
+        offFact: "Delivery is paused right now. Dine-in and pickup only.",
+      },
+      {
+        id: "reservations",
+        label: "Table reservations",
+        hint: "Accept bookings",
+        on: true,
+        onFact: "Table reservations are open.",
+        offFact: "Online reservations are closed right now. Suggest walking in or calling the restaurant.",
+      },
+    ],
+  },
+  {
+    id: "clinic",
+    label: "Dental clinic",
+    businessName: "BrightSmile Dental",
+    initials: "BS",
+    currency: "AED",
+    itemsTitle: "Treatments",
+    availableLabel: "Available",
+    unavailableLabel: "Unavailable",
+    greeting:
+      "Hi! I'm the BrightSmile Dental assistant. Ask me about treatments, prices or booking, in any language.",
+    suggestions: ["How much is teeth whitening?", "Are you taking new patients?", "كم سعر تنظيف الأسنان؟"],
+    about: `Business: BrightSmile Dental, a family dental clinic (SAMPLE business for a demo). Prices in AED.
+Emergency line open 24/7. Braces consultation is free.
+Insurance: accepts most major insurance.
+Booking: ask for name, preferred day/time and phone number, then say the team will confirm by WhatsApp within an hour.
+Location: Dubai, Jumeirah Lake Towers. Parking available. Languages: English, Arabic, Urdu, Hindi.`,
+    hours: "Sat-Thu 9:00-21:00, Fri 14:00-20:00",
+    items: [
+      { id: "cleaning", name: "Check-up and cleaning", price: 150, available: true },
+      { id: "whitening", name: "Teeth whitening", price: 800, available: true },
+      { id: "filling", name: "Filling (from)", price: 250, available: true },
+      { id: "rootcanal", name: "Root canal (from)", price: 900, available: true },
+      { id: "emergency", name: "Emergency visit", price: 200, available: true },
+    ],
+    toggles: [
+      {
+        id: "newpatients",
+        label: "Accepting new patients",
+        hint: "Show in bot replies",
+        on: true,
+        onFact: "The clinic is accepting new patients.",
+        offFact: "The clinic is NOT accepting new patients right now; offer to join a waiting list.",
+      },
+      {
+        id: "insurance",
+        label: "Direct insurance billing",
+        hint: "Daman and Thiqa",
+        on: true,
+        onFact: "Direct billing is available with Daman and Thiqa.",
+        offFact: "Direct insurance billing is not available right now; patients pay and claim back.",
+      },
+    ],
   },
   {
     id: "salon",
     label: "Beauty salon",
-    businessName: "Glow Studio (sample)",
+    businessName: "Glow Studio",
+    initials: "GS",
+    currency: "AED",
+    itemsTitle: "Services",
+    availableLabel: "Available",
+    unavailableLabel: "Unavailable",
     greeting:
-      "Hello! I'm the Glow Studio assistant. Ask about services, prices or booking — in any language.",
+      "Hello! I'm the Glow Studio assistant. Ask about services, prices or booking, in any language.",
     suggestions: ["How much is a haircut and colour?", "Do you do bridal makeup?", "What time do you close?"],
-    knowledge: `Business: Glow Studio, a women's beauty salon (SAMPLE business for a demo).
-Hours: daily 10:00–21:00.
-Services & prices (AED): haircut 90; colour from 250; keratin treatment from 450; manicure 70; pedicure 90; facial 180; bridal makeup from 900 (trial included); henna from 150.
-Booking: ask for name, service, preferred day/time and phone; then say the team will confirm by WhatsApp. Bridal bookings need 2 weeks' notice.
+    about: `Business: Glow Studio, a women's beauty salon (SAMPLE business for a demo). Prices in AED.
+Booking: ask for name, service, preferred day/time and phone; then say the team will confirm by WhatsApp. Bridal bookings need 2 weeks' notice and include a trial.
 Cancellation: free up to 12 hours before the appointment.`,
+    hours: "Daily 10:00-21:00",
+    items: [
+      { id: "haircut", name: "Haircut", price: 90, available: true },
+      { id: "colour", name: "Hair colour (from)", price: 250, available: true },
+      { id: "keratin", name: "Keratin treatment (from)", price: 450, available: true },
+      { id: "manicure", name: "Manicure", price: 70, available: true },
+      { id: "facial", name: "Facial", price: 180, available: true },
+      { id: "bridal", name: "Bridal makeup (from)", price: 900, available: true },
+    ],
+    toggles: [
+      {
+        id: "walkins",
+        label: "Walk-ins welcome",
+        hint: "No booking needed",
+        on: true,
+        onFact: "Walk-ins are welcome, subject to availability.",
+        offFact: "Walk-ins are not accepted today; appointments only.",
+      },
+      {
+        id: "bridal",
+        label: "Bridal bookings",
+        hint: "Accept new brides",
+        on: true,
+        onFact: "Bridal bookings are open.",
+        offFact: "Bridal bookings are fully booked at the moment; offer to take a waiting-list request.",
+      },
+    ],
   },
 ];
 
 export function getNiche(id: unknown): DemoNiche {
   return DEMO_NICHES.find((n) => n.id === id) ?? DEMO_NICHES[0];
+}
+
+export function initialState(niche: DemoNiche): DemoState {
+  return {
+    items: Object.fromEntries(niche.items.map((i) => [i.id, { price: i.price, available: i.available }])),
+    toggles: Object.fromEntries(niche.toggles.map((t) => [t.id, t.on])),
+    hours: niche.hours,
+  };
+}
+
+// Builds the "live" facts the bot answers from. The client may only change values the
+// niche already defines (price, availability, toggles, hours), and everything is validated.
+export function buildLiveKnowledge(niche: DemoNiche, raw: unknown): string {
+  const s = (raw && typeof raw === "object" ? raw : {}) as Partial<DemoState>;
+
+  const lines = niche.items.map((item) => {
+    const r = s.items?.[item.id];
+    const price =
+      r && typeof r.price === "number" && Number.isFinite(r.price) && r.price >= 0 && r.price <= 99999
+        ? Math.round(r.price * 100) / 100
+        : item.price;
+    const available = r && typeof r.available === "boolean" ? r.available : item.available;
+    return available
+      ? `- ${item.name}: ${price} ${niche.currency} (available)`
+      : `- ${item.name}: ${price} ${niche.currency} (NOT AVAILABLE right now: do not offer it, suggest an alternative)`;
+  });
+
+  const facts = niche.toggles.map((t) => {
+    const on = typeof s.toggles?.[t.id] === "boolean" ? (s.toggles[t.id] as boolean) : t.on;
+    return `- ${on ? t.onFact : t.offFact}`;
+  });
+
+  const hoursRaw = typeof s.hours === "string" ? s.hours : "";
+  const hours = hoursRaw.replace(/[\u0000-\u001f\u007f]/g, " ").trim().slice(0, 60) || niche.hours;
+
+  return `${niche.about}
+
+LIVE DASHBOARD DATA (set by the owner just now; always trust this over anything said earlier in the chat):
+Opening hours: ${hours}
+${niche.itemsTitle}:
+${lines.join("\n")}
+Status:
+${facts.join("\n")}`;
 }

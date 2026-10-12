@@ -64,35 +64,52 @@ export const chatbotTiers: Tier[] = [
   {
     name: "Basic FAQ Bot",
     price: "$150–$250",
-    desc: "Instant answers to the questions your customers ask every day: hours, prices, location, policies.",
+    desc: "Instant answers to the questions customers ask every day: hours, prices, location, policies.",
     features: [
       "Answers from a Q&A list you approve",
       "Chat widget on your website",
       "Lead capture form (name, phone, email)",
-      "Delivered in a few days",
       "1 revision round",
     ],
   },
   {
-    name: "AI-Powered Bot",
+    name: "AI Bot",
     price: "$600–$1,200",
-    desc: "Understands any question and replies in your customer's own language, using your real business information.",
+    desc: "Understands any question and replies in your customer's language, using your real business information.",
     features: [
-      "Answers from your menu, services, prices and policies",
-      "Replies in the customer's language (Arabic, English, Urdu and more)",
+      "Everything in Basic",
+      "Replies in Arabic, English, Urdu and more",
+      "Answers from your menu, services and prices",
       "Remembers the conversation",
       "Takes booking and enquiry details",
-      "Website widget included",
-      "WhatsApp / Telegram: +$120 / +$100",
     ],
     highlight: true,
   },
+  {
+    name: "AI Bot + Dashboard",
+    price: "from $1,200",
+    desc: "Run your bot yourself. Change stock, prices and hours in a private dashboard, and the bot updates instantly.",
+    features: [
+      "Everything in AI Bot",
+      "Private login to your own dashboard",
+      "Mark items in or out of stock",
+      "Edit prices, hours and offers yourself",
+      "See conversations and leads",
+    ],
+  },
+];
+
+export const chatbotAddons = [
+  { name: "WhatsApp connection", price: "+$120" },
+  { name: "Telegram connection", price: "+$100" },
+  { name: "Live menu page for your website (always matches your dashboard)", price: "+$150–$250" },
+  { name: "Your own address, e.g. bot.yourbusiness.com", price: "+$50" },
 ];
 
 export const chatbotCarePlan = {
   name: "Care plan",
-  price: "$30–$50 / month",
-  desc: "Hosting, updates to your information, monitoring and quick fixes, so your bot stays accurate. Includes the AI usage for up to 3,000 customer replies a month.",
+  price: "$30–$50 / month (AI Bot) · $50–$80 / month (Dashboard)",
+  desc: "We host and monitor your bot, update your information and fix problems. Includes the AI usage for up to 3,000 customer replies a month.",
 };
 
 export const mvpTiers: Tier[] = [
@@ -254,40 +271,48 @@ export const trustPoints = [
 
 export const chatbotFaqs = [
   {
-    q: "What's the difference between a Basic bot and an AI-Powered bot?",
-    a: "A Basic bot answers from a fixed list of questions and answers you approve. It's reliable for simple, repeated questions like hours, pricing or location. An AI-Powered bot understands open-ended questions, replies in the customer's own language, and answers from your actual business information.",
+    q: "Which option should I choose?",
+    a: "Choose Basic if customers mostly ask the same few simple questions. Choose AI Bot if they ask all kinds of questions, in different languages, and you want bookings and enquiries captured. Choose AI Bot + Dashboard if your menu, prices or stock change often and you want to update them yourself without calling us.",
   },
   {
     q: "Does the chatbot reply in my customers' language?",
-    a: "Yes. The AI-Powered bot replies in whatever language the customer writes in, including Arabic and English, and switches when they do. Try the live demo above and type in any language.",
+    a: "Yes. The AI Bot replies in whatever language the customer writes in, including Arabic and English, and switches when they do. Try the live demo above and type in any language.",
   },
   {
-    q: "Can the chatbot connect to WhatsApp or Telegram?",
-    a: "Yes. Every bot comes with a website chat widget. WhatsApp and Telegram connections are available as add-ons (+$120 and +$100) on the AI-Powered tier.",
+    q: "Will it work with my website (Wix, Squarespace, WordPress, Shopify)?",
+    a: "Yes. The chat widget is added with one small piece of code, which works on WordPress, Shopify, Wix, Squarespace, Webflow and custom websites. We add it for you or send you simple steps. A few website builders only allow custom code on a paid plan. If yours doesn't, we can give you a link to a hosted chat page or connect the bot to your WhatsApp instead.",
+  },
+  {
+    q: "Where do I log in to the dashboard?",
+    a: "The dashboard is a private page on our site, protected by your own login. It works on your phone or computer, and you don't install anything. Your website only shows the chat widget. If you want a branded address such as bot.yourbusiness.com, that's available as a small add-on.",
+  },
+  {
+    q: "If I change something in the dashboard, does my website menu change too?",
+    a: "The chatbot updates instantly. Your website's own menu only updates if you add our live menu page (a small add-on), which you paste into your site and which always matches your dashboard. Connecting to an existing system such as Shopify, Square or a POS is possible but quoted separately after we check what you use.",
   },
   {
     q: "What information does the bot use to answer?",
     a: "Only your own business content: menu, services, prices, opening hours, policies and FAQs. If a customer asks something outside that, the bot says it isn't sure and offers to pass them to you, instead of guessing.",
   },
   {
-    q: "How long does a chatbot take to build?",
-    a: "Basic FAQ bots are usually the quickest to deliver. AI-Powered bots take a little longer because we load and test your business information, but most are delivered within a few days.",
-  },
-  {
     q: "What does it cost to run the AI?",
-    a: "The AI is billed by usage, and for a small business it is usually only a few dollars a month. One customer reply costs a fraction of a cent. The care plan includes up to 3,000 AI replies a month. Busier bots pay a small extra amount for each additional 5,000 replies (about $10), or you can connect your own AI account and pay the provider directly.",
+    a: "The AI is billed by usage, and for a small business it is usually only a few dollars a month. The care plan includes up to 3,000 AI replies a month. Busier bots pay a small extra amount for each additional 5,000 replies (about $10), or you can connect your own AI account and pay the provider directly.",
   },
   {
-    q: "Do I own the chatbot afterward?",
-    a: "Yes. It's deployed on your own accounts, with no dependency on a third-party platform or a subscription you don't control. The optional care plan is only for hosting and updates.",
+    q: "Can the chatbot connect to WhatsApp or Telegram?",
+    a: "Yes. Every bot comes with a website chat widget. WhatsApp and Telegram connections are available as add-ons (+$120 and +$100).",
   },
   {
-    q: "Can I add it to my existing website?",
-    a: "Yes. It works with any website: WordPress, Wix, Shopify, Webflow or a custom build. It's added with a simple script or embed, no rebuild needed.",
+    q: "How long does it take?",
+    a: "Basic FAQ bots are the quickest. AI bots take a little longer because we load and test your business information, but most are live within a few days. Dashboard projects take longer, and we confirm the timeline in your quote.",
+  },
+  {
+    q: "Do I own my chatbot and my data?",
+    a: "You own your content and your data. By default your bot runs on our hosting, covered by the care plan, so there's nothing technical for you to manage. You can ask us to move it to your own accounts at any time.",
   },
   {
     q: "What if I need help or changes after it's live?",
-    a: "For existing customers, small tweaks and quick help are provided free whenever needed. Bigger requests, like new features or major changes, are separate paid work with their own quote. The care plan covers ongoing updates.",
+    a: "Small tweaks in the first month are free. After that, the care plan covers updates to your information and quick fixes. Bigger requests, like new features, are separate work with their own quote.",
   },
 ];
 
