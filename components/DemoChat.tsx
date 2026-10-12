@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Send, RotateCcw, ArrowRight, MessageCircle, LayoutDashboard } from "lucide-react";
-import { DEMO_NICHES, initialState, type DemoNicheId, type DemoState } from "@/lib/demo-bots";
-import DemoDashboard from "@/components/DemoDashboard";
+import { Send, RotateCcw, ArrowRight, MessageCircle, LayoutDashboard, UtensilsCrossed, Stethoscope, Scissors } from "lucide-react";
+import { DEMO_NICHES, MAX_CUSTOM, initialState, type DemoNicheId, type DemoState } from "@/lib/demo-bots";
+import DemoDashboard, { type DashboardActions } from "@/components/DemoDashboard";
 
 type Msg = { role: "user" | "assistant" | "system"; content: string };
 
 const MAX_USER_MESSAGES = 12;
+
+const NICHE_ICONS = {
+  restaurant: UtensilsCrossed,
+  clinic: Stethoscope,
+  salon: Scissors,
+} as const;
+
+const newId = () => Math.random().toString(36).slice(2, 8);
 
 function freshStates(): Record<DemoNicheId, DemoState> {
   return Object.fromEntries(DEMO_NICHES.map((n) => [n.id, initialState(n)])) as Record<DemoNicheId, DemoState>;
@@ -43,26 +51,70 @@ export default function DemoChat() {
     setStates((all) => ({ ...all, [nicheId]: fn(all[nicheId]) }));
   }
 
-  function onItem(id: string, patch: Partial<{ price: number; available: boolean }>) {
-    const item = niche.items.find((i) => i.id === id)!;
-    patchState((s) => ({ ...s, items: { ...s.items, [id]: { ...s.items[id], ...patch } } }));
-    if (patch.available !== undefined) {
-      note(`${item.name} marked ${patch.available ? niche.availableLabel.toLowerCase() : niche.unavailableLabel.toLowerCase()}`);
-    } else if (patch.price !== undefined) {
-      note(`${item.name} price changed to ${patch.price} ${niche.currency}`);
-    }
-  }
-
-  function onToggle(id: string, on: boolean) {
-    const t = niche.toggles.find((x) => x.id === id)!;
-    patchState((s) => ({ ...s, toggles: { ...s.toggles, [id]: on } }));
-    note(`${t.label} turned ${on ? "on" : "off"}`);
-  }
-
-  function onHours(hours: string) {
-    patchState((s) => ({ ...s, hours }));
-    note(`Opening hours updated to ${hours}`);
-  }
+  const actions: DashboardActions = {
+    setItem(id, patch) {
+      const item = niche.items.find((i) => i.id === id)!;
+      patchState((s) => ({ ...s, items: { ...s.items, [id]: { ...s.items[id], ...patch } } }));
+      if (patch.available !== undefined) {
+        note(`${item.name} marked ${patch.available ? niche.availableLabel.toLowerCase() : niche.unavailableLabel.toLowerCase()}`);
+      } else if (patch.price !== undefined) {
+        note(`${item.name} price changed to ${patch.price} ${niche.currency}`);
+      }
+    },
+    setToggle(id, on) {
+      const t = niche.toggles.find((x) => x.id === id)!;
+      patchState((s) => ({ ...s, toggles: { ...s.toggles, [id]: on } }));
+      note(`${t.label} turned ${on ? "on" : "off"}`);
+    },
+    setHours(hours) {
+      patchState((s) => ({ ...s, hours }));
+      note(`Opening hours updated to ${hours}`);
+    },
+    setNotice(notice) {
+      patchState((s) => ({ ...s, notice }));
+      note(notice ? `Notice added: ${notice}` : "Notice removed");
+    },
+    addCustomItem(name, price) {
+      patchState((s) => ({
+        ...s,
+        customItems: [...s.customItems, { id: newId(), name, price, available: true }].slice(0, MAX_CUSTOM),
+      }));
+      note(`Your own item added: ${name} (${price} ${niche.currency})`);
+    },
+    setCustomItem(id, patch) {
+      const it = state.customItems.find((x) => x.id === id);
+      patchState((s) => ({ ...s, customItems: s.customItems.map((x) => (x.id === id ? { ...x, ...patch } : x)) }));
+      if (!it) return;
+      if (patch.available !== undefined) {
+        note(`${it.name} marked ${patch.available ? niche.availableLabel.toLowerCase() : niche.unavailableLabel.toLowerCase()}`);
+      } else if (patch.price !== undefined) {
+        note(`${it.name} price changed to ${patch.price} ${niche.currency}`);
+      }
+    },
+    removeCustomItem(id) {
+      const it = state.customItems.find((x) => x.id === id);
+      patchState((s) => ({ ...s, customItems: s.customItems.filter((x) => x.id !== id) }));
+      if (it) note(`${it.name} removed`);
+    },
+    addCustomToggle(label) {
+      patchState((s) => ({
+        ...s,
+        customToggles: [...s.customToggles, { id: newId(), label, on: true }].slice(0, MAX_CUSTOM),
+      }));
+      note(`Your own toggle added: ${label} (on)`);
+    },
+    setCustomToggle(id, on) {
+      const t = state.customToggles.find((x) => x.id === id);
+      patchState((s) => ({ ...s, customToggles: s.customToggles.map((x) => (x.id === id ? { ...x, on } : x)) }));
+      if (t) note(`${t.label} turned ${on ? "on" : "off"}`);
+    },
+    removeCustomToggle(id) {
+      const t = state.customToggles.find((x) => x.id === id);
+      patchState((s) => ({ ...s, customToggles: s.customToggles.filter((x) => x.id !== id) }));
+      if (t) note(`${t.label} removed`);
+    },
+    askBot: () => setTab("chat"),
+  };
 
   function reset(id: DemoNicheId) {
     const next = DEMO_NICHES.find((n) => n.id === id)!;
@@ -228,25 +280,30 @@ export default function DemoChat() {
         role="tablist"
         aria-label="Choose a sample business"
       >
-        {DEMO_NICHES.map((n) => (
-          <button
-            key={n.id}
-            role="tab"
-            aria-selected={n.id === nicheId}
-            onClick={() => switchNiche(n.id)}
-            className={`h-11 shrink-0 rounded-full border px-5 text-sm font-medium transition-colors ${
-              n.id === nicheId
-                ? "border-mint bg-mint text-white"
-                : "border-border bg-surface text-ink hover:border-mint/60 hover:text-mint"
-            }`}
-          >
-            {n.label}
-          </button>
-        ))}
+        {DEMO_NICHES.map((n) => {
+          const Icon = NICHE_ICONS[n.id];
+          const active = n.id === nicheId;
+          return (
+            <button
+              key={n.id}
+              role="tab"
+              aria-selected={active}
+              onClick={() => switchNiche(n.id)}
+              className={`inline-flex h-12 shrink-0 items-center gap-2 rounded-full border-2 px-5 text-sm font-semibold transition-colors ${
+                active
+                  ? "border-[#F59E0B] bg-[#FEF3C7] text-[#92400E]"
+                  : "border-[#CBD5E1] bg-white text-[#334155] hover:border-[#F59E0B]/70"
+              }`}
+            >
+              <Icon size={16} aria-hidden />
+              {n.label}
+            </button>
+          );
+        })}
       </div>
 
       <p className="mx-auto mt-4 max-w-md text-center text-sm text-muted">
-        Switch an item off or change a price in the dashboard, then ask the bot about it. It updates instantly.
+        Switch an item off, change a price, or make your own field in the dashboard, then ask the bot about it. It updates instantly.
       </p>
 
       {/* Mobile: tabs. Desktop: side by side. */}
@@ -282,14 +339,7 @@ export default function DemoChat() {
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#6D28D9] lg:flex">
             <LayoutDashboard size={14} aria-hidden /> Owner view: manage stock and prices
           </p>
-          <DemoDashboard
-            niche={niche}
-            state={state}
-            onItem={onItem}
-            onToggle={onToggle}
-            onHours={onHours}
-            onAskBot={() => setTab("chat")}
-          />
+          <DemoDashboard niche={niche} state={state} actions={actions} />
         </div>
         <div className={tab === "chat" ? "block" : "hidden lg:block"}>
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#1D4ED8] lg:flex">

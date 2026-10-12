@@ -94,6 +94,7 @@ export const chatbotTiers: Tier[] = [
       "Private login to your own dashboard",
       "Mark items in or out of stock",
       "Edit prices, hours and offers yourself",
+      "Add any custom field you need",
       "See conversations and leads",
     ],
   },
