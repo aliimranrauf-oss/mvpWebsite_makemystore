@@ -273,7 +273,7 @@ export default function DemoChat() {
   );
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto w-full min-w-0 max-w-5xl">
       {/* Business picker */}
       <div
         className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:justify-center sm:px-0"
@@ -334,14 +334,14 @@ export default function DemoChat() {
         </button>
       </div>
 
-      <div className="mt-4 grid gap-6 lg:grid-cols-2 lg:items-start">
-        <div className={tab === "dashboard" ? "block" : "hidden lg:block"}>
+      <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-2 lg:items-start">
+        <div className={`min-w-0 ${tab === "dashboard" ? "block" : "hidden lg:block"}`}>
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#6D28D9] lg:flex">
             <LayoutDashboard size={14} aria-hidden /> Owner view: manage stock and prices
           </p>
           <DemoDashboard niche={niche} state={state} actions={actions} />
         </div>
-        <div className={tab === "chat" ? "block" : "hidden lg:block"}>
+        <div className={`min-w-0 ${tab === "chat" ? "block" : "hidden lg:block"}`}>
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#1D4ED8] lg:flex">
             <MessageCircle size={14} aria-hidden /> Customer view: chat on your website
           </p>

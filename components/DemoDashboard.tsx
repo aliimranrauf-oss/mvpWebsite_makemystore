@@ -28,15 +28,15 @@ function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) =
       aria-checked={on}
       aria-label={label}
       onClick={() => onChange(!on)}
-      className="flex h-11 w-14 shrink-0 items-center justify-center"
+      className="flex h-11 w-12 shrink-0 items-center justify-center"
     >
       <span
-        className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
           on ? "bg-[#8B5CF6]" : "bg-[#475569]"
         }`}
       >
         <span
-          className={`absolute left-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform ${
+          className={`absolute left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
             on ? "translate-x-5" : "translate-x-0"
           }`}
         />
@@ -70,7 +70,7 @@ function PriceInput({
   }
 
   return (
-    <label className="flex h-11 items-center gap-1.5 rounded-lg border border-[#334155] bg-[#0F172A] px-2.5 focus-within:border-[#8B5CF6]">
+    <label className="flex h-11 shrink-0 items-center gap-1 rounded-lg border border-[#334155] bg-[#0F172A] px-2 focus-within:border-[#8B5CF6]">
       <input
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
@@ -78,9 +78,9 @@ function PriceInput({
         onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLInputElement).blur()}
         inputMode="decimal"
         aria-label={label}
-        className="w-12 bg-transparent text-right text-base font-medium text-white outline-none sm:text-sm"
+        className="w-11 bg-transparent text-right text-base font-medium text-white outline-none sm:w-12 sm:text-sm"
       />
-      <span className="text-xs text-slate-400">{currency}</span>
+      <span className="text-[11px] text-slate-400">{currency}</span>
     </label>
   );
 }
@@ -99,9 +99,9 @@ function ItemRow(props: {
 }) {
   const { name, price, available, currency, availableLabel, unavailableLabel, custom } = props;
   return (
-    <li className="flex items-center gap-2 px-3 py-1.5">
+    <li className="flex items-center gap-1.5 px-2.5 py-2 sm:gap-2 sm:px-3">
       <div className="min-w-0 flex-1">
-        <p className={`truncate text-sm font-medium ${available ? "text-white" : "text-slate-500 line-through"}`}>
+        <p className={`break-words text-sm font-medium leading-snug ${available ? "text-white" : "text-slate-500 line-through"}`}>
           {name}
         </p>
         <p className="flex flex-wrap items-center gap-x-2 text-xs">
@@ -271,7 +271,7 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
   return (
     <div className="overflow-hidden rounded-xl2 border border-[#1E293B] bg-[#0F172A] text-slate-100 shadow-xl">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-[#1E293B] px-4 py-3.5">
+      <div className="flex items-center gap-3 border-b border-[#1E293B] px-3 py-3.5 sm:px-4">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#8B5CF6] font-display text-sm font-semibold text-white">
           {niche.initials}
         </span>
@@ -279,21 +279,21 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
           <p className="truncate text-sm font-semibold text-white">{niche.businessName}</p>
           <p className="text-xs text-slate-400">Owner dashboard</p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1E293B] px-2.5 py-1 text-xs font-medium text-emerald-400">
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#1E293B] px-2.5 py-1 text-xs font-medium text-emerald-400">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
           Bot live
         </span>
       </div>
 
-      <div className="space-y-5 px-4 py-4">
+      <div className="space-y-5 px-3 py-4 sm:px-4">
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-3 gap-2">
           {[
             { label: "Chats today", value: "128" },
             { label: "Leads captured", value: "9" },
             { label: niche.unavailableLabel, value: String(unavailable) },
           ].map((s) => (
-            <div key={s.label} className="rounded-lg bg-[#1E293B] px-3 py-2.5">
+            <div key={s.label} className="min-w-0 rounded-lg bg-[#1E293B] px-2.5 py-2.5">
               <p className="font-display text-xl font-semibold text-white">{s.value}</p>
               <p className="mt-0.5 text-[11px] leading-tight text-slate-400">{s.label}</p>
             </div>
@@ -346,7 +346,7 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
           <h3 className="px-0.5 text-xs font-semibold uppercase tracking-wide text-slate-400">Settings</h3>
           <ul className="mt-2 divide-y divide-[#334155] overflow-hidden rounded-lg bg-[#1E293B]">
             {niche.toggles.map((t) => (
-              <li key={t.id} className="flex items-center gap-2 px-3 py-1.5">
+              <li key={t.id} className="flex items-center gap-1.5 px-2.5 py-2 sm:gap-2 sm:px-3">
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-white">{t.label}</p>
                   <p className="text-xs text-slate-400">{t.hint}</p>
@@ -359,9 +359,9 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
               </li>
             ))}
             {state.customToggles.map((c) => (
-              <li key={c.id} className="flex items-center gap-2 px-3 py-1.5">
+              <li key={c.id} className="flex items-center gap-1.5 px-2.5 py-2 sm:gap-2 sm:px-3">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-white">{c.label}</p>
+                  <p className="break-words text-sm font-medium leading-snug text-white">{c.label}</p>
                   <p className="flex items-center gap-2 text-xs">
                     <span className="rounded bg-[#8B5CF6]/20 px-1.5 py-0.5 text-[10px] font-semibold text-violet-300">
                       Your own
