@@ -5,7 +5,8 @@ import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import DemoChat from "@/components/DemoChat";
 import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons } from "@/lib/data";
-import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
+import { SITE_URL, WHATSAPP_NUMBER, AI_CHATBOT_VIDEO } from "@/lib/constants";
+import YouTubeFacade from "@/components/YouTubeFacade";
 import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd, lowestPrice } from "@/lib/seo";
 import { chatbotCountries, chatbotHreflang } from "@/lib/chatbot-countries";
 
@@ -82,6 +83,20 @@ export default function AiChatbotPage() {
       availableLanguage: ["English", "Arabic", "Urdu", "Spanish"],
     }),
     faqJsonLd(chatbotFaqs),
+    ...(AI_CHATBOT_VIDEO.uploadDate
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "VideoObject",
+            name: AI_CHATBOT_VIDEO.title,
+            description: AI_CHATBOT_VIDEO.description,
+            thumbnailUrl: [`https://i.ytimg.com/vi/${AI_CHATBOT_VIDEO.id}/hqdefault.jpg`],
+            uploadDate: AI_CHATBOT_VIDEO.uploadDate,
+            embedUrl: `https://www.youtube.com/embed/${AI_CHATBOT_VIDEO.id}`,
+            contentUrl: `https://youtu.be/${AI_CHATBOT_VIDEO.id}`,
+          },
+        ]
+      : []),
     breadcrumbJsonLd([
       { name: "Home", path: "/" },
       { name: "AI Chatbot", path: "/ai-chatbot" },
@@ -118,7 +133,7 @@ export default function AiChatbotPage() {
             </a>
             {WHATSAPP_NUMBER && (
               <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi, I'd like a quote for an AI chatbot for my business.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
@@ -128,6 +143,27 @@ export default function AiChatbotPage() {
             )}
           </div>
         </PageHeader>
+
+        <section aria-labelledby="how-it-works-video" className="border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-10 sm:px-8 sm:py-16">
+            <div className="mx-auto max-w-3xl">
+              <div className="text-center">
+                <h2
+                  id="how-it-works-video"
+                  className="font-display text-2xl font-semibold text-ink sm:text-3xl"
+                >
+                  See how the chatbot and demo work
+                </h2>
+                <p className="mx-auto mt-3 max-w-xl text-sm text-muted sm:text-base">
+                  A short walkthrough: how the bot answers customers, captures leads, and how you update it yourself.
+                </p>
+              </div>
+              <div className="mt-6 sm:mt-8">
+                <YouTubeFacade videoId={AI_CHATBOT_VIDEO.id} title={AI_CHATBOT_VIDEO.title} />
+              </div>
+            </div>
+          </div>
+        </section>
 
         <section id="demo" className="border-b border-border bg-surface/40">
           <div className="mx-auto max-w-content px-5 py-12 sm:px-8 sm:py-24">

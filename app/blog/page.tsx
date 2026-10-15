@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 
 // Always fetch fresh so a new post (is_live = true in Supabase) shows up
 // immediately without a redeploy.
-export const revalidate = 0;
+export const revalidate = 300;
 
 export default async function BlogPage() {
   const { data: posts, error } = supabase

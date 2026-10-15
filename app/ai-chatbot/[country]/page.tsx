@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { chatbotTiers } from "@/lib/data";
-import { SITE_URL } from "@/lib/constants";
+import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
 import { chatbotCountries, getCountry, chatbotHreflang } from "@/lib/chatbot-countries";
 import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
@@ -38,6 +38,11 @@ export default function ChatbotCountryPage({ params }: Props) {
 
   const path = `/ai-chatbot/${c.slug}`;
   const others = chatbotCountries.filter((o) => o.slug !== c.slug);
+  const waHref = WHATSAPP_NUMBER
+    ? `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+        `Hi, I'd like a quote for an AI chatbot for my business (${c.label}).`
+      )}`
+    : "";
 
   const jsonLd = [
     serviceJsonLd({
@@ -83,6 +88,16 @@ export default function ChatbotCountryPage({ params }: Props) {
             >
               Try the live demo
             </a>
+            {waHref && (
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
+              >
+                Chat on WhatsApp
+              </a>
+            )}
           </div>
         </PageHeader>
 

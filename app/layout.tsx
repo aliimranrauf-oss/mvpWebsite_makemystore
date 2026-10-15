@@ -4,7 +4,7 @@ import Script from "next/script";
 import dynamic from "next/dynamic";
 import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS, PHONE_E164 } from "@/lib/constants";
 
 // Only the active bot's code (and the shared ChatWidget it pulls in) ever
 // gets fetched — dynamic() + a build-time-constant CHATBOT_MODE lets
@@ -118,6 +118,7 @@ export default function RootLayout({
       description:
         "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
       email: "info@makemystore.online",
+      telephone: PHONE_E164,
       areaServed: [
         { "@type": "Country", name: "United States" },
         { "@type": "Country", name: "United Kingdom" },
@@ -131,6 +132,7 @@ export default function RootLayout({
         "@type": "ContactPoint",
         contactType: "sales",
         email: "info@makemystore.online",
+        telephone: PHONE_E164,
         availableLanguage: ["English"],
       },
       ...(SOCIAL_LINKS.length ? { sameAs: SOCIAL_LINKS } : {}),

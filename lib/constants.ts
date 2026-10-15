@@ -43,4 +43,18 @@ export const CHATBOT_MODE: "faq" | "ai" | "hybrid" | "off" =
 
 // Your WhatsApp number in international format without + or spaces (e.g. "447700900123").
 // Leave empty to hide the "Chat on WhatsApp" buttons.
-export const WHATSAPP_NUMBER = "";
+export const WHATSAPP_NUMBER = "447462230676";
+// Same number in readable E.164 form, used in schema.org contactPoint.
+export const WHATSAPP_DISPLAY = "+44 7462 230676";
+export const PHONE_E164 = "+447462230676";
+
+// YouTube walkthrough on /ai-chatbot. To get a VideoObject rich result in Google,
+// fill in uploadDate (YYYY-MM-DD, the day the video was published) and make sure
+// title/description match the video. Leave uploadDate empty to skip the schema.
+export const AI_CHATBOT_VIDEO = {
+  id: "krYF4PCZLIw",
+  title: "How our AI chatbot and live demo work",
+  description:
+    "A walkthrough of how the MakeMyStore AI chatbot answers customers, captures leads, and how the owner dashboard updates it.",
+  uploadDate: "",
+};

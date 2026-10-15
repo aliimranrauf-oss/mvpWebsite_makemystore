@@ -8,11 +8,12 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SITE_URL, SITE_NAME } from "@/lib/constants";
 
-export const revalidate = 0;
+export const revalidate = 300;
 
 // Pre-render every live post at build time, and let Next fall back to
-// on-demand rendering (via revalidate = 0 above) for anything published
-// after the last deploy — so a brand-new post is live immediately.
+// on-demand rendering for anything published after the last deploy. Pages are
+// cached for 5 minutes (revalidate = 300), so a new post or edit appears within
+// 5 minutes while visitors and Googlebot get a fast cached page.
 export async function generateStaticParams() {
   if (!supabase) return [];
   const { data: posts } = await supabase.from("blogs").select("slug").eq("is_live", true);

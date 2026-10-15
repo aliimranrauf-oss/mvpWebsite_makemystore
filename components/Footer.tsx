@@ -1,4 +1,4 @@
-import { CONTACT_EMAIL } from "@/lib/constants";
+import { CONTACT_EMAIL, WHATSAPP_NUMBER } from "@/lib/constants";
 
 export default function Footer() {
   return (
@@ -25,6 +25,16 @@ export default function Footer() {
           <a href="/#faq" className="hover:text-ink">FAQ</a>
           <a href="/about" className="hover:text-ink">About</a>
           <a href="/contact" className="hover:text-ink">Contact</a>
+          {WHATSAPP_NUMBER && (
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-ink"
+            >
+              WhatsApp
+            </a>
+          )}
           <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-ink">
             {CONTACT_EMAIL}
           </a>
