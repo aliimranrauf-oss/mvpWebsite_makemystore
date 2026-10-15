@@ -34,7 +34,6 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   publisher: SITE_NAME,
   category: "technology",
-  alternates: { languages: { "en": SITE_URL, "x-default": SITE_URL } },
   formatDetection: { email: false, address: false, telephone: false },
   robots: {
     index: true,

@@ -32,9 +32,13 @@ export default function Footer() {
         <p>© {new Date().getFullYear()} makemystore.online</p>
       </div>
       <div className="border-t border-border">
-        <div className="mx-auto flex max-w-content flex-col items-center gap-2 px-5 py-4 text-xs text-muted sm:flex-row sm:justify-center sm:gap-6 sm:px-8">
+        <div className="mx-auto flex max-w-content flex-col flex-wrap items-center gap-2 px-5 py-4 text-xs text-muted sm:flex-row sm:flex-wrap sm:justify-center sm:gap-6 sm:px-8">
           <a href="/privacy" className="hover:text-ink">Privacy Policy</a>
           <a href="/terms" className="hover:text-ink">Terms of Service</a>
+          <a href="/ai-chatbot/uk" className="hover:text-ink">AI Chatbot UK</a>
+          <a href="/ai-chatbot/usa" className="hover:text-ink">AI Chatbot USA</a>
+          <a href="/ai-chatbot/australia" className="hover:text-ink">AI Chatbot Australia</a>
+          <a href="/ai-chatbot/uae" className="hover:text-ink">AI Chatbot UAE</a>
         </div>
       </div>
     </footer>

@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
 import { ArrowRight, Check, Rocket, Database, Bot, Github } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { mvpTiers, mvpFaqs } from "@/lib/data";
-import { SITE_URL } from "@/lib/constants";
+import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd, lowestPrice } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "AI-Powered SaaS MVP Development — MakeMyStore",
   description:
     "A working SaaS product on Next.js and Supabase, delivered in 48–72 hours — user accounts, a real database, an optional AI chatbot, and full code ownership.",
+  path: "/saas-mvp",
   keywords: [
     "SaaS MVP development",
     "build a SaaS MVP fast",
@@ -19,23 +19,8 @@ export const metadata: Metadata = {
     "AI SaaS MVP",
     "fast MVP development",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/saas-mvp`,
-  },
-  openGraph: {
-    title: "AI-Powered SaaS MVP Development — MakeMyStore",
-    description:
-      "A working SaaS product built on Next.js and Supabase, delivered in days, not months.",
-    url: `${SITE_URL}/saas-mvp`,
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "AI-Powered SaaS MVP Development — MakeMyStore",
-    description:
-      "A working SaaS product built on Next.js and Supabase, delivered in days, not months.",
-  },
-};
+  imageAlt: "SaaS MVP development on Next.js and Supabase",
+});
 
 const included = [
   {
@@ -56,21 +41,29 @@ const included = [
 ];
 
 export default function SaasMvpPage() {
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: mvpFaqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+
+  const jsonLd = [
+    serviceJsonLd({
+      name: "AI-Powered SaaS MVP Development",
+      serviceType: "SaaS MVP development",
+      description:
+        "A working SaaS product on Next.js and Supabase, delivered in 48–72 hours, with user accounts, a real database and full code ownership.",
+      path: "/saas-mvp",
+      lowPriceUsd: lowestPrice(mvpTiers.map((t) => t.price)),
+      offerCount: mvpTiers.length,
+    }),
+    faqJsonLd(mvpFaqs),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "SaaS MVP", path: "/saas-mvp" },
+    ]),
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Navbar />
       <main>

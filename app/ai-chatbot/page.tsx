@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { ArrowRight, Check, Languages, Clock, UserPlus, Stethoscope, UtensilsCrossed, Scissors, Home, ShoppingBag, Dumbbell, SlidersHorizontal, Plug } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -7,11 +6,14 @@ import PageHeader from "@/components/PageHeader";
 import DemoChat from "@/components/DemoChat";
 import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons } from "@/lib/data";
 import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
+import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd, lowestPrice } from "@/lib/seo";
+import { chatbotCountries, chatbotHreflang } from "@/lib/chatbot-countries";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "AI Chatbot for Business: WhatsApp & Website, 24/7 — MakeMyStore",
   description:
     "AI chatbot for your business that answers customers 24/7 in their own language, on your website and WhatsApp. Try the live demo. From $150, fixed price.",
+  path: "/ai-chatbot",
   keywords: [
     "AI chatbot for business",
     "WhatsApp chatbot for business",
@@ -21,23 +23,10 @@ export const metadata: Metadata = {
     "website chatbot",
     "custom chatbot developer",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/ai-chatbot`,
-  },
-  openGraph: {
-    title: "AI Chatbot for Business: WhatsApp & Website, 24/7 — MakeMyStore",
-    description:
-      "Answer customers 24/7 in their own language. Try the live demo, including the owner dashboard, then get a fixed-price chatbot from $150.",
-    url: `${SITE_URL}/ai-chatbot`,
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "AI Chatbot for Business: WhatsApp & Website, 24/7 — MakeMyStore",
-    description:
-      "A chatbot trained on your business — from a simple FAQ bot to a full AI assistant with memory.",
-  },
-};
+  imageAlt: "AI chatbot for business: website and WhatsApp",
+  // Reciprocal hreflang with the four country pages; this page is the x-default.
+  languages: chatbotHreflang(SITE_URL),
+});
 
 const included = [
   {
@@ -80,21 +69,30 @@ const steps = [
 ];
 
 export default function AiChatbotPage() {
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: chatbotFaqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+
+  const jsonLd = [
+    serviceJsonLd({
+      name: "AI Chatbot Development",
+      serviceType: "AI chatbot development",
+      description:
+        "Custom AI chatbots trained on your business information, for your website and WhatsApp, replying in the customer's own language.",
+      path: "/ai-chatbot",
+      lowPriceUsd: lowestPrice(chatbotTiers.map((t) => t.price)),
+      offerCount: chatbotTiers.length,
+      availableLanguage: ["English", "Arabic", "Urdu", "Spanish"],
+    }),
+    faqJsonLd(chatbotFaqs),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "AI Chatbot", path: "/ai-chatbot" },
+    ]),
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Navbar />
       <main>
@@ -376,6 +374,29 @@ export default function AiChatbotPage() {
                   </summary>
                   <p className="mt-3 max-w-[65ch] text-sm leading-relaxed text-muted">{f.a}</p>
                 </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-14 sm:px-8 sm:py-20">
+            <h2 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+              AI chatbots for businesses in your country
+            </h2>
+            <p className="mt-3 max-w-xl text-muted">
+              Local channels, local privacy rules and a price guide in your currency.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {chatbotCountries.map((c) => (
+                <a
+                  key={c.slug}
+                  href={`/ai-chatbot/${c.slug}`}
+                  className="group flex items-center justify-between rounded-xl2 card-glow-border p-5 transition-colors hover:!border-mint/60"
+                >
+                  <span className="font-display text-base font-semibold text-ink">{c.label}</span>
+                  <ArrowRight size={16} className="text-mint transition-transform group-hover:translate-x-0.5" />
+                </a>
               ))}
             </div>
           </div>

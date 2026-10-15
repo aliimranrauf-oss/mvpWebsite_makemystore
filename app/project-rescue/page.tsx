@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
 import { ArrowRight, Check, Wrench, Search, ShieldCheck } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { rescueTiers, rescueFaqs } from "@/lib/data";
-import { SITE_URL } from "@/lib/constants";
+import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd, lowestPrice } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Project Rescue — Fix a Stuck AI-Built Project — MakeMyStore",
   description:
     "Stuck on a project from Lovable, Bolt, or another AI builder? We review it, fix what's broken, and deploy it cleanly to your own GitHub and Vercel.",
+  path: "/project-rescue",
   keywords: [
     "fix Lovable project",
     "fix Bolt.new project",
@@ -19,23 +19,8 @@ export const metadata: Metadata = {
     "fix broken Next.js app",
     "finish stuck MVP",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/project-rescue`,
-  },
-  openGraph: {
-    title: "Project Rescue — Fix a Stuck AI-Built Project — MakeMyStore",
-    description:
-      "We review, fix, and deploy projects that stalled out on Lovable, Bolt, or another AI builder.",
-    url: `${SITE_URL}/project-rescue`,
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "Project Rescue — Fix a Stuck AI-Built Project — MakeMyStore",
-    description:
-      "We review, fix, and deploy projects that stalled out on Lovable, Bolt, or another AI builder.",
-  },
-};
+  imageAlt: "Project Rescue: fixing a stuck AI-built app",
+});
 
 const included = [
   {
@@ -65,21 +50,29 @@ const commonProblems = [
 ];
 
 export default function ProjectRescuePage() {
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: rescueFaqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+
+  const jsonLd = [
+    serviceJsonLd({
+      name: "Project Rescue",
+      serviceType: "Fix and finish AI-generated app projects",
+      description:
+        "We review stuck projects from Lovable, Bolt or other AI builders, fix what's broken and deploy them cleanly to your own GitHub and Vercel.",
+      path: "/project-rescue",
+      lowPriceUsd: lowestPrice(rescueTiers.map((t) => t.price)),
+      offerCount: rescueTiers.length,
+    }),
+    faqJsonLd(rescueFaqs),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Project Rescue", path: "/project-rescue" },
+    ]),
+  ];
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <Navbar />
       <main>
