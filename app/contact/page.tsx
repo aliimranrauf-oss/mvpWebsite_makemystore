@@ -1,16 +1,17 @@
-import type { Metadata } from "next";
 import { Mail, Clock, ShieldCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import ContactForm from "@/components/ContactForm";
 import { CONTACT_EMAIL, SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo";
 import { services, chatbotTiers } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Contact — MakeMyStore",
   description:
     "Tell us about your AI chatbot, SaaS MVP, or project rescue and get a fixed quote back within 24 hours.",
+  path: "/contact",
   keywords: [
     "contact MakeMyStore",
     "hire AI chatbot developer",
@@ -18,23 +19,7 @@ export const metadata: Metadata = {
     "fix AI generated project",
     "Next.js developer contact",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/contact`,
-  },
-  openGraph: {
-    title: "Contact — MakeMyStore",
-    description:
-      "Tell us about your project and get a fixed quote back within 24 hours.",
-    url: `${SITE_URL}/contact`,
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "Contact — MakeMyStore",
-    description:
-      "Tell us about your project and get a fixed quote back within 24 hours.",
-  },
-};
+});
 
 const reassurances = [
   {

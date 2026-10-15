@@ -1,28 +1,16 @@
-import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo";
 import { services } from "@/lib/data";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Terms of Service — MakeMyStore",
   description: "The terms that apply when you work with MakeMyStore.",
+  path: "/terms",
   keywords: ["MakeMyStore terms of service", "terms and conditions"],
-  alternates: {
-    canonical: `${SITE_URL}/terms`,
-  },
-  openGraph: {
-    title: "Terms of Service — MakeMyStore",
-    description: "The terms that apply when you work with MakeMyStore.",
-    url: `${SITE_URL}/terms`,
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+});
 
 const lastUpdated = "September 9, 2026";
 

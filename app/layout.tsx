@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk, Inter } from "next/font/google";
 import Script from "next/script";
 import dynamic from "next/dynamic";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS } from "@/lib/constants";
 
@@ -171,6 +172,15 @@ export default function RootLayout({
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
+            var mmsConsent = 'denied';
+            try { if (localStorage.getItem('mms_consent') === 'granted') mmsConsent = 'granted'; } catch (e) {}
+            gtag('consent', 'default', {
+              analytics_storage: mmsConsent,
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+              wait_for_update: 500
+            });
             gtag('js', new Date());
             gtag('config', '${GA_MEASUREMENT_ID}');
           `}
@@ -181,6 +191,7 @@ export default function RootLayout({
         {CHATBOT_MODE === "faq" && <FaqChatBot />}
         {CHATBOT_MODE === "ai" && <AiChatBot />}
         {CHATBOT_MODE === "hybrid" && <HybridChatBot />}
+        <CookieConsent />
       </body>
     </html>
   );

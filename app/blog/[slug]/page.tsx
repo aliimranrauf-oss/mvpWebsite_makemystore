@@ -142,6 +142,7 @@ export default async function BlogPostPage({
     },
     publisher: {
       "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
       logo: { "@type": "ImageObject", url: `${SITE_URL}/header-logo.png` },
     },

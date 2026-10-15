@@ -8,7 +8,7 @@ export const DEFAULT_OG_IMAGE = {
   alt: "MakeMyStore: AI chatbots, SaaS MVPs and POS systems",
 };
 // Bump this date when you meaningfully change a page (used by sitemap lastmod).
-export const SITE_LAST_UPDATED = "2026-10-04";
+export const SITE_LAST_UPDATED = "2026-10-15";
 // Add your real profiles here; they feed the Organization schema (sameAs).
 export const SOCIAL_LINKS: string[] = [
   // "https://www.linkedin.com/company/your-page",

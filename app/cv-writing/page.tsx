@@ -3,9 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CvPage from "@/components/CvPage";
 import { cvPackages, cvFaqs } from "@/lib/cv-data";
-import { SITE_URL, SITE_NAME } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
-const TITLE = "Professional CV, LinkedIn & Cover Letter Writing for KSA, UAE & the Gulf — MakeMyStore";
+const TITLE = "CV, LinkedIn & Cover Letter Writing for the Gulf — MakeMyStore";
 const DESC =
   "ATS-friendly CV writing, free cover letter, LinkedIn optimisation and professional biographies for job seekers in Saudi Arabia, the UAE and the GCC. From £40, 11 months free revisions.";
 
@@ -27,8 +27,15 @@ export const metadata: Metadata = {
     "كتابة سيرة ذاتية السعودية",
   ],
   alternates: { canonical: `${SITE_URL}/cv-writing` },
-  openGraph: { title: TITLE, description: DESC, url: `${SITE_URL}/cv-writing`, type: "website" },
-  twitter: { card: "summary", title: TITLE, description: DESC },
+  openGraph: {
+    title: TITLE,
+    description: DESC,
+    url: `${SITE_URL}/cv-writing`,
+    siteName: SITE_NAME,
+    type: "website",
+    images: [DEFAULT_OG_IMAGE],
+  },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESC, images: [DEFAULT_OG_IMAGE.url] },
 };
 
 export default function CvWritingPage() {

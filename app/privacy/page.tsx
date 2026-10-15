@@ -1,27 +1,15 @@
-import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { CONTACT_EMAIL, SITE_NAME, SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "Privacy Policy — MakeMyStore",
   description: "How MakeMyStore collects, uses, and protects your information.",
+  path: "/privacy",
   keywords: ["MakeMyStore privacy policy", "data protection", "privacy"],
-  alternates: {
-    canonical: `${SITE_URL}/privacy`,
-  },
-  openGraph: {
-    title: "Privacy Policy — MakeMyStore",
-    description: "How MakeMyStore collects, uses, and protects your information.",
-    url: `${SITE_URL}/privacy`,
-    type: "website",
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-};
+});
 
 const lastUpdated = "September 9, 2026";
 

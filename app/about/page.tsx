@@ -1,15 +1,16 @@
-import type { Metadata } from "next";
 import { ArrowRight, Github, ShieldCheck, Zap, Code2 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { techStack, benefits } from "@/lib/data";
 import { SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata = buildMetadata({
   title: "About — MakeMyStore",
   description:
     "Why MakeMyStore exists, how projects get built, and the tech stack behind every AI chatbot, SaaS MVP, POS system, and project rescue delivered.",
+  path: "/about",
   keywords: [
     "about MakeMyStore",
     "AI chatbot developer",
@@ -20,23 +21,7 @@ export const metadata: Metadata = {
     "fix stuck AI project",
     "custom AI development studio",
   ],
-  alternates: {
-    canonical: `${SITE_URL}/about`,
-  },
-  openGraph: {
-    title: "About — MakeMyStore",
-    description:
-      "Why MakeMyStore exists, how projects get built, and the tech stack behind every delivery.",
-    url: `${SITE_URL}/about`,
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "About — MakeMyStore",
-    description:
-      "Why MakeMyStore exists, how projects get built, and the tech stack behind every delivery.",
-  },
-};
+});
 
 const values = [
   {
