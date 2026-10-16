@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { Noto_Sans_Arabic } from "next/font/google";
-import { ArrowRight, Check, Plus, FileText, Globe2, MapPin, ShieldCheck } from "lucide-react";
+import { ArrowRight, Briefcase, Check, Plus, FileText, Globe2, MapPin, ShieldCheck } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import CvOrderForm from "@/components/CvOrderForm";
+import Image from "next/image";
 import { content, type Lang } from "@/lib/cv-data";
 
 // Arabic font is only loaded on this route (the rest of the site is unaffected).
@@ -144,7 +145,7 @@ export default function CvPage() {
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.packages.title}</h2>
               <p className="mt-4 text-muted">{t.packages.intro}</p>
             </div>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
               {t.packages.items.map((p, i) => (
                 <Reveal key={p.id} delay={i * 80}>
                   <div
@@ -198,6 +199,48 @@ export default function CvPage() {
                 <span className="font-semibold text-ink">{t.packages.academicBold}</span> {t.packages.academicText}
               </p>
             </div>
+          </div>
+        </section>
+
+        {/* Portfolio website showcase.
+            Replace /public/images/cv/portfolio-sample.png with your own image
+            (1600 x 1000 px). No code change needed. */}
+        <section id="portfolio" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto grid max-w-content items-center gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-2">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint">
+                <Briefcase size={14} /> {t.portfolio.badge}
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.portfolio.title}</h2>
+              <p className="mt-4 text-muted">{t.portfolio.intro}</p>
+              <ul className="mt-6 space-y-3">
+                {t.portfolio.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-2 text-sm text-muted">
+                    <Check size={16} className="mt-0.5 shrink-0 text-mint" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#order"
+                data-package="portfolio"
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                {t.portfolio.cta}
+                <ArrowRight size={16} className={arrow} />
+              </a>
+            </div>
+            <Reveal>
+              <div dir="ltr" className="overflow-hidden rounded-xl2 border border-border bg-surface2/60 shadow-sm">
+                <Image
+                  src="/images/cv/portfolio-sample.png"
+                  alt={t.portfolio.imageAlt}
+                  width={1600}
+                  height={1000}
+                  className="h-auto w-full"
+                />
+              </div>
+            </Reveal>
           </div>
         </section>
 
