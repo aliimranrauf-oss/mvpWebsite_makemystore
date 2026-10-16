@@ -103,6 +103,11 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
         return;
       }
 
+      // Tell GTM a lead was submitted (used as the Google Ads conversion trigger)
+      try {
+        const w = window as unknown as { dataLayer?: unknown[] };
+        (w.dataLayer = w.dataLayer || []).push({ event: "generate_lead", form_name: "cv_order" });
+      } catch {}
       setStatus("success");
       form.reset();
     } catch {
