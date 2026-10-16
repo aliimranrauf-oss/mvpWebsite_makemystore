@@ -83,6 +83,11 @@ export default function ContactForm({
         return;
       }
 
+      // Tell GTM a lead was submitted (used as the Google Ads conversion trigger)
+      try {
+        const w = window as unknown as { dataLayer?: unknown[] };
+        (w.dataLayer = w.dataLayer || []).push({ event: "generate_lead", form_name: "contact" });
+      } catch {}
       setStatus("success");
       form.reset();
     } catch {
