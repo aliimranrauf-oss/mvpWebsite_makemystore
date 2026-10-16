@@ -120,11 +120,62 @@ function buildEntries(): Entry[] {
   const CV_TERMS = ["cv", "resume", "linkedin", "cover letter", "biography", "curriculum vitae"];
   const LINK = "/cv-writing#order";
 
+  // Portfolio website (same page, anchor #portfolio). Checked BEFORE the CV
+  // entries so "portfolio website price" never falls through to the CV answers.
+  const PF_TERMS = ["portfolio", "personal website", "personal site", "personal web site", "online portfolio"];
+  const pf = cvContent.en.portfolio;
+  const pfPkg = cvContent.en.packages.items.find((p) => p.id === "portfolio");
+  const pfFeatures = pfPkg ? pfPkg.features.map((x) => `• ${x}`).join("\n") : "";
+  const PF_LINK = "/cv-writing#portfolio";
+
+  entries.push(
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget", "quote"],
+      requires: PF_TERMS,
+      response: `The Portfolio Website package is quoted individually — you get a fixed price by email before any work starts, and no payment is taken until you accept it. Prices are listed in GBP; tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent. If you also need a CV, our CV & Cover Letter package starts from £40 (cover letter free). Request your quote: ${LINK} (choose "Portfolio Website").`,
+    },
+    {
+      keywords: ["how long", "delivery", "turnaround", "how fast", "timeline", "deadline", "urgent"],
+      requires: PF_TERMS,
+      response: `We confirm a delivery date in your fixed quote, and we deliver on time. Tell us your deadline in the order form: ${LINK}`,
+    },
+    {
+      keywords: ["domain", "hosting", "my own domain", "custom domain", "yourname com"],
+      requires: PF_TERMS,
+      response: `Your portfolio is set up so it can live on your own domain. Domain and hosting details and any costs are confirmed in your fixed quote, so there are no surprises. Ask for a quote: ${LINK}`,
+    },
+    {
+      keywords: ["sample", "samples", "example", "examples", "template", "see", "look like", "preview"],
+      requires: PF_TERMS,
+      response: `You can see a sample portfolio layout on our CV page: ${PF_LINK}. Every portfolio is custom-designed around your work, not a fixed template.`,
+    },
+    {
+      keywords: ["revision", "revisions", "edits", "changes", "update", "11 months"],
+      requires: PF_TERMS,
+      response: `The Portfolio Website package includes 11 months of free revisions, so you can send updates as your projects and experience grow.`,
+    },
+    {
+      keywords: ["arabic", "bilingual", "english"],
+      requires: PF_TERMS,
+      response: `Portfolios are built in English, with Arabic available on request. Mention it in the order form and the team will confirm what's possible and the cost: ${LINK}`,
+    },
+    {
+      keywords: ["who is it for", "who is this for", "who needs", "do i need", "should i", "designer", "developer", "freelancer", "consultant", "creative", "photographer", "student", "graduate"],
+      requires: PF_TERMS,
+      response: `A portfolio website suits designers, developers, consultants, creatives and executives, and anyone who wants to show real work instead of just listing it. ${pfPkg?.bestFor ?? ""} It pairs well with a CV and LinkedIn profile so everything tells the same story.`,
+    },
+    {
+      // General portfolio overview, the catch-all for portfolio questions.
+      keywords: PF_TERMS,
+      response: `${pf.title}. ${pf.intro}\n\nThe Portfolio Website package includes:\n${pfFeatures}\n\nIt's quoted individually (fixed price before any work starts) and you can bundle it with a CV or LinkedIn order. Details and sample layout: ${PF_LINK}`,
+    }
+  );
+
   entries.push(
     {
       keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget"],
       requires: CV_TERMS,
-      response: `Our CV & Cover Letter package starts from £40, with the cover letter included free. LinkedIn, Complete and Biography packages are quoted individually based on seniority and scope — you always get a fixed price before any work starts.\n\nPrices are listed in GBP. Tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent in your quote.\n\nGet your exact price: ${LINK}`,
+      response: `Our CV & Cover Letter package starts from £40, with the cover letter included free. LinkedIn, Complete, Biography and Portfolio Website packages are quoted individually based on seniority and scope — you always get a fixed price before any work starts.\n\nPrices are listed in GBP. Tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent in your quote.\n\nGet your exact price: ${LINK}`,
     },
     {
       keywords: ["how long", "delivery", "turnaround", "how fast", "timeline", "deadline", "urgent"],
@@ -182,7 +233,7 @@ function buildEntries(): Entry[] {
     {
       // General CV overview — keep LAST among the CV entries (it's the catch-all).
       keywords: CV_TERMS,
-      response: `We write professional CVs, cover letters, LinkedIn profiles and bios — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Services start from £40. See details and get a fixed quote: /cv-writing`,
+      response: `We write professional CVs, cover letters, LinkedIn profiles and bios, and build personal portfolio websites — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Services start from £40. See details and get a fixed quote: /cv-writing`,
     }
   );
 
@@ -239,7 +290,7 @@ function buildEntries(): Entry[] {
     .join("\n");
   entries.push({
     keywords: ["service", "services", "what do you offer", "what do you do", "what can you build"],
-    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (from £40) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n\nWant details on one? Just ask.`,
+    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (from £40) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n• Portfolio Websites (quoted individually) — a personal portfolio site that shows your work, built to go with your CV. See /cv-writing#portfolio\n\nWant details on one? Just ask.`,
   });
 
   // Pricing summary, generated from the same tier data used on /#pricing.
@@ -320,7 +371,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   }
 
   return {
-    text: "I didn't quite catch that — I can answer questions about pricing, services, timelines and our CV & LinkedIn writing. For anything else, let's get you to a real person.",
+    text: "I didn't quite catch that — I can answer questions about pricing, services, timelines and our CV, LinkedIn & portfolio website service. For anything else, let's get you to a real person.",
     suggestQuote: true,
     matched: false,
   };
