@@ -4,7 +4,7 @@ import Script from "next/script";
 import dynamic from "next/dynamic";
 import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
-import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS, PHONE_E164 } from "@/lib/constants";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, GTM_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS, PHONE_E164 } from "@/lib/constants";
 
 // Only the active bot's code (and the shared ChatWidget it pulls in) ever
 // gets fetched — dynamic() + a build-time-constant CHATBOT_MODE lets
@@ -165,12 +165,20 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
         />
 
-        {/* Google Analytics (GA4) */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga4-init" strategy="afterInteractive">
+        {/* GTM noscript fallback */}
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+
+        {/* Consent Mode v2 defaults: must run BEFORE GTM / GA4 load */}
+        <Script id="consent-default" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
@@ -183,10 +191,35 @@ export default function RootLayout({
               ad_personalization: 'denied',
               wait_for_update: 500
             });
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}');
           `}
         </Script>
+
+        {GTM_ID ? (
+          /* Google Tag Manager (add your GA4 tag inside GTM, not here, to avoid double counting) */
+          <Script id="gtm-init" strategy="afterInteractive">
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `}
+          </Script>
+        ) : (
+          <>
+            {/* Google Analytics (GA4) direct tag: used only when no GTM ID is set */}
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
 
         {children}
 
