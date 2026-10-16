@@ -36,6 +36,7 @@ export type Content = {
     items: CvPackage[];
   };
   gulf: { badge: string; title: string; intro: string; points: Pair[]; markets: string[] };
+  portfolio: { badge: string; title: string; intro: string; points: string[]; imageAlt: string; cta: string };
   included: { title: string; intro: string; items: Pair[] };
   how: { title: string; intro: string; steps: Pair[] };
   order: { title: string; intro: string; bullets: string[] };
@@ -163,6 +164,21 @@ const en: Content = {
           "11 months of free revisions",
         ],
       },
+      {
+        id: "portfolio",
+        name: "Portfolio Website",
+        price: "Quote on request",
+        priceNote: "Fixed price confirmed before we start",
+        tagline: "A personal portfolio website that shows your work, not just lists it.",
+        bestFor: "Designers, developers, consultants, creatives and executives who want to stand out.",
+        features: [
+          "Custom one-page or multi-page portfolio site",
+          "Mobile-friendly, fast and SEO-ready",
+          "Your projects, CV and contact details in one link",
+          "Content writing and layout included",
+          "11 months of free revisions",
+        ],
+      },
     ],
   },
   gulf: {
@@ -196,6 +212,20 @@ const en: Content = {
       "Bahrain",
       "Oman",
     ],
+  },
+  portfolio: {
+    badge: "New service",
+    title: "Your work deserves more than a PDF",
+    intro:
+      "Pair your CV with a portfolio website that recruiters, clients and boards can open with one link. We design, write and build it for you.",
+    points: [
+      "Hero section, about, projects, skills and contact",
+      "Your own domain and mobile-friendly design",
+      "Matches the tone of your CV and LinkedIn profile",
+      "Available in English and Arabic",
+    ],
+    imageAlt: "Sample portfolio website layout",
+    cta: "Ask about a portfolio website",
   },
   included: {
     title: "Included with every order",
@@ -294,6 +324,10 @@ const en: Content = {
       {
         q: "How do I pay, and in what currency?",
         a: "Prices are listed in GBP. Tell us your preferred currency (SAR, AED, USD and so on) in the form and we will confirm the equivalent and payment options in your quote.",
+      },
+      {
+        q: "Do you build portfolio websites?",
+        a: "Yes. We design, write and build a personal portfolio website that sits alongside your CV and LinkedIn profile. Choose the Portfolio Website package in the form and you will get a fixed quote before any work starts.",
       },
       {
         q: "Can I see samples?",
@@ -448,6 +482,21 @@ const ar: Content = {
           "11 شهراً من التعديلات المجانية",
         ],
       },
+      {
+        id: "portfolio",
+        name: "موقع بورتفوليو شخصي",
+        price: "السعر عند الطلب",
+        priceNote: "سعر ثابت يُؤكَّد قبل البدء",
+        tagline: "موقع شخصي يعرض أعمالك بدل أن يكتفي بسردها.",
+        bestFor: "المصممون والمطورون والمستشارون والمبدعون والتنفيذيون الراغبون في التميّز.",
+        features: [
+          "موقع بورتفوليو مخصص من صفحة واحدة أو عدة صفحات",
+          "متوافق مع الجوال وسريع وجاهز لمحركات البحث",
+          "مشاريعك وسيرتك الذاتية وبيانات التواصل في رابط واحد",
+          "كتابة المحتوى والتصميم مشمولان",
+          "11 شهراً من التعديلات المجانية",
+        ],
+      },
     ],
   },
   gulf: {
@@ -481,6 +530,20 @@ const ar: Content = {
       "البحرين",
       "سلطنة عُمان",
     ],
+  },
+  portfolio: {
+    badge: "خدمة جديدة",
+    title: "أعمالك تستحق أكثر من ملف PDF",
+    intro:
+      "أضف إلى سيرتك الذاتية موقع بورتفوليو يفتحه مسؤولو التوظيف والعملاء ومجالس الإدارة برابط واحد. نصمم الموقع ونكتب محتواه ونبنيه لك.",
+    points: [
+      "قسم رئيسي ونبذة ومشاريع ومهارات وتواصل",
+      "نطاق خاص بك وتصميم متوافق مع الجوال",
+      "يتناسق مع أسلوب سيرتك الذاتية وملف LinkedIn",
+      "متاح بالإنجليزية والعربية",
+    ],
+    imageAlt: "نموذج لتصميم موقع بورتفوليو",
+    cta: "اسأل عن موقع البورتفوليو",
   },
   included: {
     title: "مشمول مع كل طلب",
@@ -579,6 +642,10 @@ const ar: Content = {
       {
         q: "كيف أدفع، وبأي عملة؟",
         a: "الأسعار معروضة بالجنيه الإسترليني. أخبرنا في النموذج بعملتك المفضلة (ريال سعودي أو درهم إماراتي أو دولار أمريكي وغيرها) وسنؤكد لك المبلغ المعادل وخيارات الدفع في عرض السعر.",
+      },
+      {
+        q: "هل تصممون مواقع بورتفوليو؟",
+        a: "نعم. نصمم ونكتب ونبني موقع بورتفوليو شخصياً يكمل سيرتك الذاتية وملف LinkedIn. اختر باقة موقع البورتفوليو في النموذج وستحصل على سعر ثابت قبل بدء أي عمل.",
       },
       {
         q: "هل يمكنني الاطلاع على نماذج؟",
