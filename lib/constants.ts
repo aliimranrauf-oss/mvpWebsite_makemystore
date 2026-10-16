@@ -16,6 +16,11 @@ export const SOCIAL_LINKS: string[] = [
 ];
 export const GA_MEASUREMENT_ID = "G-9GHRBEWJ1J";
 
+// Google Tag Manager container ID (format: GTM-XXXXXXX).
+// Defaults to the MakeMyStore container; NEXT_PUBLIC_GTM_ID can override it.
+// If set to an empty string, GTM is skipped and the direct GA4 tag is used.
+export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID || "GTM-WCWWZLFW";
+
 export const NAV_LINKS = [
   { href: "/", label: "Home" },
   {
