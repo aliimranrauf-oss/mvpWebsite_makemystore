@@ -184,12 +184,24 @@ export default function RootLayout({
             function gtag(){dataLayer.push(arguments);}
             var mmsConsent = 'denied';
             try { if (localStorage.getItem('mms_consent') === 'granted') mmsConsent = 'granted'; } catch (e) {}
+
+            // EU / UK / Switzerland: strict, wait for the visitor's choice
             gtag('consent', 'default', {
               analytics_storage: mmsConsent,
-              ad_storage: 'denied',
-              ad_user_data: 'denied',
-              ad_personalization: 'denied',
+              ad_storage: mmsConsent,
+              ad_user_data: mmsConsent,
+              ad_personalization: mmsConsent,
+              region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
               wait_for_update: 500
+            });
+
+            // Everywhere else (UAE, Gulf, etc.): allowed by default so Google Ads
+            // can keep the click ID and count conversions
+            gtag('consent', 'default', {
+              analytics_storage: 'granted',
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted'
             });
           `}
         </Script>
