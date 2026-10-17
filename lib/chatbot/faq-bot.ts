@@ -3,7 +3,7 @@
 // inconsistent with the rest of the site — and it never claims to be AI.
 
 import { services, chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
-import { content as cvContent } from "@/lib/cv-data";
+import { content as cvContent, priceLine, gbp } from "@/lib/cv-data";
 
 export type FaqBotReply = {
   text: string;
@@ -116,7 +116,10 @@ function buildEntries(): Entry[] {
   // Built from lib/cv-data.ts so prices/features stay in sync with the page.
   // These go FIRST, but each one also needs a CV-related word (or a CV-specific
   // phrase), so they never steal questions about the other services.
-  const cvList = cvContent.en.packages.items.map((p) => `• ${p.name} — ${p.price}`).join("\n");
+  const cvById = (id: string) => cvContent.en.packages.items.find((p) => p.id === id)!;
+  const cvList = cvContent.en.packages.items.map((p) => `• ${p.name} — ${priceLine(p)}`).join("\n");
+  const pfPrice = gbp(cvById("portfolio").prices.entry);
+  const levelsGuide = cvContent.en.packages.levels.map((l) => `• ${l.label} (${l.years})`).join("\n");
   const CV_TERMS = ["cv", "resume", "linkedin", "cover letter", "biography", "curriculum vitae"];
   const LINK = "/cv-writing#order";
 
@@ -132,17 +135,17 @@ function buildEntries(): Entry[] {
     {
       keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget", "quote"],
       requires: PF_TERMS,
-      response: `The Portfolio Website package is quoted individually — you get a fixed price by email before any work starts, and no payment is taken until you accept it. Prices are listed in GBP; tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent. If you also need a CV, our CV & Cover Letter package starts from £40 (cover letter free). Request your quote: ${LINK} (choose "Portfolio Website").`,
+      response: `The Portfolio Website package is a fixed ${pfPrice} at every career level. Prices are listed in GBP; tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent. No payment is taken until we've confirmed your order. If you also need a CV, CV & Cover Letter is ${priceLine(cvById("cv-cover-letter"))} (cover letter free). Order here: ${LINK} (choose "Portfolio Website").`,
     },
     {
       keywords: ["how long", "delivery", "turnaround", "how fast", "timeline", "deadline", "urgent"],
       requires: PF_TERMS,
-      response: `We confirm a delivery date in your fixed quote, and we deliver on time. Tell us your deadline in the order form: ${LINK}`,
+      response: `We confirm a delivery date when we confirm your order, and we deliver on time. Tell us your deadline in the order form: ${LINK}`,
     },
     {
       keywords: ["domain", "hosting", "my own domain", "custom domain", "yourname com"],
       requires: PF_TERMS,
-      response: `Your portfolio is set up so it can live on your own domain. Domain and hosting details and any costs are confirmed in your fixed quote, so there are no surprises. Ask for a quote: ${LINK}`,
+      response: `Your portfolio is set up so it can live on your own domain. Any domain and hosting costs are confirmed with you before work starts, so there are no surprises. Order or ask a question: ${LINK}`,
     },
     {
       keywords: ["sample", "samples", "example", "examples", "template", "see", "look like", "preview"],
@@ -167,7 +170,36 @@ function buildEntries(): Entry[] {
     {
       // General portfolio overview, the catch-all for portfolio questions.
       keywords: PF_TERMS,
-      response: `${pf.title}. ${pf.intro}\n\nThe Portfolio Website package includes:\n${pfFeatures}\n\nIt's quoted individually (fixed price before any work starts) and you can bundle it with a CV or LinkedIn order. Details and sample layout: ${PF_LINK}`,
+      response: `${pf.title}. ${pf.intro}\n\nThe Portfolio Website package includes:\n${pfFeatures}\n\nIt's a fixed ${pfPrice} and you can order it together with a CV or LinkedIn package. Details and sample layout: ${PF_LINK}`,
+    }
+  );
+
+  entries.push(
+    {
+      // Which level am I? (no CV word needed: "entry level", "executive price" etc. are CV-specific here)
+      keywords: ["which level", "what level", "my level", "career level", "entry level", "fresh graduate", "professional level", "senior level", "executive level", "years of experience", "years experience"],
+      requires: [...CV_TERMS, "level", "price", "cost", "package"],
+      response: `Our CV prices depend on your career level:\n\n${levelsGuide}\n\nCV & Cover Letter: ${priceLine(cvById("cv-cover-letter"))}\nLinkedIn: ${priceLine(cvById("linkedin"))}\nComplete Package: ${priceLine(cvById("complete"))}\n\nIf you're between two levels, pick the one that matches the role you're applying for. Choose yours here: /cv-writing#packages`,
+    },
+    {
+      keywords: ["complete package", "complete cv", "cv and linkedin", "cv + linkedin", "bundle", "everything"],
+      requires: ["price", "cost", "how much", "pricing", "rates", "package"],
+      response: `The Complete Package (CV, cover letter and LinkedIn) is fixed by level: ${priceLine(cvById("complete"))}. That saves £50 compared with buying the CV & Cover Letter and LinkedIn packages separately. Order: ${LINK}`,
+    },
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates"],
+      requires: ["linkedin", "linked in"],
+      response: `LinkedIn Profile prices are fixed by career level: ${priceLine(cvById("linkedin"))}. It includes a full profile rewrite, SEO-optimised headline and About section, a custom cover banner and profile picture, and 11 months of free revisions. Order: ${LINK}`,
+    },
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates"],
+      requires: ["biography", "professional bio", "personal bio", "speaker bio"],
+      response: `Professional Biography: ${priceLine(cvById("biography"))}. Biographies are written for Senior and Executive profiles, in short, medium and long versions, with 11 months of free revisions. Order: ${LINK}`,
+    },
+    {
+      keywords: ["price", "pricing", "cost", "how much", "rates"],
+      requires: ["cover letter"],
+      response: `The cover letter is free with every CV package. CV & Cover Letter is fixed by level: ${priceLine(cvById("cv-cover-letter"))}. Order: ${LINK}`,
     }
   );
 
@@ -175,17 +207,17 @@ function buildEntries(): Entry[] {
     {
       keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget"],
       requires: CV_TERMS,
-      response: `Our CV & Cover Letter package starts from £40, with the cover letter included free. LinkedIn, Complete, Biography and Portfolio Website packages are quoted individually based on seniority and scope — you always get a fixed price before any work starts.\n\nPrices are listed in GBP. Tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent in your quote.\n\nGet your exact price: ${LINK}`,
+      response: `Our CV prices are fixed and depend on your career level:\n\n${cvList}\n\nThe cover letter is free with CV packages. Prices are listed in GBP; tell us your preferred currency (SAR, AED, USD…) and we'll confirm the equivalent when we confirm your order.\n\nNot sure which level you are? Entry is 0–2 years, Professional 2–5, Senior 5–10, Executive 10+. Order here: ${LINK}`,
     },
     {
       keywords: ["how long", "delivery", "turnaround", "how fast", "timeline", "deadline", "urgent"],
       requires: CV_TERMS,
-      response: `Delivery time depends on the package and how quickly you send us your details. We confirm a delivery date in your quote and we deliver on time. If it's urgent, choose "Urgent (24–48 hrs)" in the order form: ${LINK}`,
+      response: `Delivery time depends on the package and how quickly you send us your details. We confirm a delivery date when we confirm your order and we deliver on time. If it's urgent, choose "Urgent (24–48 hrs)" in the order form: ${LINK}`,
     },
     {
       keywords: ["pay", "payment", "currency", "sar", "aed", "usd", "dollar", "riyal", "dirham"],
       requires: CV_TERMS,
-      response: `Prices are listed in GBP. In the order form you can pick your preferred currency (SAR, AED, QAR, KWD, USD or GBP) and we'll confirm the equivalent and the payment options in your quote. No payment is taken until you've seen and accepted the fixed quote.`,
+      response: `Prices are listed in GBP. In the order form you can pick your preferred currency (SAR, AED, QAR, KWD, USD or GBP) and we'll confirm the equivalent and the payment options when we confirm your order. No payment is taken until we've confirmed your order and you've agreed.`,
     },
     {
       keywords: ["revision", "revisions", "edits", "update my", "changes after", "free updates", "11 months"],
@@ -211,11 +243,11 @@ function buildEntries(): Entry[] {
     },
     {
       keywords: ["linkedin", "linked in"],
-      response: `We write and optimise LinkedIn profiles: an SEO-friendly headline and About section, experience and skills rewritten for recruiter search, plus tips on photo, banner and URL — with 11 months of free revisions. LinkedIn is quoted individually, or bundled in the Complete Package (CV + cover letter + LinkedIn). Get your price: ${LINK}`,
+      response: `We write and optimise LinkedIn profiles: an SEO-friendly headline and About section, experience and skills rewritten for recruiter search, plus tips on photo, banner and URL — with 11 months of free revisions. LinkedIn is fixed by career level (${priceLine(cvById("linkedin"))}), or bundled in the Complete Package (CV + cover letter + LinkedIn). Order: ${LINK}`,
     },
     {
       keywords: ["biography", "professional bio", "personal bio", "speaker bio"],
-      response: `We write professional biographies for websites, conferences, company profiles, boards and press — in first or third person, in short, medium or long versions. It's quoted individually: ${LINK}`,
+      response: `We write professional biographies for websites, conferences, company profiles, boards and press — in first or third person, in short, medium or long versions. Fixed price: ${priceLine(cvById("biography"))}. Order: ${LINK}`,
     },
     {
       keywords: ["academic cv", "academic resume", "research cv", "lecturer cv", "phd cv"],
@@ -233,7 +265,7 @@ function buildEntries(): Entry[] {
     {
       // General CV overview — keep LAST among the CV entries (it's the catch-all).
       keywords: CV_TERMS,
-      response: `We write professional CVs, cover letters, LinkedIn profiles and bios, and build personal portfolio websites — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Services start from £40. See details and get a fixed quote: /cv-writing`,
+      response: `We write professional CVs, cover letters, LinkedIn profiles and bios, and build personal portfolio websites — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Prices are fixed by career level. See details and order: /cv-writing`,
     }
   );
 
@@ -290,7 +322,7 @@ function buildEntries(): Entry[] {
     .join("\n");
   entries.push({
     keywords: ["service", "services", "what do you offer", "what do you do", "what can you build"],
-    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (from £40) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n• Portfolio Websites (quoted individually) — a personal portfolio site that shows your work, built to go with your CV. See /cv-writing#portfolio\n\nWant details on one? Just ask.`,
+    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (fixed prices from £100, by career level) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n• Portfolio Websites (fixed £350) — a personal portfolio site that shows your work, built to go with your CV. See /cv-writing#portfolio\n\nWant details on one? Just ask.`,
   });
 
   // Pricing summary, generated from the same tier data used on /#pricing.

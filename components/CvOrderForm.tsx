@@ -2,11 +2,12 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { CheckCircle2, Loader2, AlertCircle } from "lucide-react";
-import { content, type Lang } from "@/lib/cv-data";
+import { content, effectiveLevel, gbp, priceFor, type Lang, type LevelId } from "@/lib/cv-data";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const LEVELS: LevelId[] = ["entry", "professional", "senior", "executive"];
 const CURRENCIES = ["SAR", "AED", "QAR", "KWD", "USD", "GBP"];
 
 const field =
@@ -21,6 +22,8 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [pkg, setPkg] = useState("complete");
+  const [level, setLevel] = useState<LevelId>("professional");
+  const selectedPkg = packages.find((p) => p.id === pkg);
 
   // Package cards carry data-package="<id>". Clicking one preselects it here.
   useEffect(() => {
@@ -28,10 +31,15 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
     const fromUrl = new URLSearchParams(window.location.search).get("package");
     if (fromUrl && valid.has(fromUrl)) setPkg(fromUrl);
 
+    const fromUrlLevel = new URLSearchParams(window.location.search).get("level");
+    if (fromUrlLevel && LEVELS.includes(fromUrlLevel as LevelId)) setLevel(fromUrlLevel as LevelId);
+
     function onClick(e: MouseEvent) {
       const el = (e.target as HTMLElement).closest<HTMLElement>("[data-package]");
       const id = el?.dataset.package;
       if (id && valid.has(id)) setPkg(id);
+      const lv = el?.dataset.level;
+      if (lv && LEVELS.includes(lv as LevelId)) setLevel(lv as LevelId);
     }
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
@@ -66,11 +74,15 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
     // The message saved to Supabase is always in English (option values are
     // English) so it's easy for you to read, plus a line noting the site language.
     const selected = enPackages.find((p) => p.id === pkg);
+    const billedLevel = selected ? effectiveLevel(selected, level) : level;
+    const enLevel = content.en.form.levels.find((l) => l.value === level)?.label ?? level;
+    const fixedPrice = selected ? gbp(priceFor(selected, level)) : "-";
     const lines = [
-      `CV SERVICES ORDER ENQUIRY`,
+      `CV SERVICES ORDER`,
       `Package: ${selected?.name ?? pkg}`,
+      `Career level: ${enLevel}${billedLevel !== level ? ` (billed at ${billedLevel})` : ""}`,
+      `Fixed price shown to customer: ${fixedPrice} GBP`,
       `Country targeted: ${get("country") || "-"}`,
-      `Career level: ${get("level") || "-"}`,
       `Target role / industry: ${targetRole}`,
       `Deadline: ${get("deadline") || "-"}`,
       `Preferred currency: ${get("currency") || "-"}`,
@@ -84,7 +96,7 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
       email,
       phone: get("phone"),
       service: "cv-writing",
-      budget: selected?.name ?? "",
+      budget: selected ? `${selected.name} - ${fixedPrice}` : "",
       message: lines.join("\n"),
       company_website: String(data.get("company_website") || ""), // honeypot
     };
@@ -218,7 +230,7 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
           <label htmlFor="level" className="mb-1.5 block text-sm font-medium text-ink">
             {t.level}
           </label>
-          <select id="level" name="level" defaultValue="Mid-level professional" className={field}>
+          <select id="level" name="level" value={level} onChange={(e) => setLevel(e.target.value as LevelId)} className={field}>
             {t.levels.map((l) => (
               <option key={l.value} value={l.value}>
                 {l.label}
@@ -239,6 +251,25 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
           </select>
         </div>
       </div>
+
+      {selectedPkg && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-mint/30 bg-mint/5 px-4 py-3">
+          <div>
+            <p className="text-xs font-medium text-muted">{t.yourPrice}</p>
+            <p className="text-sm text-ink">
+              {selectedPkg.name}
+              {" · "}
+              {t.levels.find((l) => l.value === effectiveLevel(selectedPkg, level))?.label}
+            </p>
+            {effectiveLevel(selectedPkg, level) !== level && (
+              <p className="mt-1 text-xs text-muted">{t.levelAdjusted}</p>
+            )}
+          </div>
+          <p className="font-display text-2xl font-semibold text-ink" aria-live="polite">
+            <bdi>{gbp(priceFor(selectedPkg, level))}</bdi>
+          </p>
+        </div>
+      )}
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
@@ -296,7 +327,7 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
         {status === "submitting" && <Loader2 size={16} className="animate-spin" />}
         {status === "submitting" ? t.sending : t.submit}
       </button>
-      <p className="text-xs text-muted">{t.note}</p>
+      <p className="text-xs text-muted">{t.note} {t.fixedPriceNote}</p>
     </form>
   );
 }

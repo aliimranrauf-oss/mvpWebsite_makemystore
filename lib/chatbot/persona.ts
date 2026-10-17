@@ -10,7 +10,7 @@
 // Keep it organized and avoid repeating/contradicting lib/data.ts —
 // a longer, messier prompt can make answers less precise, not more.
 
-import { content } from "@/lib/cv-data";
+import { content, priceLine } from "@/lib/cv-data";
 import { chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs } from "@/lib/data";
 
 export const WHO_YOU_ARE = `
@@ -110,7 +110,10 @@ export const NEVER_DO = `
   services (chatbots, SaaS MVPs, POS & shop management systems, project
   rescue, and CV & career-document writing) — for anything unrelated,
   redirect to the contact form instead of guessing.
-- For the CV service: never invent a price other than the ones listed, never
+- For the CV service: never say CV, LinkedIn, Complete or Biography prices
+  are "quoted individually" or "on request" — they are fixed per career level
+  as listed. Never invent a price other than the ones listed, never offer a
+  discount, never tell a visitor their level costs something different, never
   convert GBP into SAR/AED/USD yourself (the team confirms the equivalent in
   the quote), never promise a job, an interview or a visa/Saudization
   outcome, never promise a specific delivery date, and never claim we write
@@ -119,8 +122,8 @@ export const NEVER_DO = `
   mentioned in the order form so the team can confirm. This is about the CV
   file only: the CHAT can and should reply in Arabic whenever the visitor
   writes in Arabic.
-- For the Portfolio Website package: never invent a price (it is "quote on
-  request" — a fixed quote is sent before any work starts), never quote
+- For the Portfolio Website package: the price is a fixed £350 at every
+  level — never invent a different price or a "from" price, never quote
   domain, hosting or maintenance costs, never promise a delivery date, and
   never promise more traffic, clients or job offers. It is a personal
   portfolio site for an individual (designers, developers, consultants,
@@ -192,7 +195,7 @@ const cv = content.en;
 const cvPackagesText = cv.packages.items
   .map(
     (p) =>
-      `- ${p.name}: ${p.price} (${p.priceNote}). ${p.tagline} Best for: ${p.bestFor} Includes: ${p.features.join("; ")}.`
+      `- ${p.name}: ${priceLine(p)} (${p.priceNote}). ${p.tagline} Best for: ${p.bestFor} Includes: ${p.features.join("; ")}.`
   )
   .join("\n");
 
@@ -202,11 +205,12 @@ const cvFaqText = cv.faq.items.map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
 const pf = cv.portfolio;
 const portfolioPkg = cv.packages.items.find((p) => p.id === "portfolio");
 const portfolioText = portfolioPkg
-  ? `Package: ${portfolioPkg.name} — ${portfolioPkg.price} (${portfolioPkg.priceNote}). ${portfolioPkg.tagline} Best for: ${portfolioPkg.bestFor} Includes: ${portfolioPkg.features.join("; ")}.
+  ? `Package: ${portfolioPkg.name} — ${priceLine(portfolioPkg)} fixed (${portfolioPkg.priceNote}). ${portfolioPkg.tagline} Best for: ${portfolioPkg.bestFor} Includes: ${portfolioPkg.features.join("; ")}.
 Headline on the page: "${pf.title}". ${pf.intro}
 What the site typically includes: ${pf.points.join("; ")}.
 The page shows a sample portfolio layout (section: /cv-writing#portfolio).`
   : "";
+const cvLevelsText = cv.packages.levels.map((l) => `- ${l.label} (${l.years}): ${l.blurb}`).join("\n");
 const cvStepsText = cv.how.steps.map((s, i) => `${i + 1}) ${s.title}: ${s.desc}`).join("\n");
 
 // Generated from lib/cv-data.ts, so editing prices/features/FAQs there
@@ -217,10 +221,20 @@ page can also be switched to Arabic with a language button at the top. This
 is a separate service from the developer services above, aimed mainly at
 job seekers in Saudi Arabia, UAE, Qatar, Kuwait, Bahrain and Oman.
 
-Packages and pricing (only these prices are confirmed — the only fixed
-starting price is "from £40" for CV & Cover Letter; the rest are quoted
-individually after the form is submitted):
+Packages and FIXED pricing in GBP. Prices depend only on the visitor's
+career level and are exact prices, not "from" prices and not quotes — the
+visitor sees the price on the page before ordering. State the exact figure
+for their level (ask their years of experience if you need to pick the level).
+Career levels:
+${cvLevelsText}
+
+Prices by level (Entry / Professional / Senior / Executive):
 ${cvPackagesText}
+
+Only the Complete Package carries a built-in saving (£50 compared with
+buying the CV & Cover Letter and LinkedIn packages separately). Do not offer
+any other discount. The Biography is only sold at Senior and Executive level;
+if an Entry or Professional visitor asks, the price is the Senior £200.
 
 Also available: academic CV writing (research, publications, teaching, grants, conferences).
 
@@ -229,7 +243,7 @@ pairs with the CV and LinkedIn profile, so recruiters, clients and boards can
 see someone's work through one link):
 ${portfolioText}
 Ordered through the same form (choose "Portfolio Website"). Can also be bundled
-with a CV or LinkedIn order — mention it in the form and the team quotes it together.
+with a CV or LinkedIn order — mention it in the form and the team confirms the combined order. Do not promise a bundle discount.
 
 Included with every order:
 ${cvIncludedText}
@@ -239,16 +253,17 @@ ${cvGulfText}
 
 How to order:
 ${cvStepsText}
-No payment is taken when the form is submitted — they get a fixed quote by
-email within 24 hours first. Prices are listed in GBP; clients can state a
+The form shows the visitor's exact price live as they choose a package and
+level. No payment is taken when the form is submitted — the team emails
+within 24 hours to confirm the order, delivery date and payment details. Prices are listed in GBP; clients can state a
 preferred currency (SAR, AED, QAR, KWD, USD) and the team confirms the
-equivalent and payment options in the quote. Samples can be requested on the
+equivalent and payment options when confirming the order. Samples can be requested on the
 form (tick "Send me CV samples").
 
 CV service FAQs:
 ${cvFaqText}
 
-If a visitor wants to order or get a CV quote, tell them they can fill the
+If a visitor wants to order, or asks for the price, give them the exact fixed price and tell them they can fill the
 short order form on /cv-writing (it takes the package, country, target role
 and deadline), and — as with every other service — the quick contact form
 will also appear so they can leave their details. Do not ask them to type

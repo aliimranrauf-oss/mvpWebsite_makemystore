@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CvPage from "@/components/CvPage";
-import { cvPackages, cvFaqs } from "@/lib/cv-data";
+import { cvPackages, cvFaqs, priceRange } from "@/lib/cv-data";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
 const TITLE = "CV, LinkedIn & Cover Letter Writing for the Gulf — MakeMyStore";
 const DESC =
-  "ATS-friendly CV writing, free cover letter, LinkedIn optimisation and professional biographies for job seekers in Saudi Arabia, the UAE and the GCC. From £40, 11 months free revisions.";
+  "ATS-friendly CV writing, free cover letter, LinkedIn optimisation and professional biographies for job seekers in Saudi Arabia, the UAE and the GCC. Fixed prices from £100, 11 months free revisions.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -70,6 +70,17 @@ export default function CvWritingPage() {
         itemListElement: cvPackages.map((p) => ({
           "@type": "Offer",
           itemOffered: { "@type": "Service", name: p.name, description: p.tagline },
+          priceCurrency: "GBP",
+          price: priceRange(p).low === priceRange(p).high ? priceRange(p).low : undefined,
+          priceSpecification:
+            priceRange(p).low === priceRange(p).high
+              ? undefined
+              : {
+                  "@type": "PriceSpecification",
+                  priceCurrency: "GBP",
+                  minPrice: priceRange(p).low,
+                  maxPrice: priceRange(p).high,
+                },
         })),
       },
     },

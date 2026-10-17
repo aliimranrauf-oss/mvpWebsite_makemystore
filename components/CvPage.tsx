@@ -7,7 +7,7 @@ import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import CvOrderForm from "@/components/CvOrderForm";
 import Image from "next/image";
-import { content, type Lang } from "@/lib/cv-data";
+import { content, gbp, packageLevels, type Lang } from "@/lib/cv-data";
 
 // Arabic font is only loaded on this route (the rest of the site is unaffected).
 const arabicFont = Noto_Sans_Arabic({
@@ -46,6 +46,7 @@ export default function CvPage() {
   }
 
   const arrow = `rtl:-scale-x-100`;
+  const portfolioPrice = t.packages.items.find((p) => p.id === "portfolio")?.prices.entry ?? 0;
 
   return (
     <div className={arabicFont.variable}>
@@ -138,62 +139,104 @@ export default function CvPage() {
           </div>
         </section>
 
-        {/* Packages */}
+        {/* Packages — one block per service, four fixed-price level cards each */}
         <section id="packages" className="scroll-mt-20 border-b border-border">
           <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
             <div className="max-w-xl">
               <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.packages.title}</h2>
               <p className="mt-4 text-muted">{t.packages.intro}</p>
             </div>
-            <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-              {t.packages.items.map((p, i) => (
-                <Reveal key={p.id} delay={i * 80}>
-                  <div
-                    className={`flex h-full flex-col rounded-xl2 p-6 ${
-                      p.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
-                    }`}
-                    style={{ ["--card-bg" as string]: p.highlight ? "#F7FBF8" : "#FFFFFF" }}
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-medium text-ink">{p.name}</p>
-                      {p.badge && (
-                        <span className="shrink-0 rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-semibold text-mint">
-                          {p.badge}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-3 font-display text-2xl font-semibold text-ink">{p.price}</p>
-                    <p className="mt-1 text-xs text-muted">{p.priceNote}</p>
-                    <p className="mt-4 text-sm leading-relaxed text-muted">{p.tagline}</p>
-                    <p className="mt-3 text-xs leading-relaxed text-ink/70">
-                      <span className="font-semibold text-ink">{t.packages.bestFor}</span> {p.bestFor}
-                    </p>
-                    <ul className="mt-5 flex-1 space-y-2.5">
-                      {p.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2 text-sm text-muted">
-                          <Check size={15} className="mt-0.5 shrink-0 text-mint" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                    <a
-                      href="#order"
-                      data-package={p.id}
-                      className={`mt-6 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-transform hover:scale-[1.02] ${
-                        p.highlight
-                          ? "bg-mint text-white"
-                          : "border border-border bg-surface text-ink hover:border-mint/60 hover:text-mint"
-                      }`}
-                    >
-                      {t.packages.choose}
-                      <ArrowRight size={15} className={arrow} />
-                    </a>
-                  </div>
-                </Reveal>
+
+            {/* Level guide */}
+            <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {t.packages.levels.map((l) => (
+                <div key={l.id} className="rounded-xl2 border border-border bg-surface2/60 px-4 py-3">
+                  <dt className="flex items-baseline justify-between gap-2 text-sm font-semibold text-ink">
+                    {l.label}
+                    <span className="text-xs font-medium text-mint">{l.years}</span>
+                  </dt>
+                  <dd className="mt-1 text-xs leading-relaxed text-muted">{l.blurb}</dd>
+                </div>
               ))}
+            </dl>
+
+            <div className="mt-16 space-y-16">
+              {t.packages.items
+                .filter((p) => !p.flat)
+                .map((p) => {
+                  const offered = packageLevels(p);
+                  const cards = t.packages.levels.filter((l) => offered.includes(l.id));
+                  return (
+                    <div key={p.id} id={`pkg-${p.id}`} className="scroll-mt-24">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h3 className="font-display text-2xl font-semibold text-ink">{p.name}</h3>
+                        {p.badge && (
+                          <span className="rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-semibold text-mint">
+                            {p.badge}
+                          </span>
+                        )}
+                        <span className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted">
+                          {p.priceNote}
+                        </span>
+                      </div>
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{p.tagline}</p>
+                      <p className="mt-2 max-w-2xl text-xs leading-relaxed text-ink/70">
+                        <span className="font-semibold text-ink">{t.packages.bestFor}</span> {p.bestFor}
+                      </p>
+
+                      <p className="mt-5 text-xs font-semibold text-ink">{t.packages.groupIncludes}</p>
+                      <ul className="mt-2 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+                        {p.features.map((f) => (
+                          <li key={f} className="flex items-start gap-2 text-sm text-muted">
+                            <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div
+                        className={`mt-6 grid gap-4 ${
+                          cards.length === 2 ? "sm:grid-cols-2 lg:max-w-xl" : "grid-cols-2 lg:grid-cols-4"
+                        }`}
+                      >
+                        {cards.map((l, i) => (
+                          <Reveal key={l.id} delay={i * 60}>
+                            <div
+                              className={`flex h-full flex-col rounded-xl2 p-5 ${
+                                p.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
+                              }`}
+                              style={{ ["--card-bg" as string]: p.highlight ? "#F7FBF8" : "#FFFFFF" }}
+                            >
+                              <p className="text-sm font-semibold text-ink">{l.label}</p>
+                              <p className="text-xs text-muted">{l.years}</p>
+                              <p className="mt-4 font-display text-3xl font-semibold text-ink">
+                                <bdi>{gbp(p.prices[l.id])}</bdi>
+                              </p>
+                              <p className="mt-1 text-[11px] font-medium text-mint">{t.packages.fixedBadge}</p>
+                              <a
+                                href="#order"
+                                data-package={p.id}
+                                data-level={l.id}
+                                className={`mt-5 inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${
+                                  p.highlight
+                                    ? "bg-mint text-white"
+                                    : "border border-border bg-surface text-ink hover:border-mint/60 hover:text-mint"
+                                }`}
+                              >
+                                {t.packages.orderNow}
+                                <ArrowRight size={15} className={arrow} />
+                              </a>
+                            </div>
+                          </Reveal>
+                        ))}
+                      </div>
+                      {cards.length === 2 && <p className="mt-3 text-xs text-muted">{t.packages.onlyFrom}</p>}
+                    </div>
+                  );
+                })}
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 rounded-xl2 border border-border bg-surface2/60 p-5 text-sm text-muted sm:flex-row sm:items-center">
+            <div className="mt-12 flex flex-col gap-3 rounded-xl2 border border-border bg-surface2/60 p-5 text-sm text-muted sm:flex-row sm:items-center">
               <FileText size={18} className="shrink-0 text-mint" />
               <p>
                 <span className="font-semibold text-ink">{t.packages.academicBold}</span> {t.packages.academicText}
@@ -213,6 +256,12 @@ export default function CvPage() {
               </span>
               <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.portfolio.title}</h2>
               <p className="mt-4 text-muted">{t.portfolio.intro}</p>
+              <p className="mt-5 flex items-baseline gap-2">
+                <span className="font-display text-3xl font-semibold text-ink">
+                  <bdi>{gbp(portfolioPrice)}</bdi>
+                </span>
+                <span className="text-xs font-medium text-mint">{t.packages.fixedBadge}</span>
+              </p>
               <ul className="mt-6 space-y-3">
                 {t.portfolio.points.map((pt) => (
                   <li key={pt} className="flex items-start gap-2 text-sm text-muted">
