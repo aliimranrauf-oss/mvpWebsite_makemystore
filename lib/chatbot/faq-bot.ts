@@ -224,6 +224,11 @@ function buildEntries(): Entry[] {
       response: `Our CV prices depend on your career level:\n\n${levelsGuide}\n\nCV & Cover Letter: ${priceLine(cvById("cv-cover-letter"))}\nLinkedIn: ${priceLine(cvById("linkedin"))}\nComplete Package: ${priceLine(cvById("complete"))}\n\nIf you're between two levels, pick the one that matches the role you're applying for. Choose yours here: /cv-writing#packages`,
     },
     {
+      keywords: ["all-in-one", "all in one", "career bundle", "limited offer", "500 package", "£500", "everything included"],
+      requires: ["price", "cost", "how much", "pricing", "rates", "package", "bundle", "offer", "include", "includes", "what"],
+      response: `The All-in-One Career Bundle is our limited offer: a fixed ${gbp(cvById("all-in-one").prices.entry)} at every career level. It includes every service on the page: CV, tailored cover letter, full LinkedIn optimisation, professional biography, a portfolio website, a free interview follow-up email and 11 months of free revisions. Order: ${LINK} (choose "All-in-One Career Bundle").`,
+    },
+    {
       keywords: ["complete package", "complete cv", "cv and linkedin", "cv + linkedin", "bundle", "everything"],
       requires: ["price", "cost", "how much", "pricing", "rates", "package"],
       response: `The Complete Package (CV, cover letter and LinkedIn) is fixed by level: ${priceLine(cvById("complete"))}. That saves £50 compared with buying the CV & Cover Letter and LinkedIn packages separately. Order: ${LINK}`,

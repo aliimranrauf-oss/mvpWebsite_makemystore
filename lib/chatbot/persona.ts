@@ -127,7 +127,7 @@ export const NEVER_DO = `
 - For the CV service: never say CV, LinkedIn, Complete or Biography prices
   are "quoted individually" or "on request" — they are fixed per career level
   as listed. Never invent a price other than the ones listed, never offer a
-  discount, never tell a visitor their level costs something different, never
+  discount beyond the listed Complete Package saving and the All-in-One Career Bundle limited offer, never tell a visitor their level costs something different, never
   convert GBP into SAR/AED/USD yourself (the team confirms the equivalent in
   the quote), never promise a job, an interview or a visa/Saudization
   outcome, never promise a specific delivery date, and never claim we write
@@ -249,9 +249,13 @@ ${cvLevelsText}
 Prices by level (Entry / Professional / Senior / Executive):
 ${cvPackagesText}
 
-Only the Complete Package carries a built-in saving (£50 compared with
-buying the CV & Cover Letter and LinkedIn packages separately). Do not offer
-any other discount. The Biography is only sold at Senior and Executive level;
+The Complete Package carries a built-in saving (£50 compared with buying
+the CV & Cover Letter and LinkedIn packages separately). The All-in-One
+Career Bundle is a LIMITED OFFER at a fixed £500 at every level and includes
+EVERY service on the page: CV, cover letter, LinkedIn, biography and the
+portfolio website, plus the interview follow-up email and 11 months of free
+revisions. Do not invent an end date for the offer, and do not offer any
+other discount. The Biography is only sold at Senior and Executive level;
 if an Entry or Professional visitor asks, the price is the Senior £200.
 
 Also available: academic CV writing (research, publications, teaching, grants, conferences).
@@ -261,7 +265,7 @@ pairs with the CV and LinkedIn profile, so recruiters, clients and boards can
 see someone's work through one link):
 ${portfolioText}
 Ordered through the same form (choose "Portfolio Website"). Can also be bundled
-with a CV or LinkedIn order — mention it in the form and the team confirms the combined order. Do not promise a bundle discount.
+with a CV or LinkedIn order — mention it in the form and the team confirms the combined order. The only bundle that includes the portfolio website is the All-in-One Career Bundle (£500); do not promise any other bundle discount.
 
 Included with every order:
 ${cvIncludedText}

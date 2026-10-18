@@ -26,6 +26,8 @@ export type CvPackage = {
   tagline: string;
   bestFor: string;
   features: string[];
+  /** Short 3-4 word highlights shown inside each level card. */
+  cardPoints?: string[];
   highlight?: boolean;
   badge?: string;
 };
@@ -47,6 +49,12 @@ export type Content = {
     levels: LevelInfo[];
     groupIncludes: string;
     onlyFrom: string;
+    limitedBadge: string;
+    bundleIncludes: string;
+    worth: string;
+    separately: string;
+    saveUpTo: string;
+    claimOffer: string;
     fixedBadge: string;
     academicBold: string;
     academicText: string;
@@ -127,6 +135,12 @@ const en: Content = {
     ],
     groupIncludes: "Every level includes",
     onlyFrom: "Biographies are written for Senior and Executive profiles.",
+    limitedBadge: "Limited offer",
+    bundleIncludes: "Everything included",
+    worth: "Worth",
+    separately: "if bought separately",
+    saveUpTo: "Save up to",
+    claimOffer: "Claim this offer",
     fixedBadge: "Fixed price",
     academicBold: "Also available:",
     academicText:
@@ -139,6 +153,7 @@ const en: Content = {
         priceNote: "Cover letter included free",
         tagline: "A sharp, ATS-ready CV and a tailored cover letter.",
         bestFor: "Professionals applying for a specific role or switching employers.",
+        cardPoints: ["ATS-friendly CV", "Tailored cover letter", "Interview follow-up email", "11 months of revisions"],
         features: [
           "Professionally written, ATS-friendly CV",
           "Tailored cover letter, included at no extra charge",
@@ -154,6 +169,7 @@ const en: Content = {
         priceNote: "Fixed price, no surprises",
         tagline: "A keyword-rich profile that recruiters in the Gulf actually find.",
         bestFor: "Anyone being headhunted, or who wants to be.",
+        cardPoints: ["Full profile rewrite", "SEO headline & About", "Custom banner & photo", "11 months of revisions"],
         features: [
           "Complete LinkedIn profile rewrite",
           "SEO-optimised headline and About section",
@@ -169,6 +185,7 @@ const en: Content = {
         priceNote: "Saves £50 vs buying separately",
         tagline: "CV, cover letter and LinkedIn, all telling the same strong story.",
         bestFor: "Career moves, relocations and senior or executive applications.",
+        cardPoints: ["CV + cover letter", "Full LinkedIn optimisation", "Interview follow-up email", "11 months of revisions"],
         features: [
           "Everything in CV & Cover Letter",
           "Full LinkedIn profile optimisation",
@@ -187,6 +204,7 @@ const en: Content = {
         priceNote: "Short, medium and long versions",
         tagline: "A polished bio for your website, speaking, board or press needs.",
         bestFor: "Executives, consultants, founders, speakers and board candidates.",
+        cardPoints: ["Short, medium & long bios", "First or third person", "Web & conference versions", "11 months of revisions"],
         features: [
           "Written in first or third person",
           "Versions for web, conferences and company profiles",
@@ -210,6 +228,26 @@ const en: Content = {
           "Content writing and layout included",
           "11 months of free revisions",
         ],
+      },
+      {
+        id: "all-in-one",
+        name: "All-in-One Career Bundle",
+        prices: { entry: 500, professional: 500, senior: 500, executive: 500 },
+        flat: true,
+        priceNote: "Limited offer · one price at every level",
+        tagline: "Every service on this page in one package: CV, cover letter, LinkedIn, biography and portfolio website.",
+        bestFor: "Anyone who wants a complete, consistent career brand at the best possible price.",
+        features: [
+          "Professionally written, ATS-friendly CV",
+          "Tailored cover letter",
+          "Full LinkedIn profile optimisation",
+          "Professional biography (short, medium and long)",
+          "Portfolio website, designed, written and built",
+          "Free interview follow-up email",
+          "11 months of free revisions",
+        ],
+        highlight: true,
+        badge: "Limited offer",
       },
     ],
   },
@@ -327,7 +365,7 @@ const en: Content = {
     items: [
       {
         q: "How much does a CV writing package cost?",
-        a: "Prices are fixed and depend on your career level (Entry, Professional, Senior or Executive). CV & Cover Letter: £150 / £200 / £250 / £300. LinkedIn Profile: £100 / £150 / £200 / £250. Complete Package (CV, cover letter and LinkedIn): £200 / £300 / £400 / £500. Professional Biography: £200 (Senior) or £250 (Executive). Portfolio Website: £350.",
+        a: "Prices are fixed and depend on your career level (Entry, Professional, Senior or Executive). CV & Cover Letter: £150 / £200 / £250 / £300. LinkedIn Profile: £100 / £150 / £200 / £250. Complete Package (CV, cover letter and LinkedIn): £200 / £300 / £400 / £500. Professional Biography: £200 (Senior) or £250 (Executive). Portfolio Website: £350. All-in-One Career Bundle (limited offer): £500 at every level, including the CV, cover letter, LinkedIn, biography and portfolio website.",
       },
       {
         q: "Which career level should I choose?",
@@ -363,7 +401,7 @@ const en: Content = {
       },
       {
         q: "Do you build portfolio websites?",
-        a: "Yes. We design, write and build a personal portfolio website that sits alongside your CV and LinkedIn profile for a fixed £350. Choose the Portfolio Website package in the form and we will confirm your order within 24 hours.",
+        a: "Yes. We design, write and build a personal portfolio website that sits alongside your CV and LinkedIn profile for a fixed £350, or included in the £500 All-in-One Career Bundle (limited offer). Choose your package in the form and we will confirm your order within 24 hours.",
       },
       {
         q: "Can I see samples?",
@@ -463,6 +501,12 @@ const ar: Content = {
     ],
     groupIncludes: "يشمل كل مستوى",
     onlyFrom: "تُكتب النبذة التعريفية للمستويين الكبير والتنفيذي.",
+    limitedBadge: "عرض لفترة محدودة",
+    bundleIncludes: "كل ما تحصل عليه",
+    worth: "قيمتها",
+    separately: "عند شراء كل خدمة منفصلة",
+    saveUpTo: "وفّر حتى",
+    claimOffer: "احصل على العرض",
     fixedBadge: "سعر ثابت",
     academicBold: "متاح أيضاً:",
     academicText:
@@ -475,6 +519,7 @@ const ar: Content = {
         priceNote: "خطاب التقديم مجاني",
         tagline: "سيرة ذاتية احترافية متوافقة مع ATS مع خطاب تقديم مخصص.",
         bestFor: "المهنيون المتقدمون لوظيفة محددة أو الراغبون في تغيير جهة العمل.",
+        cardPoints: ["سيرة ذاتية متوافقة مع ATS", "خطاب تقديم مخصص", "رسالة متابعة بعد المقابلة", "11 شهراً من التعديلات"],
         features: [
           "سيرة ذاتية مكتوبة باحترافية ومتوافقة مع أنظمة ATS",
           "خطاب تقديم مخصص مشمول دون أي رسوم إضافية",
@@ -490,6 +535,7 @@ const ar: Content = {
         priceNote: "سعر ثابت دون مفاجآت",
         tagline: "ملف غني بالكلمات المفتاحية يصل إليه مسؤولو التوظيف في الخليج.",
         bestFor: "كل من يستهدفه الباحثون عن الكفاءات، أو يرغب في ذلك.",
+        cardPoints: ["إعادة كتابة كاملة للملف", "عنوان ونبذة محسّنان", "غلاف وصورة مخصصان", "11 شهراً من التعديلات"],
         features: [
           "إعادة كتابة كاملة لملف LinkedIn",
           "عنوان وقسم «نبذة» محسّنان لمحركات البحث",
@@ -505,6 +551,7 @@ const ar: Content = {
         priceNote: "توفير £50 مقارنة بشراء كل خدمة منفصلة",
         tagline: "سيرة ذاتية وخطاب تقديم وLinkedIn، جميعها تروي قصة نجاحك بصوت واحد.",
         bestFor: "التنقل الوظيفي، والانتقال إلى بلد جديد، والوظائف الإدارية العليا.",
+        cardPoints: ["سيرة ذاتية + خطاب تقديم", "تحسين كامل لـLinkedIn", "رسالة متابعة بعد المقابلة", "11 شهراً من التعديلات"],
         features: [
           "كل ما في باقة السيرة الذاتية وخطاب التقديم",
           "تحسين كامل لملف LinkedIn",
@@ -523,6 +570,7 @@ const ar: Content = {
         priceNote: "نسخ قصيرة ومتوسطة ومطوّلة",
         tagline: "نبذة مصقولة لموقعك الإلكتروني أو مؤتمراتك أو مجالس الإدارة أو الإعلام.",
         bestFor: "المديرون التنفيذيون والمستشارون ورواد الأعمال والمتحدثون والمرشحون لعضوية مجالس الإدارة.",
+        cardPoints: ["نسخ قصيرة ومتوسطة ومطوّلة", "بصيغة المتكلم أو الغائب", "نسخ للموقع والمؤتمرات", "11 شهراً من التعديلات"],
         features: [
           "تُكتب بصيغة المتكلم أو الغائب",
           "نسخ للموقع والمؤتمرات وملفات الشركات",
@@ -546,6 +594,26 @@ const ar: Content = {
           "كتابة المحتوى والتصميم مشمولان",
           "11 شهراً من التعديلات المجانية",
         ],
+      },
+      {
+        id: "all-in-one",
+        name: "باقة المسيرة المهنية المتكاملة",
+        prices: { entry: 500, professional: 500, senior: 500, executive: 500 },
+        flat: true,
+        priceNote: "عرض لفترة محدودة · سعر واحد لكل المستويات",
+        tagline: "كل خدمات هذه الصفحة في باقة واحدة: سيرة ذاتية وخطاب تقديم وLinkedIn ونبذة تعريفية وموقع بورتفوليو.",
+        bestFor: "كل من يريد هوية مهنية متكاملة ومتسقة بأفضل سعر ممكن.",
+        features: [
+          "سيرة ذاتية مكتوبة باحترافية ومتوافقة مع ATS",
+          "خطاب تقديم مخصص",
+          "تحسين كامل لملف LinkedIn",
+          "نبذة تعريفية مهنية (قصيرة ومتوسطة ومطوّلة)",
+          "موقع بورتفوليو: تصميم وكتابة وبناء",
+          "رسالة متابعة بعد المقابلة مجاناً",
+          "11 شهراً من التعديلات المجانية",
+        ],
+        highlight: true,
+        badge: "عرض لفترة محدودة",
       },
     ],
   },
@@ -663,7 +731,7 @@ const ar: Content = {
     items: [
       {
         q: "كم تكلفة باقة كتابة السيرة الذاتية؟",
-        a: "الأسعار ثابتة وتعتمد على مستواك المهني (مبتدئ، محترف، كبير، تنفيذي). السيرة الذاتية وخطاب التقديم: £150 / £200 / £250 / £300. ملف LinkedIn: £100 / £150 / £200 / £250. الباقة الشاملة (سيرة ذاتية وخطاب تقديم وLinkedIn): £200 / £300 / £400 / £500. النبذة التعريفية المهنية: £200 (كبير) أو £250 (تنفيذي). موقع البورتفوليو: £350.",
+        a: "الأسعار ثابتة وتعتمد على مستواك المهني (مبتدئ، محترف، كبير، تنفيذي). السيرة الذاتية وخطاب التقديم: £150 / £200 / £250 / £300. ملف LinkedIn: £100 / £150 / £200 / £250. الباقة الشاملة (سيرة ذاتية وخطاب تقديم وLinkedIn): £200 / £300 / £400 / £500. النبذة التعريفية المهنية: £200 (كبير) أو £250 (تنفيذي). موقع البورتفوليو: £350. باقة المسيرة المهنية المتكاملة (عرض لفترة محدودة): £500 لكل المستويات، وتشمل السيرة الذاتية وخطاب التقديم وLinkedIn والنبذة التعريفية وموقع البورتفوليو.",
       },
       {
         q: "أي مستوى مهني أختار؟",
@@ -699,7 +767,7 @@ const ar: Content = {
       },
       {
         q: "هل تصممون مواقع بورتفوليو؟",
-        a: "نعم. نصمم ونكتب ونبني موقع بورتفوليو شخصياً يكمل سيرتك الذاتية وملف LinkedIn بسعر ثابت قدره £350. اختر باقة موقع البورتفوليو في النموذج وسنؤكد طلبك خلال 24 ساعة.",
+        a: "نعم. نصمم ونكتب ونبني موقع بورتفوليو شخصياً يكمل سيرتك الذاتية وملف LinkedIn بسعر ثابت قدره £350، أو ضمن باقة المسيرة المهنية المتكاملة (عرض لفترة محدودة) بسعر £500. اختر باقتك في النموذج وسنؤكد طلبك خلال 24 ساعة.",
       },
       {
         q: "هل يمكنني الاطلاع على نماذج؟",
@@ -809,4 +877,19 @@ export function priceLine(p: CvPackage): string {
   return packageLevels(p)
     .map((l) => `${names[l]} ${gbp(p.prices[l])}`)
     .join(" · ");
+}
+
+/** Services that the All-in-One bundle replaces (for the "worth" figure). */
+export const BUNDLE_PARTS = ["cv-cover-letter", "linkedin", "biography", "portfolio"];
+
+/** What the bundle's services would cost bought separately at one level. */
+export function bundleValue(items: CvPackage[], level: LevelId): number {
+  return items
+    .filter((p) => BUNDLE_PARTS.includes(p.id))
+    .reduce((sum, p) => sum + priceFor(p, level), 0);
+}
+
+/** Lowest (Entry) and highest (Executive) separate-purchase value. */
+export function bundleValueRange(items: CvPackage[]): { low: number; high: number } {
+  return { low: bundleValue(items, "entry"), high: bundleValue(items, "executive") };
 }

@@ -77,7 +77,7 @@ export const siteFacts: SiteFact[] = [
   {
     q: "Do you offer discounts?",
     keywords: ["discount", "coupon", "promo", "offer code", "negotiate", "reduce the price", "lower price", "best price", "special offer"],
-    a: "Our prices are set as listed. The one built-in saving is the Complete Package, which costs £50 less than buying the CV & Cover Letter and LinkedIn packages separately. For anything else, ask the team at /contact. If a lighter option helps, the Starter MVP and Basic FAQ Bot tiers are our entry points.",
+    a: "Our prices are set as listed. The built-in savings are the Complete Package (£50 less than buying the CV & Cover Letter and LinkedIn packages separately) and the limited-offer All-in-One Career Bundle: a fixed £500 that includes the CV, cover letter, LinkedIn, biography and portfolio website. For anything else, ask the team at /contact. If a lighter option helps, the Starter MVP and Basic FAQ Bot tiers are our entry points.",
   },
   {
     q: "What is your refund and cancellation policy?",
