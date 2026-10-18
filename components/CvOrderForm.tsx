@@ -24,12 +24,17 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
   const [pkg, setPkg] = useState("complete");
   const [level, setLevel] = useState<LevelId>("professional");
   const selectedPkg = packages.find((p) => p.id === pkg);
+  // Where this lead came from: the card the visitor clicked (or the ?package= link).
+  const [origin, setOrigin] = useState<{ type: "card" | "link"; pkg: string; level?: string } | null>(null);
 
   // Package cards carry data-package="<id>". Clicking one preselects it here.
   useEffect(() => {
     const valid = new Set(enPackages.map((p) => p.id));
     const fromUrl = new URLSearchParams(window.location.search).get("package");
-    if (fromUrl && valid.has(fromUrl)) setPkg(fromUrl);
+    if (fromUrl && valid.has(fromUrl)) {
+      setPkg(fromUrl);
+      setOrigin({ type: "link", pkg: fromUrl });
+    }
 
     const fromUrlLevel = new URLSearchParams(window.location.search).get("level");
     if (fromUrlLevel && LEVELS.includes(fromUrlLevel as LevelId)) setLevel(fromUrlLevel as LevelId);
@@ -40,6 +45,9 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
       if (id && valid.has(id)) setPkg(id);
       const lv = el?.dataset.level;
       if (lv && LEVELS.includes(lv as LevelId)) setLevel(lv as LevelId);
+      if (id && valid.has(id)) {
+        setOrigin({ type: "card", pkg: id, level: lv && LEVELS.includes(lv as LevelId) ? lv : undefined });
+      }
     }
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
@@ -77,8 +85,17 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
     const billedLevel = selected ? effectiveLevel(selected, level) : level;
     const enLevel = content.en.form.levels.find((l) => l.value === level)?.label ?? level;
     const fixedPrice = selected ? gbp(priceFor(selected, level)) : "-";
+    // Source tag saved in leads.source, e.g. "cv-card:all-in-one" or "cv-card:complete:executive"
+    const source = origin
+      ? `cv-${origin.type}:${origin.pkg}${origin.level ? `:${origin.level}` : ""}`
+      : "cv-form";
+    const originPkg = enPackages.find((p) => p.id === origin?.pkg);
+    const originText = origin
+      ? `${origin.type === "card" ? "Clicked the" : "Opened a link for the"} "${originPkg?.name ?? origin.pkg}" ${origin.type === "card" ? "card" : "package"}${origin.level ? ` (${origin.level} level)` : ""}${originPkg?.badge ? ` [${originPkg.badge}]` : ""}`
+      : "Used the order form directly (no card clicked)";
     const lines = [
       `CV SERVICES ORDER`,
+      `Lead origin: ${originText}`,
       `Package: ${selected?.name ?? pkg}`,
       `Career level: ${enLevel}${billedLevel !== level ? ` (billed at ${billedLevel})` : ""}`,
       `Fixed price shown to customer: ${fixedPrice} GBP`,
@@ -96,6 +113,7 @@ export default function CvOrderForm({ lang = "en" }: { lang?: Lang }) {
       email,
       phone: get("phone"),
       service: "cv-writing",
+      source,
       budget: selected ? `${selected.name} - ${fixedPrice}` : "",
       message: lines.join("\n"),
       company_website: String(data.get("company_website") || ""), // honeypot

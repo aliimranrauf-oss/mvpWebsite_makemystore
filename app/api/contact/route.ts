@@ -16,6 +16,13 @@ const MAX_MESSAGE_LENGTH = 2000;
 const VALID_SOURCES = ["faq_chatbot", "ai_chatbot", "contact_page"] as const;
 type LeadSource = (typeof VALID_SOURCES)[number];
 
+// CV page leads carry exactly where they came from, e.g.
+//   cv-card:all-in-one            (clicked the £500 bundle card)
+//   cv-card:complete:executive    (clicked the Executive card of a package)
+//   cv-link:portfolio             (arrived via a ?package= link, e.g. from the chatbot)
+//   cv-form                       (used the form without clicking a card)
+const CV_SOURCE_RE = /^cv-(card|link)(:[a-z0-9-]{1,40}){1,2}$|^cv-form$/;
+
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_REQUESTS = 10; // per IP, per window — leads are rarer than chat messages
 
@@ -78,9 +85,11 @@ export async function POST(req: NextRequest) {
   const message = clean(body.message, MAX_MESSAGE_LENGTH);
 
   const rawSource = clean(body.source, MAX_FIELD_LENGTH);
-  const source: LeadSource = (VALID_SOURCES as readonly string[]).includes(rawSource)
-    ? (rawSource as LeadSource)
-    : "contact_page"; // ContactForm.tsx doesn't send a source field — default it here.
+  const source: string = CV_SOURCE_RE.test(rawSource)
+    ? rawSource
+    : (VALID_SOURCES as readonly string[]).includes(rawSource)
+      ? (rawSource as LeadSource)
+      : "contact_page"; // ContactForm.tsx doesn't send a source field — default it here.
 
   const fieldErrors: Record<string, string> = {};
   if (!name) fieldErrors.name = "Name is required.";
