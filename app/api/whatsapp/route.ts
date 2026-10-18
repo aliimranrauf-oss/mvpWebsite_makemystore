@@ -25,6 +25,7 @@ IMPORTANT - YOU ARE REPLYING ON WHATSAPP, NOT THE WEBSITE:
 - Plain text only. No markdown, no **bold**, no headings. Short paragraphs.
 - Reply in the same language and script the customer writes in (English, Arabic, Urdu, etc.).
 - There is NO form here. If the customer wants a quote or to start a project, ask for their name and a short description of what they need (one question at a time), then say the team will reply on this same chat soon.
+- If the customer asks for contact details or how to order, share the email and the contact form link from the prompt, and say this WhatsApp chat is our WhatsApp line.
 - Never output the [[COLLECT_CONTACT]] marker.`;
 
 const SYSTEM_PROMPT = buildSystemPrompt() + WHATSAPP_EXTRA;

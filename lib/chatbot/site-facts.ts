@@ -5,7 +5,10 @@
 // (Terms, Privacy, About, Contact pages). Do not add anything the site does not
 // say: if it isn't published, the bots should send people to the team instead.
 
-import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/lib/constants";
+import { CONTACT_EMAIL, WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/lib/constants";
+
+/** Tap-to-chat link for the business WhatsApp number. */
+export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 import { chatbotCarePlan } from "@/lib/data";
 
 export type SiteFact = {
@@ -19,13 +22,29 @@ export type SiteFact = {
 
 export const siteFacts: SiteFact[] = [
   {
+    q: "How do I order or get started, and where do I go?",
+    keywords: [
+      "how to order", "how do i order", "where to order", "where can i order", "where do i order", "place an order",
+      "want to order", "ready to order", "order now", "how can i buy", "how do i buy", "where to buy", "how to hire",
+      "how do i hire", "how do i get started", "how to get started", "how to start", "where do i start", "how do i begin",
+      "how do i start", "contact form", "contact page", "contact link", "form link", "order form", "link to order",
+      "link to the form", "get a quote", "request a quote", "send my details", "fill the form", "fill in the form",
+      "where is the form", "where do i sign up", "sign up",
+    ],
+    a: `The quickest way is the contact form at /contact: tell us what you need and we reply within 24 hours with a fixed quote. For CV, LinkedIn, biography or portfolio website orders, use the order form at /cv-writing#order (pick your package and career level and you see your fixed price). Prefer to chat? Message us on WhatsApp at ${WHATSAPP_DISPLAY} (${WHATSAPP_LINK}) or email ${CONTACT_EMAIL}.`,
+  },
+  {
     q: "How do I contact you?",
     keywords: [
       "contact", "email address", "your email", "phone number", "whatsapp number", "reach you", "get in touch",
       "call you", "talk to you", "speak to someone", "speak to a person", "customer service", "support email",
-      "your number", "message you",
+      "your number", "message you", "do you have whatsapp", "have a whatsapp", "your whatsapp", "whatsapp you",
+      "~whatsapp me", "whatsapp link", "whatsapp contact", "contact you on whatsapp", "contact on whatsapp",
+      "message you on whatsapp", "chat with you on whatsapp", "mobile number", "contact details", "contact info",
+      "contact information", "where can i contact", "where do i contact", "how can i contact", "where to contact",
+      "how to contact", "email you", "send an email", "write to you",
     ],
-    a: `You can email ${CONTACT_EMAIL}, message us on WhatsApp (${WHATSAPP_DISPLAY}), or use the contact form at /contact. Every message gets a real reply within 24 hours, and sending your details doesn't commit you to anything.`,
+    a: `Yes, we're on WhatsApp: ${WHATSAPP_DISPLAY} (tap to chat: ${WHATSAPP_LINK}). You can also email ${CONTACT_EMAIL} or use the contact form at /contact. Every message gets a real reply within 24 hours, and sending your details doesn't commit you to anything.`,
   },
   {
     q: "How quickly do you reply?",

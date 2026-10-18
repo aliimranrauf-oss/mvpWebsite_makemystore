@@ -306,7 +306,7 @@ function buildEntries(): Entry[] {
     {
       keywords: ["how to order", "how do i order", "place an order", "order a cv", "how can i order", "what do you need from me", "what do i need to send", "what information do you need"],
       requires: CV_TERMS,
-      response: `Choose your package and career level at /cv-writing#packages, then fill in the short order form with your target role, country and any deadline (and tick the samples box if you'd like examples). We reply within 24 hours to confirm your order, delivery date and payment details, and you can reply with your current CV to speed things up. Nothing is charged until you agree: ${LINK}`,
+      response: `Choose your package and career level at /cv-writing#packages, then fill in the short order form with your target role, country and any deadline (and tick the samples box if you'd like examples). We reply within 24 hours to confirm your order, delivery date and payment details, and you can reply with your current CV to speed things up. Nothing is charged until you agree: ${LINK}\n\nPrefer to chat? WhatsApp ${WHATSAPP_DISPLAY} or email ${CONTACT_EMAIL}.`,
     },
     {
       keywords: ["interview follow", "follow up email", "follow-up email", "follow up mail", "thank you note", "thank-you note", "thank you email", "thank-you"],
