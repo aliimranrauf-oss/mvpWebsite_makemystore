@@ -61,6 +61,13 @@ export type Content = {
     items: CvPackage[];
   };
   gulf: { badge: string; title: string; intro: string; points: Pair[]; markets: string[] };
+  cities: {
+    badge: string;
+    title: string;
+    intro: string;
+    cta: string;
+    items: { id: string; name: string; title: string; desc: string; points: string[] }[];
+  };
   portfolio: { badge: string; title: string; intro: string; points: string[]; imageAlt: string; cta: string };
   included: { title: string; intro: string; items: Pair[] };
   how: { title: string; intro: string; steps: Pair[] };
@@ -108,8 +115,8 @@ export type Content = {
 const en: Content = {
   hero: {
     eyebrow: "CV, LinkedIn & Career Documents",
-    title: "A CV that opens doors across Saudi Arabia, the UAE and the Gulf",
-    desc: "Professional CV, cover letter, LinkedIn and biography writing for ambitious candidates targeting the GCC. ATS-ready, industry-matched and backed by 11 months of free revisions.",
+    title: "Professional CV Writing for Dubai, Abu Dhabi, Saudi Arabia & the Gulf",
+    desc: "Professional CV, cover letter, LinkedIn and biography writing for ambitious candidates targeting Dubai, Abu Dhabi, Riyadh and the wider GCC. ATS-ready, industry-matched and backed by 11 months of free revisions.",
     primary: "Order now",
     secondary: "See fixed prices",
   },
@@ -283,6 +290,48 @@ const en: Content = {
       "Oman",
     ],
   },
+  cities: {
+    badge: "Dubai · Abu Dhabi · Saudi Arabia",
+    title: "CV writing for Dubai, Abu Dhabi and Saudi Arabia",
+    intro:
+      "Each market hires differently. We tailor your CV, cover letter and LinkedIn profile to the city and sector you are applying in, so your experience reads as relevant from the first page.",
+    cta: "Get my CV written",
+    items: [
+      {
+        id: "dubai",
+        name: "Dubai",
+        title: "CV writing for Dubai jobs",
+        desc: "Dubai recruiters move fast and see a large number of international applicants. We make your CV easy to scan, with your scope, results and right-to-work status clear from the start.",
+        points: [
+          "Finance, technology, real estate, hospitality, aviation and logistics roles",
+          "Visa or residency status, notice period and languages handled where they help",
+          "ATS-friendly for company career pages and recruiter searches",
+        ],
+      },
+      {
+        id: "abu-dhabi",
+        name: "Abu Dhabi",
+        title: "CV writing for Abu Dhabi jobs",
+        desc: "Abu Dhabi is strong in government and semi-government entities, energy, healthcare and finance. We position your experience for these employers with clear qualifications and measurable achievements.",
+        points: [
+          "Energy, government entities, healthcare, finance and education roles",
+          "Qualifications and certifications presented clearly",
+          "A tone suited to large, structured organisations",
+        ],
+      },
+      {
+        id: "saudi-arabia",
+        name: "Saudi Arabia",
+        title: "CV writing for Saudi Arabia, Riyadh and Jeddah",
+        desc: "Vision 2030 projects and regional headquarters are driving hiring across the Kingdom. We shape your CV for construction, energy, tourism, healthcare, technology and finance roles.",
+        points: [
+          "Vision 2030 and giga-project experience positioned clearly",
+          "Nationality, residency or visa status and notice period handled where relevant",
+          "Riyadh, Jeddah and the Eastern Province covered",
+        ],
+      },
+    ],
+  },
   portfolio: {
     badge: "New service",
     title: "Your work deserves more than a PDF",
@@ -370,6 +419,14 @@ const en: Content = {
       {
         q: "Which career level should I choose?",
         a: "Entry / Fresh is for 0 to 2 years of experience, Professional for 2 to 5 years, Senior for 5 to 10 years and Executive for 10+ years or director and C-level roles. If you sit between two levels, pick the one that matches the role you are applying for. We will tell you if a different level fits better.",
+      },
+      {
+        q: "Do you write CVs for jobs in Dubai and Abu Dhabi?",
+        a: "Yes. We write CVs, cover letters and LinkedIn profiles for UAE employers in finance, technology, real estate, hospitality, energy, healthcare and government. Your CV is shaped for the city and sector, and covers details such as visa status and notice period where they help.",
+      },
+      {
+        q: "Do you write CVs for jobs in Saudi Arabia, Riyadh and Jeddah?",
+        a: "Yes. We position your experience for Saudi employers and Vision 2030 sectors such as construction, energy, tourism, healthcare, technology and finance, in Riyadh, Jeddah and across the Kingdom.",
       },
       {
         q: "Is the cover letter really free?",
@@ -474,8 +531,8 @@ const en: Content = {
 const ar: Content = {
   hero: {
     eyebrow: "السيرة الذاتية وLinkedIn والمستندات المهنية",
-    title: "سيرة ذاتية تفتح لك الأبواب في السعودية والإمارات ودول الخليج",
-    desc: "كتابة احترافية للسيرة الذاتية وخطاب التقديم وملف LinkedIn والنبذة التعريفية للطامحين إلى العمل في دول مجلس التعاون الخليجي. متوافقة مع أنظمة تتبع المتقدمين (ATS)، ومصممة وفق مجالك، مع 11 شهراً من التعديلات المجانية.",
+    title: "كتابة سيرة ذاتية احترافية لدبي وأبوظبي والسعودية ودول الخليج",
+    desc: "كتابة احترافية للسيرة الذاتية وخطاب التقديم وملف LinkedIn والنبذة التعريفية للطامحين إلى العمل في دبي وأبوظبي والرياض ودول مجلس التعاون الخليجي. متوافقة مع أنظمة تتبع المتقدمين (ATS)، ومصممة وفق مجالك، مع 11 شهراً من التعديلات المجانية.",
     primary: "اطلب الآن",
     secondary: "استعرض الأسعار الثابتة",
   },
@@ -649,6 +706,48 @@ const ar: Content = {
       "سلطنة عُمان",
     ],
   },
+  cities: {
+    badge: "دبي · أبوظبي · السعودية",
+    title: "كتابة السيرة الذاتية لدبي وأبوظبي والسعودية",
+    intro:
+      "لكل سوق أسلوبه في التوظيف. نصمم سيرتك الذاتية وخطاب التقديم وملف LinkedIn وفق المدينة والقطاع الذي تتقدم إليه، لتظهر خبرتك مناسبة من الصفحة الأولى.",
+    cta: "اكتبوا سيرتي الذاتية",
+    items: [
+      {
+        id: "dubai",
+        name: "دبي",
+        title: "كتابة السيرة الذاتية لوظائف دبي",
+        desc: "يعمل مسؤولو التوظيف في دبي بسرعة ويطّلعون على أعداد كبيرة من المتقدمين الدوليين. نجعل سيرتك سهلة القراءة السريعة، مع وضوح نطاق خبرتك ونتائجك ووضع الإقامة منذ البداية.",
+        points: [
+          "وظائف المال والتقنية والعقارات والضيافة والطيران والخدمات اللوجستية",
+          "وضع الإقامة أو التأشيرة وفترة الإشعار واللغات حيث تخدمك",
+          "متوافقة مع ATS لصفحات التوظيف وبحث مسؤولي التوظيف",
+        ],
+      },
+      {
+        id: "abu-dhabi",
+        name: "أبوظبي",
+        title: "كتابة السيرة الذاتية لوظائف أبوظبي",
+        desc: "تتميز أبوظبي بالجهات الحكومية وشبه الحكومية وقطاعات الطاقة والرعاية الصحية والمال. نبرز خبرتك لهذه الجهات بمؤهلات واضحة وإنجازات قابلة للقياس.",
+        points: [
+          "وظائف الطاقة والجهات الحكومية والرعاية الصحية والمال والتعليم",
+          "عرض المؤهلات والشهادات بوضوح",
+          "أسلوب يناسب المؤسسات الكبيرة المنظمة",
+        ],
+      },
+      {
+        id: "saudi-arabia",
+        name: "السعودية",
+        title: "كتابة السيرة الذاتية للسعودية والرياض وجدة",
+        desc: "تدفع مشاريع رؤية 2030 والمقرات الإقليمية حركة التوظيف في المملكة. نصيغ سيرتك لوظائف الإنشاءات والطاقة والسياحة والرعاية الصحية والتقنية والمال.",
+        points: [
+          "إبراز الخبرة في رؤية 2030 والمشاريع الكبرى",
+          "الجنسية ووضع الإقامة أو التأشيرة وفترة الإشعار حيث يلزم",
+          "تغطية الرياض وجدة والمنطقة الشرقية",
+        ],
+      },
+    ],
+  },
   portfolio: {
     badge: "خدمة جديدة",
     title: "أعمالك تستحق أكثر من ملف PDF",
@@ -736,6 +835,14 @@ const ar: Content = {
       {
         q: "أي مستوى مهني أختار؟",
         a: "مبتدئ / خريج جديد لمن لديه 0 إلى 2 سنوات من الخبرة، ومحترف من 2 إلى 5 سنوات، وكبير من 5 إلى 10 سنوات، وتنفيذي لمن لديه أكثر من 10 سنوات أو يشغل منصب مدير أو قيادة عليا. وإن كنت بين مستويين فاختر المستوى الأقرب للوظيفة التي تتقدم إليها، وسنخبرك إن كان مستوى آخر أنسب لك.",
+      },
+      {
+        q: "هل تكتبون سيراً ذاتية لوظائف دبي وأبوظبي؟",
+        a: "نعم. نكتب السير الذاتية وخطابات التقديم وملفات LinkedIn لجهات العمل في الإمارات في المال والتقنية والعقارات والضيافة والطاقة والرعاية الصحية والقطاع الحكومي. تُصاغ سيرتك وفق المدينة والقطاع، وتشمل تفاصيل مثل وضع التأشيرة وفترة الإشعار متى خدمتك.",
+      },
+      {
+        q: "هل تكتبون سيراً ذاتية لوظائف السعودية والرياض وجدة؟",
+        a: "نعم. نبرز خبرتك لجهات العمل السعودية وقطاعات رؤية 2030 مثل الإنشاءات والطاقة والسياحة والرعاية الصحية والتقنية والمال، في الرياض وجدة وسائر مناطق المملكة.",
       },
       {
         q: "هل خطاب التقديم مجاني فعلاً؟",

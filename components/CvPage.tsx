@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Noto_Sans_Arabic } from "next/font/google";
 import { ArrowRight, Briefcase, Check, Clock, Plus, FileText, Globe2, MapPin, ShieldCheck } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
@@ -17,7 +19,6 @@ const arabicFont = Noto_Sans_Arabic({
   display: "swap",
 });
 
-const STORAGE_KEY = "mms-cv-lang";
 
 // One colour per career level, so the same level always looks the same
 // in every package group. Only the pricing cards use these.
@@ -59,31 +60,20 @@ const LEVEL_THEME: Record<
   },
 };
 
-export default function CvPage() {
-  const [lang, setLang] = useState<Lang>("en"); // English is always the default
+export default function CvPage({ initialLang = "en" }: { initialLang?: Lang }) {
+  // English lives at /cv-writing and Arabic at /cv-writing/ar, so each language
+  // has its own address that search engines can index.
+  const lang: Lang = initialLang;
   const t = content[lang];
   const isAr = lang === "ar";
+  const router = useRouter();
 
-  // Restore a previous choice, or honour ?lang=ar (handy for sharing an Arabic link).
+  // Old shared links like /cv-writing?lang=ar now go to the Arabic page.
   useEffect(() => {
-    try {
-      const fromUrl = new URLSearchParams(window.location.search).get("lang");
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      const next = fromUrl === "ar" || fromUrl === "en" ? fromUrl : saved;
-      if (next === "ar" || next === "en") setLang(next);
-    } catch {
-      /* storage blocked — stay on English */
+    if (initialLang === "en" && new URLSearchParams(window.location.search).get("lang") === "ar") {
+      router.replace("/cv-writing/ar");
     }
-  }, []);
-
-  function choose(next: Lang) {
-    setLang(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore */
-    }
-  }
+  }, [initialLang, router]);
 
   const arrow = `rtl:-scale-x-100`;
   const portfolioPrice = t.packages.items.find((p) => p.id === "portfolio")?.prices.entry ?? 0;
@@ -111,27 +101,27 @@ export default function CvPage() {
         <div className="mx-auto flex max-w-content items-center justify-end gap-3 px-5 py-2 sm:px-8">
           <Globe2 size={14} className="text-muted" aria-hidden="true" />
           <div role="group" aria-label="Language" className="inline-flex rounded-full border border-border bg-surface p-0.5 text-xs font-semibold">
-            <button
-              type="button"
-              onClick={() => choose("en")}
-              aria-pressed={!isAr}
+            <Link
+              href="/cv-writing"
+              hrefLang="en"
+              aria-current={!isAr ? "page" : undefined}
               className={`rounded-full px-3.5 py-1.5 transition-colors ${
                 !isAr ? "bg-mint text-white" : "text-muted hover:text-ink"
               }`}
             >
               English
-            </button>
-            <button
-              type="button"
-              onClick={() => choose("ar")}
-              aria-pressed={isAr}
+            </Link>
+            <Link
+              href="/cv-writing/ar"
+              hrefLang="ar"
               lang="ar"
+              aria-current={isAr ? "page" : undefined}
               className={`rounded-full px-3.5 py-1.5 transition-colors ${
                 isAr ? "bg-mint text-white" : "text-muted hover:text-ink"
               }`}
             >
               العربية
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -147,8 +137,8 @@ export default function CvPage() {
           image={{
             src: "/images/hero/cv-writing.png",
             alt: isAr
-              ? "كتابة احترافية للسيرة الذاتية وملف LinkedIn لباحثي العمل في الخليج"
-              : "Professional CV and LinkedIn writing for Gulf job seekers",
+              ? "كتابة احترافية للسيرة الذاتية وملف LinkedIn لباحثي العمل في دبي وأبوظبي والسعودية"
+              : "Professional CV and LinkedIn writing for job seekers in Dubai, Abu Dhabi and Saudi Arabia",
           }}
         >
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
@@ -454,6 +444,50 @@ export default function CvPage() {
                 <span key={m} className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-ink">
                   {m}
                 </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* City sections: Dubai, Abu Dhabi, Saudi Arabia (each has an anchor id for links) */}
+        <section id="cities" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint">
+                <MapPin size={14} /> {t.cities.badge}
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.cities.title}</h2>
+              <p className="mt-4 text-muted">{t.cities.intro}</p>
+            </div>
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {t.cities.items.map((c, i) => (
+                <Reveal key={c.id} delay={i * 60}>
+                  <article
+                    id={c.id}
+                    className="flex h-full scroll-mt-24 flex-col rounded-xl2 border border-border bg-surface2/60 p-6"
+                  >
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-mint/10 text-mint">
+                      <MapPin size={18} />
+                    </span>
+                    <h3 className="mt-4 font-display text-lg font-semibold text-ink">{c.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{c.desc}</p>
+                    <ul className="mt-4 space-y-2">
+                      {c.points.map((pt) => (
+                        <li key={pt} className="flex items-start gap-2 text-sm text-muted">
+                          <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                          {pt}
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#order"
+                      className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-mint hover:underline"
+                    >
+                      {t.cities.cta}
+                      <ArrowRight size={15} className={arrow} />
+                    </a>
+                  </article>
+                </Reveal>
               ))}
             </div>
           </div>
