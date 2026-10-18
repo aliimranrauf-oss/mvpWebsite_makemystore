@@ -7,10 +7,13 @@ import TechStack from "@/components/TechStack";
 import Pricing from "@/components/Pricing";
 import HowItWorks from "@/components/HowItWorks";
 import Trust from "@/components/Trust";
+import ReviewsSection from "@/components/ReviewsSection";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import { allFaqItems } from "@/lib/faq-groups";
+import { getApprovedReviews } from "@/lib/get-reviews";
+import { aggregateRatingFrom, reviewsJsonLd } from "@/lib/seo";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
 const HOME_TITLE = "MakeMyStore: Custom AI Chatbots, SaaS MVPs & POS Systems";
@@ -47,7 +50,13 @@ const services = [
 ];
 
 
-export default function Home() {
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
+
+export default async function Home() {
+  const reviews = await getApprovedReviews();
+  const aggregateRating = aggregateRatingFrom(reviews);
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -74,6 +83,17 @@ export default function Home() {
         },
       })),
     },
+    ...(aggregateRating
+      ? [
+          {
+            "@context": "https://schema.org",
+            "@type": "ProfessionalService",
+            "@id": `${SITE_URL}/#organization`,
+            aggregateRating,
+            review: reviewsJsonLd(reviews),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -88,6 +108,11 @@ export default function Home() {
         <Pricing />
         <HowItWorks />
         <Trust />
+        <ReviewsSection
+          reviews={reviews.slice(0, 9)}
+          total={reviews.length}
+          average={aggregateRating ? String(aggregateRating.ratingValue) : "5.0"}
+        />
         <FAQ />
         <FinalCTA />
       </main>

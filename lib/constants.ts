@@ -35,6 +35,7 @@ export const NAV_LINKS = [
   },
   { href: "/cv-writing", label: "CV Writing" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/reviews", label: "Reviews" },
   { href: "/#faq", label: "FAQ" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },

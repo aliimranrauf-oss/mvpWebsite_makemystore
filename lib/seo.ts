@@ -137,3 +137,30 @@ export function serviceJsonLd(o: ServiceJsonLdOptions) {
       : {}),
   };
 }
+
+/** AggregateRating from a list of reviews, or null when there are none. */
+export function aggregateRatingFrom(reviews: { rating: number }[]) {
+  if (reviews.length === 0) return null;
+  const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+  return {
+    "@type": "AggregateRating",
+    ratingValue: avg.toFixed(1),
+    reviewCount: reviews.length,
+    bestRating: 5,
+    worstRating: 1,
+  };
+}
+
+/** schema.org Review objects (most recent first, capped). */
+export function reviewsJsonLd(
+  reviews: { name: string; rating: number; review: string; created_at: string }[],
+  limit = 10
+) {
+  return reviews.slice(0, limit).map((r) => ({
+    "@type": "Review",
+    author: { "@type": "Person", name: r.name },
+    datePublished: r.created_at.slice(0, 10),
+    reviewBody: r.review,
+    reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+  }));
+}
