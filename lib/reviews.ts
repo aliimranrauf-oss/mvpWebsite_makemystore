@@ -21,6 +21,15 @@ export const REVIEW_SERVICES = [
   "Other",
 ];
 
+// Which review "service" values appear on which service page.
+export const SERVICE_GROUPS = {
+  chatbot: ["AI Chatbot"],
+  saas: ["SaaS MVP", "MVP Development"],
+  pos: ["POS System"],
+  rescue: ["Project Rescue"],
+  cv: ["CV Writing", "Portfolio Website"],
+} as const;
+
 const FLAGS: Record<string, string> = {
   "united kingdom": "🇬🇧",
   uk: "🇬🇧",

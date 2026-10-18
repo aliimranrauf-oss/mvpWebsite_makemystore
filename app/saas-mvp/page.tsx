@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import { ArrowRight, Check, Rocket, Database, Bot, Github } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -39,6 +41,9 @@ const included = [
     desc: "Add a trained AI assistant straight into your MVP, on the Pro tier or as an add-on.",
   },
 ];
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function SaasMvpPage() {
 
@@ -218,6 +223,8 @@ export default function SaasMvpPage() {
             </div>
           </div>
         </section>
+
+        <ServiceReviews services={SERVICE_GROUPS.saas} title="What clients say about our MVP builds" />
 
         <section className="relative overflow-hidden">
           <div

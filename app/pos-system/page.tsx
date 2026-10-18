@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import type { Metadata } from "next";
 import {
   ArrowRight, Check, Plus, Package, Receipt, Bot, Users, ShieldCheck,
@@ -84,6 +86,9 @@ const verticals: { icon: typeof Store; name: string; href?: string }[] = [
   { icon: Car, name: "Auto Parts Shops" },
   { icon: Users, name: "Wholesale & Distribution" },
 ];
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function PosSystemPage() {
   const faqJsonLd = {
@@ -332,6 +337,8 @@ export default function PosSystemPage() {
             </div>
           </div>
         </section>
+
+        <ServiceReviews services={SERVICE_GROUPS.pos} title="What clients say about our POS systems" />
 
         <section className="relative overflow-hidden">
           <div

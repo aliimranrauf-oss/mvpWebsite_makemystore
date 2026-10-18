@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import { ArrowRight, Check, Wrench, Search, ShieldCheck } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -48,6 +50,9 @@ const commonProblems = [
   "Code so tangled that even small changes break something else",
   "The original builder tool got abandoned or is unsupported",
 ];
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function ProjectRescuePage() {
 
@@ -207,6 +212,8 @@ export default function ProjectRescuePage() {
             </div>
           </div>
         </section>
+
+        <ServiceReviews services={SERVICE_GROUPS.rescue} title="What clients say about our project rescues" />
 
         <section className="relative overflow-hidden">
           <div

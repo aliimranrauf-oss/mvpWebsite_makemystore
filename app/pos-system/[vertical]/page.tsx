@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check, Plus, ArrowLeft, Languages } from "lucide-react";
@@ -43,6 +45,9 @@ export function generateMetadata({ params }: Props): Metadata {
     },
   };
 }
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function VerticalPage({ params }: Props) {
   const d = getDemo(params.vertical);
@@ -200,6 +205,8 @@ export default function VerticalPage({ params }: Props) {
             </div>
           </div>
         </section>
+
+        <ServiceReviews services={SERVICE_GROUPS.pos} title="What clients say about our POS systems" />
 
         <section className="relative overflow-hidden">
           <div className="relative mx-auto max-w-content px-5 py-20 text-center sm:px-8 sm:py-28">

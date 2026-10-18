@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import { ArrowRight, Check, Languages, Clock, UserPlus, Stethoscope, UtensilsCrossed, Scissors, Home, ShoppingBag, Dumbbell, SlidersHorizontal, Plug } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -68,6 +70,9 @@ const steps = [
   { n: "2", title: "We build and test it", desc: "We set up your bot, check it against real customer questions and show you a preview." },
   { n: "3", title: "It goes live", desc: "We add it to your website (and WhatsApp if you want). Most bots are live within a few days." },
 ];
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function AiChatbotPage() {
 
@@ -437,6 +442,8 @@ export default function AiChatbotPage() {
             </div>
           </div>
         </section>
+
+        <ServiceReviews services={SERVICE_GROUPS.chatbot} title="What clients say about our AI chatbots" />
 
         <section className="relative overflow-hidden">
           <div

@@ -1,3 +1,5 @@
+import ServiceReviews from "@/components/ServiceReviews";
+import { SERVICE_GROUPS } from "@/lib/reviews";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArrowRight, Check, Plus, Globe2, ShieldCheck, MessageCircle } from "lucide-react";
@@ -31,6 +33,9 @@ export function generateMetadata({ params }: Props): Metadata {
     languages: chatbotHreflang(SITE_URL),
   });
 }
+
+// Refetch approved reviews at most every 60s so new ones show without a redeploy.
+export const revalidate = 60;
 
 export default function ChatbotCountryPage({ params }: Props) {
   const c = getCountry(params.country);
@@ -249,6 +254,8 @@ export default function ChatbotCountryPage({ params }: Props) {
         </section>
 
         {/* Other countries + CTA */}
+        <ServiceReviews services={SERVICE_GROUPS.chatbot} title="What clients say about our AI chatbots" />
+
         <section className="relative overflow-hidden">
           <div
             aria-hidden="true"

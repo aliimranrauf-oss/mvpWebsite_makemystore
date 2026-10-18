@@ -60,7 +60,14 @@ const LEVEL_THEME: Record<
   },
 };
 
-export default function CvPage({ initialLang = "en" }: { initialLang?: Lang }) {
+export default function CvPage({
+  initialLang = "en",
+  reviews,
+}: {
+  initialLang?: Lang;
+  /** Server-rendered reviews block, placed before the final CTA. */
+  reviews?: React.ReactNode;
+}) {
   // English lives at /cv-writing and Arabic at /cv-writing/ar, so each language
   // has its own address that search engines can index.
   const lang: Lang = initialLang;
@@ -577,6 +584,8 @@ export default function CvPage({ initialLang = "en" }: { initialLang?: Lang }) {
             </div>
           </div>
         </section>
+
+        {reviews}
 
         {/* Final CTA */}
         <section className="relative overflow-hidden">
