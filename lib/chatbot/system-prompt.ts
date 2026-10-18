@@ -1,14 +1,14 @@
 // Shared brain for the website widget AND the WhatsApp bot, so both always answer the same way.
-import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, benefits, type Tier } from "@/lib/data";
+import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, mvpFaqs, rescueFaqs, benefits, type Tier } from "@/lib/data";
 import { PERSONA } from "@/lib/chatbot/persona";
 
 function formatTiers(label: string, tiers: Tier[]): string {
-  const lines = tiers.map((t) => `  - ${t.name}: ${t.price} — ${t.desc}`).join("\n");
+  const lines = tiers.map((t) => `  - ${t.name}: ${t.price} — ${t.desc} Includes: ${t.features.join("; ")}.`).join("\n");
   return `${label}:\n${lines}`;
 }
 
 export function buildSystemPrompt(): string {
-  const servicesText = services.map((s) => `- ${s.title}: ${s.desc} (${s.price})`).join("\n");
+  const servicesText = services.map((s) => `- ${s.title}: ${s.desc} (${s.price}). Key points: ${s.points.join("; ")}.`).join("\n");
 
   const pricingText = [
     formatTiers("Chatbots", chatbotTiers),
@@ -17,7 +17,7 @@ export function buildSystemPrompt(): string {
     formatTiers("Project Rescue", rescueTiers),
   ].join("\n");
 
-  const faqText = [...faqs, ...posFaqs].map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
+  const faqText = [...faqs, ...mvpFaqs, ...rescueFaqs, ...posFaqs].map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
   const benefitsText = benefits.map((b) => `- ${b.title}: ${b.desc}`).join("\n");
 
   // Generated from lib/data.ts at module load, so pricing/service changes

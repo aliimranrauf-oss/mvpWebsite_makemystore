@@ -2,7 +2,12 @@
 // content that already exists in lib/data.ts, so it can never say something
 // inconsistent with the rest of the site — and it never claims to be AI.
 
-import { services, chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
+import { services, chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, mvpFaqs, rescueFaqs, type Tier } from "@/lib/data";
+import { chatbotCountries } from "@/lib/chatbot-countries";
+import { demos } from "@/lib/demos";
+import { faqGroups } from "@/lib/faq-groups";
+import { siteFacts } from "@/lib/chatbot/site-facts";
+import { CONTACT_EMAIL, WHATSAPP_DISPLAY } from "@/lib/constants";
 import { content as cvContent, priceLine, gbp, priceRange } from "@/lib/cv-data";
 
 export type FaqBotReply = {
@@ -34,6 +39,15 @@ function normalize(input: string): string {
     .trim();
 }
 
+/** Keyword test. A leading "~" means whole word only (so "~pos" never matches "possible"). */
+function has(normalized: string, k: string): boolean {
+  if (k.startsWith("~")) return ` ${normalized} `.includes(` ${k.slice(1)} `);
+  return normalized.includes(k);
+}
+
+const tierLines = (tiers: Tier[]) =>
+  tiers.map((t) => `• ${t.name}: ${t.price}. ${t.desc} Includes: ${t.features.join("; ")}.`).join("\n");
+
 function buildEntries(): Entry[] {
   const entries: Entry[] = [];
 
@@ -44,7 +58,33 @@ function buildEntries(): Entry[] {
   const CB_TERMS = ["chatbot", "chat bot", "ai bot", "faq bot", "whatsapp bot"];
   const cbTierList = chatbotTiers.map((t) => `• ${t.name}: ${t.price}. ${t.desc}`).join("\n");
 
+  // Country pages (/ai-chatbot/uk, /usa, /australia, /uae), generated from lib/chatbot-countries.ts.
+  const COUNTRY_WORDS: Record<string, string[]> = {
+    uk: ["~uk", "united kingdom", "britain", "british", "england"],
+    usa: ["~usa", "united states", "america", "american"],
+    australia: ["australia", "australian"],
+    uae: ["~uae", "dubai", "emirates", "abu dhabi"],
+  };
+  for (const c of chatbotCountries) {
+    const kw = COUNTRY_WORDS[c.slug];
+    if (!kw) continue;
+    entries.push({
+      keywords: kw,
+      requires: CB_TERMS,
+      response: `Yes, we build AI chatbots for ${c.label} businesses. Prices are in GBP (Basic FAQ Bot ${chatbotTiers[0].price}, AI Bot ${chatbotTiers[1].price}, AI Bot + Dashboard ${chatbotTiers[2].price}).${c.currencyName !== "GBP" ? ` Local guide in ${c.currencyName}: Basic ${c.tierPrices["basic-faq-bot"]}, AI Bot ${c.tierPrices["ai-bot"]}, Dashboard ${c.tierPrices["ai-bot-dashboard"]}.` : ""} ${c.privacy.law}\n\nChannels, industries and FAQs for ${c.label}: /ai-chatbot/${c.slug}`,
+    });
+  }
+
   entries.push(
+    {
+      keywords: ["remember", "memory", "remembers"],
+      requires: [...CB_TERMS, "bot", "conversation"],
+      response: "Yes. The AI Bot and AI Bot + Dashboard remember the conversation, so customers don't have to repeat themselves. The Basic FAQ Bot answers from a Q&A list you approve instead.",
+    },
+    {
+      keywords: ["replies a month", "replies per month", "how many replies", "message limit", "usage limit", "replies included"],
+      response: chatbotFaqs[6].a,
+    },
     {
       keywords: ["demo", "try it", "try the", "try out", "test it", "see it", "example"],
       requires: CB_TERMS,
@@ -217,7 +257,7 @@ function buildEntries(): Entry[] {
     {
       keywords: ["pay", "payment", "currency", "sar", "aed", "usd", "dollar", "riyal", "dirham"],
       requires: CV_TERMS,
-      response: `Prices are listed in GBP. In the order form you can pick your preferred currency (SAR, AED, QAR, KWD, USD or GBP) and we'll confirm the equivalent and the payment options when we confirm your order. No payment is taken until we've confirmed your order and you've agreed.`,
+      response: `Prices are listed in GBP. In the order form you can pick your preferred currency (SAR, AED, QAR, KWD, USD or GBP) and we'll confirm the equivalent and the payment options when we confirm your order. No payment is taken until we've confirmed your order and you've agreed. Payment is mainly by Payoneer invoice or payment link, with a secure Fiverr payment as an alternative.`,
     },
     {
       keywords: ["revision", "revisions", "edits", "update my", "changes after", "free updates", "11 months"],
@@ -259,14 +299,199 @@ function buildEntries(): Entry[] {
       response: `Yes — our CV service is built for the Gulf job market (KSA, UAE, Qatar, Kuwait, Bahrain, Oman). We structure your CV the way GCC recruiters scan it, include Gulf details like nationality, visa status and notice period only where they help, and position your experience for sectors like construction, energy, tourism, healthcare, tech and finance. We also help expats translate overseas experience into terms Gulf employers trust. Details: /cv-writing`,
     },
     {
-      keywords: ["arabic version", "in arabic", "arabic language", "arabic page", "arabic website", "arabic site", "speak arabic"],
+      keywords: ["arabic version of the page", "arabic version of your", "arabic page", "arabic website", "arabic site", "page in arabic", "website in arabic"],
+      requires: [...CV_TERMS, "page", "website", "site", "version"],
       response: `Our CV & LinkedIn page (/cv-writing) has an Arabic version — tap the Arabic language button at the top of the page to switch (English is the default). Our CV packages themselves are written in English; for an Arabic or bilingual CV, mention it in the order form and the team will confirm.`,
+    },
+    {
+      keywords: ["how to order", "how do i order", "place an order", "order a cv", "how can i order", "what do you need from me", "what do i need to send", "what information do you need"],
+      requires: CV_TERMS,
+      response: `Choose your package and career level at /cv-writing#packages, then fill in the short order form with your target role, country and any deadline (and tick the samples box if you'd like examples). We reply within 24 hours to confirm your order, delivery date and payment details, and you can reply with your current CV to speed things up. Nothing is charged until you agree: ${LINK}`,
+    },
+    {
+      keywords: ["interview follow", "follow up email", "follow-up email", "follow up mail", "thank you note", "thank-you note", "thank you email", "thank-you"],
+      response: "Yes. A ready-to-send interview follow-up (thank-you) email is included free with the CV & Cover Letter and Complete packages, along with a tailored cover letter. See the packages: /cv-writing#packages",
+    },
+    {
+      keywords: ["refund", "money back", "guarantee"],
+      requires: CV_TERMS,
+      response: `For CV and career-document orders you see the fixed price before you order, we confirm the order with you first, and nothing is charged until you agree. Every package includes 11 months of free revisions. For a specific refund question, email ${CONTACT_EMAIL} before you pay. Our Terms: /terms`,
     },
     {
       // General CV overview — keep LAST among the CV entries (it's the catch-all).
       keywords: CV_TERMS,
       response: `We write professional CVs, cover letters, LinkedIn profiles and bios, and build personal portfolio websites — built for job seekers in Saudi Arabia, the UAE and the wider Gulf.\n\n${cvList}\n\nEvery CV package includes a free cover letter, a free interview follow-up email and 11 months of free revisions. Prices are fixed by career level. See details and order: /cv-writing`,
     }
+  );
+
+  // ---- Site facts: contact, payment, policies, tech stack, who we are ------------
+  // From lib/chatbot/site-facts.ts (shared with the AI bot). Placed before the
+  // generic FAQ entries so "how long to reply" isn't taken for a delivery question.
+  for (const f of siteFacts) {
+    entries.push({ keywords: f.keywords, requires: f.requires, response: f.a });
+  }
+
+  // ---- SaaS MVP, POS and Project Rescue: service-specific answers -----------------
+  const PRICE_WORDS = ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget", "packages", "plans", "tiers", "fee"];
+  const MVP_TERMS = ["mvp", "saas", "startup", "minimum viable", "my idea", "app idea", "web app", "build my app", "build an app"];
+  const POS_TERMS = ["~pos", "point of sale", "shop management", "inventory", "billing software", "billing system", "retail system", "stock management", "cash register"];
+  const RESCUE_TERMS = ["rescue", "full rebuild", "quick fix", "standard rescue", "lovable", "bolt", "ai builder", "ai-built", "ai built", "stuck project", "broken app", "fix my app", "fix my project", "fix my website", "unfinished", "half built", "half-built", "finish my"];
+  const demo = demos.find((d) => d.live);
+  const POS_DEMO = demo ? `/pos-system/${demo.slug}` : "/pos-system";
+
+  entries.push(
+    // MVP
+    {
+      keywords: PRICE_WORDS,
+      requires: MVP_TERMS,
+      response: `SaaS MVP packages (fixed quote before anything starts):\n${tierLines(mvpTiers)}\n\nOptional AI chatbot is built into Pro and can be added to Starter or Growth. Details: /saas-mvp#pricing`,
+    },
+    {
+      keywords: ["starter", "growth", "pro tier", "pro plan", "included", "what do i get", "features", "what's in", "whats in"],
+      requires: MVP_TERMS,
+      response: `Here's what each SaaS MVP tier includes:\n${tierLines(mvpTiers)}\n\nAll of it is built on Next.js and Supabase and deployed to your own accounts. Details: /saas-mvp`,
+    },
+    {
+      keywords: ["how long", "how fast", "timeline", "delivery", "turnaround", "how soon", "48", "72"],
+      requires: MVP_TERMS,
+      response: faqs[5].a + " Timelines are estimates based on typical projects of that size, and you get a timeline with your quote.",
+    },
+    {
+      keywords: ["source code", "own the code", "code ownership", "who owns", "do i own"],
+      requires: MVP_TERMS,
+      response: mvpFaqs[4].a,
+    },
+    {
+      keywords: ["add ai", "ai chatbot", "add a chatbot", "ai in my", "ai assistant", "~ai"],
+      requires: MVP_TERMS,
+      response: mvpFaqs[1].a,
+    },
+    {
+      keywords: ["admin panel", "admin page", "admin dashboard"],
+      response: mvpFaqs[5].a,
+    },
+    {
+      keywords: ["after launch", "after delivery", "changes after", "help after"],
+      requires: MVP_TERMS,
+      response: mvpFaqs[6].a,
+    },
+    {
+      keywords: MVP_TERMS,
+      response: `We build working SaaS products on Next.js and Supabase, delivered in 48–72 hours, with real accounts, a real database, an admin panel and an optional AI chatbot. You describe what the product needs to do, and you own the code, hosting and deployment. Starter ${mvpTiers[0].price}, Growth ${mvpTiers[1].price}, Pro ${mvpTiers[2].price}. Details: /saas-mvp`,
+    },
+
+    // POS
+    {
+      keywords: ["demo", "try", "example", "sample", "see it", "live"],
+      requires: POS_TERMS,
+      response: `Yes, there's a live POS demo (a battery & solar shop build): ${POS_DEMO}. Click "Log in to demo" with no sign-up. It uses sample data only and resets every hour, so please don't enter real business information. Your system is built around your own business.`,
+    },
+    {
+      keywords: PRICE_WORDS,
+      requires: POS_TERMS,
+      response: `POS & shop management is a one-time build fee, with no forced monthly license. Exact pricing depends on the modules you need:\n${tierLines(posTiers)}\n\nDetails: /pos-system#pricing`,
+    },
+    {
+      keywords: ["how long", "how fast", "timeline", "delivery", "turnaround", "how soon"],
+      requires: POS_TERMS,
+      response: posFaqs[5].a,
+    },
+    {
+      keywords: ["multi branch", "multi-branch", "multiple branches", "multi store", "multi-store", "multiple shops", "branches", "several shops"],
+      response: `Yes. The Custom / Multi-Branch tier covers multiple branches or stores, industry-specific modules and custom integrations, and it's priced after a short call. ${posTiers[2].desc} Start here: /contact`,
+    },
+    {
+      keywords: ["own the app", "source code", "one-time", "one time", "monthly license", "subscription", "license fee", "licence"],
+      requires: POS_TERMS,
+      response: posFaqs[4].a,
+    },
+    {
+      keywords: ["included", "features", "modules", "what does", "what can", "staff", "roles", "invoice", "invoices", "pdf", "ledger", "expense", "reports", "supplier", "customers"],
+      requires: POS_TERMS,
+      response: posFaqs[1].a,
+    },
+    {
+      keywords: ["pharmacy", "pharmacies", "grocery", "hardware store", "garments", "boutique", "wholesale", "electronics shop", "mobile shop", "auto parts", "any business", "my business type"],
+      requires: [...POS_TERMS, "shop", "store", "business", "system"],
+      response: posFaqs[0].a,
+    },
+    {
+      keywords: ["offline", "without internet", "no internet", "internet"],
+      requires: POS_TERMS,
+      response: posFaqs[3].a,
+    },
+    {
+      keywords: ["ai assistant", "assistant", "ai safe", "is the ai"],
+      requires: POS_TERMS,
+      response: posFaqs[2].a,
+    },
+    {
+      keywords: POS_TERMS,
+      response: `We build custom POS & shop management systems: inventory with stock history, invoicing (print, PDF, WhatsApp), customer and supplier ledgers, payments, expenses, reports, staff roles and an optional AI assistant. It works offline, and it's a one-time build you own. Starter POS ${posTiers[0].price}, Business POS + AI ${posTiers[1].price}, Custom / Multi-Branch ${posTiers[2].price.toLowerCase()}. Live demo: ${POS_DEMO}. Details: /pos-system`,
+    },
+
+    // Project Rescue
+    {
+      keywords: PRICE_WORDS,
+      requires: RESCUE_TERMS,
+      response: `Project Rescue packages (a fixed quote before work starts; a Full Rebuild is priced after a quick, free review):\n${tierLines(rescueTiers)}\n\nDetails: /project-rescue#pricing`,
+    },
+    {
+      keywords: ["free review", "scope review", "review first", "free quote"],
+      requires: RESCUE_TERMS,
+      response: "Yes. Project Rescue starts with an honest, free review: send us the current state of the project and you get a clear read on what's actually broken, then a fixed quote before anything starts. Get a free review: /project-rescue",
+    },
+    {
+      keywords: ["how long", "how fast", "timeline", "turnaround", "how soon"],
+      requires: RESCUE_TERMS,
+      response: rescueFaqs[4].a,
+    },
+    {
+      keywords: ["problems", "what do you fix", "kinds of", "what can you fix", "common issues"],
+      requires: RESCUE_TERMS,
+      response: rescueFaqs[1].a,
+    },
+    {
+      keywords: ["full rebuild", "rebuild", "start over", "start from scratch"],
+      requires: RESCUE_TERMS,
+      response: rescueFaqs[2].a,
+    },
+    {
+      keywords: RESCUE_TERMS,
+      response: rescueFaqs[0].a + " Pricing: " + rescueTiers.map((t) => `${t.name} ${t.price}`).join(", ") + ". Details: /project-rescue",
+    },
+
+    // Cross-service
+    {
+      keywords: ["free review", "scope review"],
+      response: "Yes. Project Rescue starts with an honest, free review: send us the current state of the project and you get a clear read on what's actually broken, then a fixed quote before anything starts. Get a free review: /project-rescue",
+    },
+    {
+      keywords: ["reset", "is it safe", "is the demo safe", "real data", "real information", "sample data", "is it real"],
+      requires: ["demo"],
+      response: "Both demos use made-up sample data. In the chatbot demo nothing is actually booked, and there's a message limit. The POS demo resets every hour, so please don't enter real customer or business information.",
+    },
+    {
+      keywords: ["deploy", "deployed", "deployment", "vercel", "github", "supabase"],
+      response: faqs[2].a,
+    },
+    {
+      keywords: ["live demo", "see a demo", "show me a demo", "any demo", "demos", "try the demo", "demo"],
+      response: `We have two live demos. The AI chatbot demo (both the owner dashboard and the customer chat, with sample restaurant, clinic and salon businesses): /ai-chatbot#demo. The POS system demo (a battery & solar shop build, sample data, resets hourly): ${POS_DEMO}.`,
+    },
+    {
+      keywords: ["telegram"],
+      response: chatbotFaqs[7].a,
+    },
+    {
+      keywords: ["~rag", "retrieval"],
+      response: "RAG (retrieval-augmented generation) means the bot looks up the answer in your own information (menu, services, prices, policies) before it replies, so it answers from your real data instead of guessing. " + chatbotFaqs[5].a,
+    },
+    {
+      keywords: ["speak arabic", "reply in arabic", "answer in arabic", "arabic customers", "arabic speaking", "urdu", "multilingual", "other languages", "in my language", "my language"],
+      requires: ["bot", "chat", "reply", "answer", "customers", "speak"],
+      response: chatbotFaqs[1].a,
+    },
   );
 
   // FAQs, reused verbatim from lib/data.ts.
@@ -338,7 +563,7 @@ function buildEntries(): Entry[] {
 
   // Small talk.
   entries.push({
-    keywords: ["hello", "hi", "hey", "good morning", "good afternoon"],
+    keywords: ["~hello", "~hi", "~hey", "good morning", "good afternoon", "~salam", "assalam"],
     response: "Hey there! Ask me about pricing, services, or timelines — happy to help.",
   });
 
@@ -364,6 +589,57 @@ function buildEntries(): Entry[] {
   return entries;
 }
 
+// ---- Whole-site FAQ search (fallback) ------------------------------------------
+const STOP = new Set(
+  "the and for you your are does did can could will would that this with what how much many about have has from get any our can't there their them they then than into just like want need please tell know let make who why when where which also".split(" ")
+);
+const stem = (w: string) => (w.length > 4 ? w.replace(/(ing|ed|es|s)$/, "") : w);
+const tokenize = (t: string) => normalize(t).split(" ").filter((w) => w.length > 2 && !STOP.has(w)).map(stem);
+
+type PoolItem = { a: string; link: string; q: Set<string>; body: Set<string> };
+
+const GROUP_LINK: Record<string, string> = {
+  pricing: "/pricing",
+  "ai-chatbot": "/ai-chatbot",
+  "saas-mvp": "/saas-mvp",
+  "pos-system": "/pos-system",
+  "project-rescue": "/project-rescue",
+  "cv-writing": "/cv-writing",
+};
+
+function buildPool(): PoolItem[] {
+  const items: PoolItem[] = [];
+  const add = (q: string, a: string, link: string) =>
+    items.push({ a, link, q: new Set(tokenize(q)), body: new Set(tokenize(a)) });
+  for (const g of faqGroups) for (const f of g.items) add(f.q, f.a, GROUP_LINK[g.id] ?? "/pricing");
+  for (const d of demos.filter((x) => x.live)) for (const f of d.faqs) add(f.q, f.a, `/pos-system/${d.slug}`);
+  for (const f of siteFacts) add(f.q, f.a, "/contact");
+  return items;
+}
+const POOL = buildPool();
+
+function bestPoolMatch(normalized: string): string | null {
+  const qt = [...new Set(tokenize(normalized))];
+  if (qt.length < 2) return null;
+  let best: PoolItem | null = null;
+  let bestScore = 0;
+  for (const item of POOL) {
+    let inQuestion = 0;
+    let inAnswer = 0;
+    for (const t of qt) {
+      if (item.q.has(t)) inQuestion++;
+      else if (item.body.has(t)) inAnswer++;
+    }
+    if (inQuestion < 2 || inQuestion / qt.length < 0.5) continue;
+    const score = inQuestion * 3 + inAnswer;
+    if (score > bestScore) {
+      best = item;
+      bestScore = score;
+    }
+  }
+  return best ? `${best.a}\n\nMore: ${best.link}` : null;
+}
+
 const ENTRIES = buildEntries();
 
 const LEAD_INTENT_KEYWORDS = [
@@ -385,9 +661,17 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   const hasLeadIntent = LEAD_INTENT_KEYWORDS.some((k) => normalized.includes(k));
 
   for (const entry of ENTRIES) {
-    if (!entry.keywords.some((k) => normalized.includes(k))) continue;
-    if (entry.requires && !entry.requires.some((r) => normalized.includes(r))) continue;
+    if (!entry.keywords.some((k) => has(normalized, k))) continue;
+    if (entry.requires && !entry.requires.some((r) => has(normalized, r))) continue;
     return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
+  }
+
+  // No keyword topic matched: look across EVERY FAQ on the site (all service
+  // FAQs, pricing FAQs, the POS demo FAQs and the site facts) for the closest
+  // question, so anything that is written on the website can still be answered.
+  const pool = bestPoolMatch(normalized);
+  if (pool) {
+    return { text: pool, suggestQuote: hasLeadIntent, matched: true };
   }
 
   // Fallback branches below: neither is a real topic match, so both are
@@ -404,7 +688,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   }
 
   return {
-    text: "I didn't quite catch that — I can answer questions about pricing, services, timelines and our CV, LinkedIn & portfolio website service. For anything else, let's get you to a real person.",
+    text: `I didn't quite catch that. I can answer questions about prices, services, timelines, payment, our CV, LinkedIn & portfolio website service and more. For anything else, a real person will reply within 24 hours: ${CONTACT_EMAIL}, WhatsApp ${WHATSAPP_DISPLAY}, or /contact.`,
     suggestQuote: true,
     matched: false,
   };
