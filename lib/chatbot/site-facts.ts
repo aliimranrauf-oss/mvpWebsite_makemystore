@@ -18,6 +18,8 @@ export type SiteFact = {
   keywords: string[];
   /** If set, at least one of these must also appear. */
   requires?: string[];
+  /** Show the "Get a quote" button (opens the lead form that saves to Supabase). */
+  suggestQuote?: boolean;
 };
 
 export const siteFacts: SiteFact[] = [
@@ -31,7 +33,8 @@ export const siteFacts: SiteFact[] = [
       "link to the form", "get a quote", "request a quote", "send my details", "fill the form", "fill in the form",
       "where is the form", "where do i sign up", "sign up",
     ],
-    a: `The quickest way is the contact form at /contact: tell us what you need and we reply within 24 hours with a fixed quote. For CV, LinkedIn, biography or portfolio website orders, use the order form at /cv-writing#order (pick your package and career level and you see your fixed price). Prefer to chat? Message us on WhatsApp at ${WHATSAPP_DISPLAY} (${WHATSAPP_LINK}) or email ${CONTACT_EMAIL}.`,
+    a: `To order, tap "Get a quote" below and fill in the quick form with what you need, and we\'ll confirm everything within 24 hours. You can also WhatsApp us on ${WHATSAPP_DISPLAY} or email ${CONTACT_EMAIL}.`,
+    suggestQuote: true,
   },
   {
     q: "How do I contact you?",
@@ -44,7 +47,8 @@ export const siteFacts: SiteFact[] = [
       "contact information", "where can i contact", "where do i contact", "how can i contact", "where to contact",
       "how to contact", "email you", "send an email", "write to you",
     ],
-    a: `Yes, we're on WhatsApp: ${WHATSAPP_DISPLAY} (tap to chat: ${WHATSAPP_LINK}). You can also email ${CONTACT_EMAIL} or use the contact form at /contact. Every message gets a real reply within 24 hours, and sending your details doesn't commit you to anything.`,
+    a: `You can reach us on WhatsApp at ${WHATSAPP_DISPLAY} or by email at ${CONTACT_EMAIL}. Or tap "Get a quote" below and fill in the quick form, and the team replies within 24 hours.`,
+    suggestQuote: true,
   },
   {
     q: "How quickly do you reply?",

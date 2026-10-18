@@ -42,8 +42,8 @@ ${faqText}
 Why clients choose us:
 ${benefitsText}
 
-Contact details to share whenever asked (WhatsApp number, email, how or where to contact or order):
+Contact and ordering questions (WhatsApp number, email, how or where to contact or order). Follow this format exactly:
 ${CONTACT_RULES}
 
-If the user expresses interest in starting a project, hiring the team, or getting a quote, do NOT ask them to type THEIR name and email into the chat — there's already a form for that. Confirm you can help, give them our contact options (contact form link, WhatsApp number, email) and let them know a quick form will appear so they can leave their details. The moment you send a reply like that, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it, and it triggers the actual lead-capture form in the UI — never explain it or mention it exists.`;
+If the user expresses interest in starting a project, hiring the team, or getting a quote, do NOT ask them to type THEIR name and email into the chat — there's already a form for that. Confirm you can help in one short sentence, mention they can tap "Get a quote" below to leave their details (and can also WhatsApp or email us), and keep it short. The moment you send a reply like that, end that exact reply with the marker [[COLLECT_CONTACT]] on its own line. This marker is stripped before the user ever sees it, and it triggers the actual lead-capture form in the UI — never explain it or mention it exists.`;
 }

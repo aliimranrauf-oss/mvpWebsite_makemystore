@@ -29,6 +29,8 @@ type Entry = {
    *  like "price" or "how long" match only when the topic (e.g. a CV) is mentioned. */
   requires?: string[];
   response: string;
+  /** Force the "Get a quote" button for this answer. */
+  suggestQuote?: boolean;
 };
 
 function normalize(input: string): string {
@@ -306,7 +308,8 @@ function buildEntries(): Entry[] {
     {
       keywords: ["how to order", "how do i order", "place an order", "order a cv", "how can i order", "what do you need from me", "what do i need to send", "what information do you need"],
       requires: CV_TERMS,
-      response: `Choose your package and career level at /cv-writing#packages, then fill in the short order form with your target role, country and any deadline (and tick the samples box if you'd like examples). We reply within 24 hours to confirm your order, delivery date and payment details, and you can reply with your current CV to speed things up. Nothing is charged until you agree: ${LINK}\n\nPrefer to chat? WhatsApp ${WHATSAPP_DISPLAY} or email ${CONTACT_EMAIL}.`,
+      response: `To order, tap "Get a quote" below and tell us the package you want and your target role, and we\'ll confirm your order and delivery date within 24 hours. You can also WhatsApp us on ${WHATSAPP_DISPLAY} or email ${CONTACT_EMAIL}. Prices by level: /cv-writing#packages`,
+      suggestQuote: true,
     },
     {
       keywords: ["interview follow", "follow up email", "follow-up email", "follow up mail", "thank you note", "thank-you note", "thank you email", "thank-you"],
@@ -328,7 +331,7 @@ function buildEntries(): Entry[] {
   // From lib/chatbot/site-facts.ts (shared with the AI bot). Placed before the
   // generic FAQ entries so "how long to reply" isn't taken for a delivery question.
   for (const f of siteFacts) {
-    entries.push({ keywords: f.keywords, requires: f.requires, response: f.a });
+    entries.push({ keywords: f.keywords, requires: f.requires, response: f.a, suggestQuote: f.suggestQuote });
   }
 
   // ---- SaaS MVP, POS and Project Rescue: service-specific answers -----------------
@@ -663,7 +666,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   for (const entry of ENTRIES) {
     if (!entry.keywords.some((k) => has(normalized, k))) continue;
     if (entry.requires && !entry.requires.some((r) => has(normalized, r))) continue;
-    return { text: entry.response, suggestQuote: hasLeadIntent, matched: true };
+    return { text: entry.response, suggestQuote: hasLeadIntent || Boolean(entry.suggestQuote), matched: true };
   }
 
   // No keyword topic matched: look across EVERY FAQ on the site (all service
