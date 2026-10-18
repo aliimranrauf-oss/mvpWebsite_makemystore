@@ -5,9 +5,10 @@
  * and local-currency price guide, so the pages are genuinely different (not the
  * same text with the country name swapped).
  *
- * PRICES: the business prices in USD (see chatbotTiers in lib/data.ts). The local
- * figures below are approximate guides at rough 2026 exchange rates and are
- * labelled "approx." on the page. Update them here if rates move a lot.
+ * PRICES: all business prices are in GBP (see chatbotTiers in lib/data.ts). The
+ * USD / AUD / AED figures below are approximate guides at rough October 2026
+ * rates (about $1.35, A$1.90 and AED 4.95 to the pound) and are labelled
+ * "approx." on the page. Update them here if rates move a lot.
  *
  * PRIVACY COPY: describes what the law covers and how the bot is designed. It
  * deliberately does NOT claim legal compliance on the client's behalf.
@@ -61,7 +62,7 @@ export const chatbotCountries: CountryPage[] = [
     ogLocale: "en_GB",
     metaTitle: "AI Chatbot Development for UK Businesses — MakeMyStore",
     metaDescription:
-      "Custom AI chatbot for UK businesses, on your website and WhatsApp. Answers enquiries out of hours, books leads, built around UK GDPR. Fixed price, from about £120.",
+      "Custom AI chatbot for UK businesses, on your website and WhatsApp. Answers enquiries out of hours, books leads, built around UK GDPR. Fixed price from £120.",
     keywords: [
       "AI chatbot for UK businesses",
       "WhatsApp chatbot UK",
@@ -85,7 +86,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         title: "WhatsApp Business",
-        desc: "Many UK customers already message businesses on WhatsApp. We connect your bot to your WhatsApp number (+$120, about £95), so it answers there too and passes anything tricky to you.",
+        desc: "Many UK customers already message businesses on WhatsApp. We connect your bot to your WhatsApp number (+£95), so it answers there too and passes anything tricky to you.",
       },
       {
         title: "Out-of-hours lead capture",
@@ -103,13 +104,13 @@ export const chatbotCountries: CountryPage[] = [
     ],
     currencyName: "GBP",
     tierPrices: {
-      "basic-faq-bot": "approx. £120–£200",
-      "ai-bot": "approx. £470–£950",
-      "ai-bot-dashboard": "from approx. £950",
+      "basic-faq-bot": "£120–£200",
+      "ai-bot": "£480–£950",
+      "ai-bot-dashboard": "from £950",
     },
-    addonNote: "WhatsApp connection: +$120 (about £95).",
+    addonNote: "WhatsApp connection: +£95.",
     priceNote:
-      "Our prices are set in US dollars. The pound figures are a rough guide at recent exchange rates and will move a little. You get a fixed quote before anything starts.",
+      "Prices are in pounds sterling. You get a fixed quote before anything starts, with no surprises later.",
     privacy: {
       heading: "Privacy and UK GDPR",
       law: "UK GDPR and the Data Protection Act 2018",
@@ -125,7 +126,7 @@ export const chatbotCountries: CountryPage[] = [
     faqs: [
       {
         q: "Can the chatbot answer on WhatsApp for my UK business?",
-        a: "Yes. Every bot includes the website chat widget, and a WhatsApp connection is an add-on (+$120, roughly £95). Customers message your number and the bot replies using your information, and passes anything it can't answer to you. WhatsApp's own messaging charges may apply, and we explain those in your quote.",
+        a: "Yes. Every bot includes the website chat widget, and a WhatsApp connection is an add-on (+£95). Customers message your number and the bot replies using your information, and passes anything it can't answer to you. WhatsApp's own messaging charges may apply, and we explain those in your quote.",
       },
       {
         q: "Is the chatbot UK GDPR compliant?",
@@ -133,7 +134,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         q: "How much does an AI chatbot cost in pounds?",
-        a: "Pricing is set in US dollars: Basic FAQ bots from $150, AI bots from $600 and the dashboard version from $1,200. At recent exchange rates that is roughly £120, £470 and £950. Rates move, so treat the pound figures as a guide. The fixed quote you receive before we start is what counts.",
+        a: "Basic FAQ bots start at £120, AI bots run £480 to £950, and AI Bot + Dashboard starts at £950. Optional care plans are £25 to £65 a month. The fixed quote you receive before we start is what counts.",
       },
       {
         q: "Can I change opening hours for bank holidays myself?",
@@ -157,7 +158,7 @@ export const chatbotCountries: CountryPage[] = [
     ogLocale: "en_US",
     metaTitle: "AI Chatbot Development for US Businesses — MakeMyStore",
     metaDescription:
-      "Custom AI chatbot for US small businesses: instant answers on your website, lead and appointment capture, optional WhatsApp and text follow-up. Fixed price from $150.",
+      "Custom AI chatbot for US small businesses: instant answers on your website, lead and appointment capture, optional WhatsApp and text follow-up. Fixed price from about $160 (£120).",
     keywords: [
       "AI chatbot for small business",
       "custom AI chatbot developer USA",
@@ -170,7 +171,7 @@ export const chatbotCountries: CountryPage[] = [
     eyebrow: "AI Chatbots for US Businesses",
     h1: "An AI chatbot for your US business that turns website visitors into booked appointments",
     intro:
-      "A chatbot trained on your services, pricing and policies. It answers visitors instantly, captures leads and appointment requests, and can follow up on WhatsApp. Priced in US dollars, quoted before we start, and your content stays yours.",
+      "A chatbot trained on your services, pricing and policies. It answers visitors instantly, captures leads and appointment requests, and can follow up on WhatsApp. Priced in pounds sterling with a dollar guide, quoted before we start, and your content stays yours.",
     channelsHeading: "How US businesses use it",
     channelsIntro:
       "In the US the website is usually the first stop, so the focus is on turning a visit into a lead before the visitor clicks away.",
@@ -185,7 +186,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         title: "English and Spanish",
-        desc: "The AI Bot replies in the language the visitor writes in, including Spanish and English, and switches mid-conversation. A WhatsApp connection (+$120) is available for customers who prefer it.",
+        desc: "The AI Bot replies in the language the visitor writes in, including Spanish and English, and switches mid-conversation. A WhatsApp connection (+£95, about $130) is available for customers who prefer it.",
       },
     ],
     industriesHeading: "Typical US use cases",
@@ -199,13 +200,13 @@ export const chatbotCountries: CountryPage[] = [
     ],
     currencyName: "USD",
     tierPrices: {
-      "basic-faq-bot": "$150–$250",
-      "ai-bot": "$600–$1,200",
-      "ai-bot-dashboard": "from $1,200",
+      "basic-faq-bot": "approx. $160–$270",
+      "ai-bot": "approx. $650–$1,300",
+      "ai-bot-dashboard": "from approx. $1,300",
     },
-    addonNote: "WhatsApp connection: +$120. Text (SMS) follow-up is quoted separately.",
+    addonNote: "WhatsApp connection: +£95 (about $130). Text (SMS) follow-up is quoted separately.",
     priceNote:
-      "Prices are in US dollars. You get a fixed quote before anything starts, with no surprises later.",
+      "Our prices are set in pounds sterling. The dollar figures are a rough guide at recent exchange rates and will move a little. You get a fixed quote before anything starts.",
     privacy: {
       heading: "Privacy, CCPA and texting rules",
       law: "CCPA/CPRA and state privacy laws",
@@ -221,7 +222,7 @@ export const chatbotCountries: CountryPage[] = [
     faqs: [
       {
         q: "Can the chatbot send text messages to my customers?",
-        a: "Not by default. Every bot includes website chat, and WhatsApp is available as an add-on (+$120). Text (SMS) follow-up can be built as a custom add-on, quoted separately once we know which provider you use. US texting rules require customer consent, so we set it up with that in mind.",
+        a: "Not by default. Every bot includes website chat, and WhatsApp is available as an add-on (+£95, about $130). Text (SMS) follow-up can be built as a custom add-on, quoted separately once we know which provider you use. US texting rules require customer consent, so we set it up with that in mind.",
       },
       {
         q: "Is the chatbot HIPAA compliant?",
@@ -233,7 +234,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         q: "How much does an AI chatbot cost?",
-        a: "Basic FAQ bots start at $150, AI bots run $600 to $1,200, and AI Bot + Dashboard starts at $1,200. Optional care plans are $30 to $80 a month. You get a fixed quote before anything starts.",
+        a: "Prices are set in pounds sterling. Basic FAQ bots start at £120 (about $160), AI bots run £480 to £950 (about $650 to $1,300), and AI Bot + Dashboard starts at £950 (about $1,300). Optional care plans are £25 to £65 a month. Dollar figures move with exchange rates. You get a fixed quote before anything starts.",
       },
       {
         q: "Can it talk to Spanish-speaking customers?",
@@ -281,7 +282,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         title: "Optional WhatsApp",
-        desc: "If your customers use it, a WhatsApp connection is available (+$120, about A$180). Every bot includes the website widget as standard.",
+        desc: "If your customers use it, a WhatsApp connection is available (+£95, about A$180). Every bot includes the website widget as standard.",
       },
     ],
     industriesHeading: "Typical Australian use cases",
@@ -296,12 +297,12 @@ export const chatbotCountries: CountryPage[] = [
     currencyName: "AUD",
     tierPrices: {
       "basic-faq-bot": "approx. A$230–$380",
-      "ai-bot": "approx. A$900–$1,800",
+      "ai-bot": "approx. A$910–$1,800",
       "ai-bot-dashboard": "from approx. A$1,800",
     },
-    addonNote: "WhatsApp connection: +$120 (about A$180).",
+    addonNote: "WhatsApp connection: +£95 (about A$180).",
     priceNote:
-      "Our prices are set in US dollars. The Australian dollar figures are a rough guide at recent exchange rates and will move a little. You get a fixed quote before anything starts.",
+      "Our prices are set in pounds sterling. The Australian dollar figures are a rough guide at recent exchange rates and will move a little. You get a fixed quote before anything starts.",
     privacy: {
       heading: "Privacy Act and the Australian Privacy Principles",
       law: "Privacy Act 1988 and the Australian Privacy Principles (APPs)",
@@ -321,7 +322,7 @@ export const chatbotCountries: CountryPage[] = [
       },
       {
         q: "How much does an AI chatbot cost in Australian dollars?",
-        a: "Pricing is set in US dollars: Basic FAQ bots from $150, AI bots from $600 and the dashboard version from $1,200. At recent exchange rates that is roughly A$230, A$900 and A$1,800. Rates move, so treat the AUD figures as a guide. The fixed quote you receive before we start is what counts.",
+        a: "Pricing is set in pounds sterling: Basic FAQ bots from £120, AI bots from £480 and the dashboard version from £950. At recent exchange rates that is roughly A$230, A$910 and A$1,800. Rates move, so treat the AUD figures as a guide. The fixed quote you receive before we start is what counts.",
       },
       {
         q: "Does the Privacy Act apply to my business?",
@@ -345,7 +346,7 @@ export const chatbotCountries: CountryPage[] = [
     ogLocale: "en_GB",
     metaTitle: "Arabic & English AI Chatbot for UAE Businesses — MakeMyStore",
     metaDescription:
-      "Custom AI chatbot for UAE businesses that replies in Arabic and English on WhatsApp and your website. Trained on your menu, services and prices. Fixed price from about AED 550.",
+      "Custom AI chatbot for UAE businesses that replies in Arabic and English on WhatsApp and your website. Trained on your menu, services and prices. Fixed price from about AED 600.",
     keywords: [
       "Arabic AI chatbot UAE",
       "WhatsApp chatbot Dubai",
@@ -365,7 +366,7 @@ export const chatbotCountries: CountryPage[] = [
     channels: [
       {
         title: "WhatsApp first",
-        desc: "WhatsApp is a main way people contact businesses across the UAE. The WhatsApp connection (+$120, about AED 440) puts your bot where customers already are, with the website widget alongside it.",
+        desc: "WhatsApp is a main way people contact businesses across the UAE. The WhatsApp connection (+£95, about AED 470) puts your bot where customers already are, with the website widget alongside it.",
       },
       {
         title: "Arabic, English and more in one bot",
@@ -387,13 +388,13 @@ export const chatbotCountries: CountryPage[] = [
     ],
     currencyName: "AED",
     tierPrices: {
-      "basic-faq-bot": "approx. AED 550–920",
-      "ai-bot": "approx. AED 2,200–4,400",
-      "ai-bot-dashboard": "from approx. AED 4,400",
+      "basic-faq-bot": "approx. AED 600–1,000",
+      "ai-bot": "approx. AED 2,400–4,700",
+      "ai-bot-dashboard": "from approx. AED 4,700",
     },
-    addonNote: "WhatsApp connection: +$120 (about AED 440).",
+    addonNote: "WhatsApp connection: +£95 (about AED 470).",
     priceNote:
-      "Our prices are set in US dollars. The dirham figures use the fixed AED/USD peg (about 3.67), rounded. You get a fixed quote before anything starts.",
+      "Our prices are set in pounds sterling. The dirham figures use a recent rate of about 4.95 dirhams to the pound, rounded, and will move a little. You get a fixed quote before anything starts.",
     privacy: {
       heading: "Privacy and the UAE PDPL",
       law: "UAE Federal Decree-Law No. 45 of 2021 (PDPL)",
@@ -409,11 +410,11 @@ export const chatbotCountries: CountryPage[] = [
     faqs: [
       {
         q: "Can the chatbot reply in Arabic and English on WhatsApp?",
-        a: "Yes. The AI Bot replies in whichever language the customer writes in, including Arabic and English, and switches when they do. The WhatsApp connection is an add-on (+$120, about AED 440). WhatsApp's own messaging charges may apply, and we explain those in your quote.",
+        a: "Yes. The AI Bot replies in whichever language the customer writes in, including Arabic and English, and switches when they do. The WhatsApp connection is an add-on (+£95, about AED 470). WhatsApp's own messaging charges may apply, and we explain those in your quote.",
       },
       {
         q: "How much does an AI chatbot cost in dirhams?",
-        a: "Pricing is set in US dollars: Basic FAQ bots from $150, AI bots from $600 and the dashboard version from $1,200. Using the AED peg of about 3.67, that is roughly AED 550, AED 2,200 and AED 4,400. You get a fixed quote before anything starts.",
+        a: "Pricing is set in pounds sterling: Basic FAQ bots from £120, AI bots from £480 and the dashboard version from £950. At about 4.95 dirhams to the pound, that is roughly AED 600, AED 2,400 and AED 4,700. You get a fixed quote before anything starts.",
       },
       {
         q: "Can I change Ramadan hours and offers myself?",

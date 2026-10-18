@@ -13,7 +13,7 @@ import { chatbotCountries, chatbotHreflang } from "@/lib/chatbot-countries";
 export const metadata = buildMetadata({
   title: "AI Chatbot for Business: WhatsApp & Website, 24/7 — MakeMyStore",
   description:
-    "AI chatbot for your business that answers customers 24/7 in their own language, on your website and WhatsApp. Try the live demo. From $150, fixed price.",
+    "AI chatbot for your business that answers customers 24/7 in their own language, on your website and WhatsApp. Try the live demo. From £120, fixed price.",
   path: "/ai-chatbot",
   keywords: [
     "AI chatbot for business",
@@ -78,7 +78,7 @@ export default function AiChatbotPage() {
       description:
         "Custom AI chatbots trained on your business information, for your website and WhatsApp, replying in the customer's own language.",
       path: "/ai-chatbot",
-      lowPriceUsd: lowestPrice(chatbotTiers.map((t) => t.price)),
+      lowPriceGbp: lowestPrice(chatbotTiers.map((t) => t.price)),
       offerCount: chatbotTiers.length,
       availableLanguage: ["English", "Arabic", "Urdu", "Spanish"],
     }),
@@ -114,7 +114,7 @@ export default function AiChatbotPage() {
         <PageHeader
           eyebrow="AI Chatbot Development"
           title="Answer customers 24/7, without hiring anyone"
-          description="A chatbot trained on your own menu, prices and policies. It replies in your customer's language, captures leads, and runs on your website and WhatsApp. Fixed price from $150."
+          description="A chatbot trained on your own menu, prices and policies. It replies in your customer's language, captures leads, and runs on your website and WhatsApp. Fixed price from £120."
           image={{ src: "/images/hero/ai-chatbot.png", alt: "Custom AI chatbot conversation interface" }}
         >
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
@@ -371,11 +371,11 @@ export default function AiChatbotPage() {
                 <p className="text-sm font-semibold text-ink">{chatbotCarePlan.name} (optional)</p>
                 <p className="mt-3 text-sm leading-relaxed text-muted">{chatbotCarePlan.desc}</p>
                 <ul className="mt-4 space-y-1.5 text-sm">
-                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot</span><span className="font-medium text-ink">$30–$50 / month</span></li>
-                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot + Dashboard</span><span className="font-medium text-ink">$50–$80 / month</span></li>
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot</span><span className="font-medium text-ink">£25–£40 / month</span></li>
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot + Dashboard</span><span className="font-medium text-ink">£40–£65 / month</span></li>
                 </ul>
                 <p className="mt-4 text-xs leading-relaxed text-muted">
-                  The AI itself is billed by usage and is typically only a few dollars a month for a small business.
+                  The AI itself is billed by usage and is typically only a few pounds a month for a small business.
                 </p>
               </div>
             </div>

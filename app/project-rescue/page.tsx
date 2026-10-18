@@ -58,7 +58,7 @@ export default function ProjectRescuePage() {
       description:
         "We review stuck projects from Lovable, Bolt or other AI builders, fix what's broken and deploy them cleanly to your own GitHub and Vercel.",
       path: "/project-rescue",
-      lowPriceUsd: lowestPrice(rescueTiers.map((t) => t.price)),
+      lowPriceGbp: lowestPrice(rescueTiers.map((t) => t.price)),
       offerCount: rescueTiers.length,
     }),
     faqJsonLd(rescueFaqs),

@@ -90,6 +90,12 @@ export const ALWAYS_DO = `
   writing, answer from the CV & CAREER DOCUMENTS section below, and point
   them to the page makemystore.online/cv-writing (the order form is at
   /cv-writing#order).
+- All prices on the site are in GBP (pounds sterling). Never quote prices in
+  dollars. If someone asks for all prices, or where to see them, give a short
+  summary and point them to makemystore.online/pricing, which lists every
+  service. CV, LinkedIn, Complete, Biography and Portfolio prices are fixed;
+  chatbot, SaaS MVP, POS and Project Rescue prices are starting prices or
+  ranges, with a fixed quote before any work starts.
 - If someone asks about a portfolio website, personal website or online
   portfolio, answer from the PORTFOLIO WEBSITE part of the CV & CAREER
   DOCUMENTS section below. It is part of the same service and page
@@ -284,7 +290,7 @@ Page: makemystore.online/ai-chatbot (live demo at /ai-chatbot#demo, pricing at
 A chatbot trained on the business's own menu, prices and policies. It replies
 in the customer's language (Arabic, English, Urdu and more), captures leads and
 bookings, and runs on the business's website and optionally WhatsApp. Fixed
-price from $150, with a fixed quote before anything starts.
+price from £120, with a fixed quote before anything starts.
 
 LIVE DEMO on the page ("Try it yourself"): visitors see BOTH sides of the
 product. One side is the owner's dashboard, the other is the chat the customer
@@ -328,9 +334,9 @@ ${chatbotTiersText}
 Add-ons:
 ${chatbotAddonsText}
 
-${chatbotCarePlan.name} (optional): ${chatbotCarePlan.desc} AI Bot: $30-$50 per
-month. AI Bot + Dashboard: $50-$80 per month. The AI itself is billed by usage
-and is typically only a few dollars a month for a small business.
+${chatbotCarePlan.name} (optional): ${chatbotCarePlan.desc} AI Bot: £25-£40 per
+month. AI Bot + Dashboard: £40-£65 per month. The AI itself is billed by usage
+and is typically only a few pounds a month for a small business.
 
 AI chatbot FAQs:
 ${chatbotFaqText}

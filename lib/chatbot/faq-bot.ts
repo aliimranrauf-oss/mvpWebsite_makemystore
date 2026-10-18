@@ -3,7 +3,7 @@
 // inconsistent with the rest of the site — and it never claims to be AI.
 
 import { services, chatbotTiers, chatbotAddons, chatbotCarePlan, chatbotFaqs, mvpTiers, rescueTiers, posTiers, faqs, posFaqs } from "@/lib/data";
-import { content as cvContent, priceLine, gbp } from "@/lib/cv-data";
+import { content as cvContent, priceLine, gbp, priceRange } from "@/lib/cv-data";
 
 export type FaqBotReply = {
   text: string;
@@ -53,7 +53,7 @@ function buildEntries(): Entry[] {
     {
       keywords: ["care plan", "monthly", "per month", "running cost", "ongoing", "hosting", "maintenance", "ai cost", "usage"],
       requires: CB_TERMS,
-      response: `${chatbotCarePlan.desc} AI Bot: $30–$50 per month; AI Bot + Dashboard: $50–$80 per month.\n\n${chatbotFaqs[6].a}`,
+      response: `${chatbotCarePlan.desc} AI Bot: £25–£40 per month; AI Bot + Dashboard: £40–£65 per month.\n\n${chatbotFaqs[6].a}`,
     },
     {
       keywords: ["price", "pricing", "cost", "how much", "rates", "cheap", "affordable", "budget", "packages", "plans"],
@@ -322,17 +322,18 @@ function buildEntries(): Entry[] {
     .join("\n");
   entries.push({
     keywords: ["service", "services", "what do you offer", "what do you do", "what can you build"],
-    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (fixed prices from £100, by career level) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n• Portfolio Websites (fixed £350) — a personal portfolio site that shows your work, built to go with your CV. See /cv-writing#portfolio\n\nWant details on one? Just ask.`,
+    response: `Here's what we offer:\n\n${servicesSummary}\n• CV, LinkedIn & Career Documents (fixed prices from £100, by career level) — professional CV, cover letter, LinkedIn and bio writing for job seekers in KSA, UAE and the Gulf. See /cv-writing\n• Portfolio Websites (fixed £350) — a personal portfolio site that shows your work, built to go with your CV. See /cv-writing#portfolio\n\nAll prices are in GBP. Full pricing: /pricing\n\nWant details on one? Just ask.`,
   });
 
-  // Pricing summary, generated from the same tier data used on /#pricing.
+  // Pricing summary, generated from the same data used on /pricing and the homepage.
+  const cvLowest = Math.min(...cvContent.en.packages.items.filter((p) => !p.flat).map((p) => priceRange(p).low));
   const chatbotSummary = chatbotTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   const mvpSummary = mvpTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   const posSummary = posTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   const rescueSummary = rescueTiers.map((t) => `${t.name}: ${t.price}`).join(", ");
   entries.push({
     keywords: ["price", "pricing", "cost", "how much", "rates", "budget"],
-    response: `Quick pricing overview:\n• Chatbots: ${chatbotSummary}\n• SaaS MVPs: ${mvpSummary}\n• POS & Shop Management: ${posSummary}\n• Project Rescue: ${rescueSummary}\n\nSee full details at /#pricing.`,
+    response: `Quick pricing overview (all prices in GBP):\n• Chatbots: ${chatbotSummary}\n• SaaS MVPs: ${mvpSummary}\n• POS & Shop Management: ${posSummary}\n• Project Rescue: ${rescueSummary}\n• CV, LinkedIn & career writing: fixed prices by career level, from ${gbp(cvLowest)} (CV & Cover Letter from ${gbp(priceRange(cvById("cv-cover-letter")).low)})\n• Portfolio Website: ${pfPrice} fixed\n\nCV and portfolio prices are fixed. The others get a fixed quote before any work starts. Everything on one page: /pricing`,
   });
 
   // Small talk.

@@ -50,7 +50,7 @@ export default function ChatbotCountryPage({ params }: Props) {
       serviceType: "AI chatbot development",
       description: c.metaDescription,
       path,
-      lowPriceUsd: 150,
+      lowPriceGbp: 120,
       offerCount: chatbotTiers.length,
       areaServed: [c.schemaCountry],
       availableLanguage: c.availableLanguage,
@@ -176,7 +176,7 @@ export default function ChatbotCountryPage({ params }: Props) {
                       )}
                     </div>
                     <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
-                    {c.currencyName !== "USD" && <p className="mt-1 text-xs text-muted">{local}</p>}
+                    {c.currencyName !== "GBP" && <p className="mt-1 text-xs text-muted">{local}</p>}
                     <p className="mt-3 text-sm leading-relaxed text-muted">{t.desc}</p>
                     <ul className="mt-5 flex-1 space-y-2.5">
                       {t.features.map((f) => (

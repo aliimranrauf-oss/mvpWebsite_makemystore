@@ -20,7 +20,7 @@ export const services = [
       "Real memory + RAG on your own data",
       "WhatsApp, Telegram, or website widget",
     ],
-    price: "From $150",
+    price: "From £120",
     accent: "mint" as const,
   },
   {
@@ -32,7 +32,7 @@ export const services = [
       "48–72 hour delivery",
       "Optional AI chatbot built in",
     ],
-    price: "From $250",
+    price: "From £200",
     accent: "cyan" as const,
   },
   {
@@ -44,7 +44,7 @@ export const services = [
       "AI assistant proposes changes, you confirm",
       "Works offline, syncs automatically",
     ],
-    price: "From $400",
+    price: "From £320",
     accent: "mint" as const,
   },
   {
@@ -56,7 +56,7 @@ export const services = [
       "Rebuilt cleanly on Next.js",
       "Deployed to your GitHub + Vercel",
     ],
-    price: "From $150",
+    price: "From £120",
     accent: "cyan" as const,
   },
 ];
@@ -65,7 +65,7 @@ export const chatbotTiers: Tier[] = [
   {
     name: "Basic FAQ Bot",
     slug: "basic-faq-bot",
-    price: "$150–$250",
+    price: "£120–£200",
     desc: "Instant answers to the questions customers ask every day: hours, prices, location, policies.",
     features: [
       "Answers from a Q&A list you approve",
@@ -77,7 +77,7 @@ export const chatbotTiers: Tier[] = [
   {
     name: "AI Bot",
     slug: "ai-bot",
-    price: "$600–$1,200",
+    price: "£480–£950",
     desc: "Understands any question and replies in your customer's language, using your real business information.",
     features: [
       "Everything in Basic",
@@ -91,7 +91,7 @@ export const chatbotTiers: Tier[] = [
   {
     name: "AI Bot + Dashboard",
     slug: "ai-bot-dashboard",
-    price: "from $1,200",
+    price: "from £950",
     desc: "Run your bot yourself. Change stock, prices and hours in a private dashboard, and the bot updates instantly.",
     features: [
       "Everything in AI Bot",
@@ -105,35 +105,35 @@ export const chatbotTiers: Tier[] = [
 ];
 
 export const chatbotAddons = [
-  { name: "WhatsApp connection", price: "+$120" },
-  { name: "Telegram connection", price: "+$100" },
-  { name: "Live menu page for your website (always matches your dashboard)", price: "+$150–$250" },
-  { name: "Your own address, e.g. bot.yourbusiness.com", price: "+$50" },
+  { name: "WhatsApp connection", price: "+£95" },
+  { name: "Telegram connection", price: "+£80" },
+  { name: "Live menu page for your website (always matches your dashboard)", price: "+£120–£200" },
+  { name: "Your own address, e.g. bot.yourbusiness.com", price: "+£40" },
 ];
 
 export const chatbotCarePlan = {
   name: "Care plan",
-  price: "$30–$50 / month (AI Bot) · $50–$80 / month (Dashboard)",
+  price: "£25–£40 / month (AI Bot) · £40–£65 / month (Dashboard)",
   desc: "We host and monitor your bot, update your information and fix problems. Includes the AI usage for up to 3,000 customer replies a month.",
 };
 
 export const mvpTiers: Tier[] = [
   {
     name: "Starter",
-    price: "$250",
+    price: "£200",
     desc: "A focused, single-purpose MVP to validate an idea fast.",
     features: ["Core feature set", "Next.js + Supabase", "48–72 hour delivery"],
   },
   {
     name: "Growth",
-    price: "$650",
+    price: "£520",
     desc: "A more complete product with auth, database, and a few key flows.",
     features: ["Everything in Starter", "User accounts + database", "Basic admin view"],
     highlight: true,
   },
   {
     name: "Pro",
-    price: "$1,600",
+    price: "£1,250",
     desc: "A fuller build for products ready to bring on real users.",
     features: ["Everything in Growth", "Optional AI chatbot built in", "Priority delivery"],
   },
@@ -142,20 +142,20 @@ export const mvpTiers: Tier[] = [
 export const rescueTiers: Tier[] = [
   {
     name: "Quick Fix",
-    price: "$150–$300",
+    price: "£120–£240",
     desc: "Small bugs or a missing feature on an otherwise working project.",
     features: ["Bug fixes", "Minor feature additions", "Delivered on your GitHub"],
   },
   {
     name: "Standard Rescue",
-    price: "$400–$800",
+    price: "£320–£640",
     desc: "Broken features, hosting issues, or a project that needs real cleanup.",
     features: ["Feature repair", "Proper GitHub + Vercel setup", "Code cleanup"],
     highlight: true,
   },
   {
     name: "Full Rebuild",
-    price: "From $1,000",
+    price: "From £800",
     desc: "The project needs to be largely rebuilt. Priced after a quick review.",
     features: ["Free scope review first", "Rebuilt on Next.js", "Fixed quote before we start"],
   },
@@ -164,7 +164,7 @@ export const rescueTiers: Tier[] = [
 export const posTiers: Tier[] = [
   {
     name: "Starter POS",
-    price: "From $400",
+    price: "From £320",
     desc: "Core billing and stock for a single shop.",
     features: [
       "Inventory with stock history",
@@ -175,7 +175,7 @@ export const posTiers: Tier[] = [
   },
   {
     name: "Business POS + AI",
-    price: "From $900",
+    price: "From £720",
     desc: "Everything in Starter, plus suppliers, payments, and the AI assistant.",
     features: [
       "Everything in Starter POS",
@@ -301,11 +301,11 @@ export const chatbotFaqs = [
   },
   {
     q: "What does it cost to run the AI?",
-    a: "The AI is billed by usage, and for a small business it is usually only a few dollars a month. The care plan includes up to 3,000 AI replies a month. Busier bots pay a small extra amount for each additional 5,000 replies (about $10), or you can connect your own AI account and pay the provider directly.",
+    a: "The AI is billed by usage, and for a small business it is usually only a few pounds a month. The care plan includes up to 3,000 AI replies a month. Busier bots pay a small extra amount for each additional 5,000 replies (about £8), or you can connect your own AI account and pay the provider directly.",
   },
   {
     q: "Can the chatbot connect to WhatsApp or Telegram?",
-    a: "Yes. Every bot comes with a website chat widget. WhatsApp and Telegram connections are available as add-ons (+$120 and +$100).",
+    a: "Yes. Every bot comes with a website chat widget. WhatsApp and Telegram connections are available as add-ons (+£95 and +£80).",
   },
   {
     q: "How long does it take?",

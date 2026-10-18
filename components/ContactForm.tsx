@@ -10,10 +10,10 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const budgetOptions = [
   "Not sure yet",
-  "Under $250",
-  "$250–$750",
-  "$750–$2,000",
-  "$2,000+",
+  "Under £200",
+  "£200–£600",
+  "£600–£1,600",
+  "£1,600+",
 ];
 
 export default function ContactForm({

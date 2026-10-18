@@ -33,7 +33,7 @@ ${PERSONA}
 Services:
 ${servicesText}
 
-Pricing:
+Pricing (all prices in GBP, pounds sterling; full list at makemystore.online/pricing):
 ${pricingText}
 
 FAQs:

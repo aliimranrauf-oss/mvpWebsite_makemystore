@@ -87,7 +87,7 @@ export function faqJsonLd(faqs: { q: string; a: string }[]) {
   };
 }
 
-/** Lowest numeric price found in strings like "$150–$250" or "From $1,000". */
+/** Lowest numeric price found in strings like "£120–£200" or "From £800". */
 export function lowestPrice(prices: string[]): number {
   const nums = prices
     .flatMap((p) => p.match(/\d[\d,]*/g) ?? [])
@@ -101,8 +101,8 @@ type ServiceJsonLdOptions = {
   serviceType: string;
   description: string;
   path: string;
-  /** Lowest starting price in USD. Omit to leave offers out. */
-  lowPriceUsd?: number;
+  /** Lowest starting price in GBP. Omit to leave offers out. */
+  lowPriceGbp?: number;
   offerCount?: number;
   areaServed?: string[];
   availableLanguage?: string[];
@@ -124,12 +124,12 @@ export function serviceJsonLd(o: ServiceJsonLdOptions) {
       name: c,
     })),
     ...(o.availableLanguage ? { availableLanguage: o.availableLanguage } : {}),
-    ...(o.lowPriceUsd
+    ...(o.lowPriceGbp
       ? {
           offers: {
             "@type": "AggregateOffer",
-            priceCurrency: "USD",
-            lowPrice: o.lowPriceUsd,
+            priceCurrency: "GBP",
+            lowPrice: o.lowPriceGbp,
             ...(o.offerCount ? { offerCount: o.offerCount } : {}),
             url,
           },

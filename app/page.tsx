@@ -10,12 +10,12 @@ import Trust from "@/components/Trust";
 import FAQ from "@/components/FAQ";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
-import { faqs } from "@/lib/data";
+import { allFaqItems } from "@/lib/faq-groups";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
 const HOME_TITLE = "MakeMyStore: Custom AI Chatbots, SaaS MVPs & POS Systems";
 const HOME_DESC =
-  "Hire a developer for a custom AI chatbot, SaaS MVP, or POS & inventory system on Next.js and Supabase. Serving clients in the US, UK, Europe, Australia & UAE. Fixed quotes, you own the code.";
+  "Hire a developer for a custom AI chatbot, SaaS MVP, or POS & inventory system on Next.js and Supabase. Serving clients in the US, UK, Europe, Australia & UAE. Prices in GBP, fixed quotes, you own the code.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -43,6 +43,7 @@ const services = [
   { name: "SaaS MVP Development", path: "/saas-mvp", desc: "A working SaaS product on Next.js and Supabase with accounts, database, and optional AI." },
   { name: "POS & Shop Management System", path: "/pos-system", desc: "Custom POS with inventory, invoicing, customers, payments, reports, and an AI assistant." },
   { name: "Project Rescue", path: "/project-rescue", desc: "Fix and deploy stuck projects from Lovable, Bolt, and other AI builders." },
+  { name: "CV, LinkedIn & Career Writing", path: "/cv-writing", desc: "ATS-ready CVs, cover letters, LinkedIn profiles, biographies and portfolio websites at fixed prices." },
 ];
 
 
@@ -51,7 +52,7 @@ export default function Home() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faqs.map((f) => ({
+      mainEntity: allFaqItems.map((f) => ({
         "@type": "Question",
         name: f.q,
         acceptedAnswer: { "@type": "Answer", text: f.a },

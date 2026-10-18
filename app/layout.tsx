@@ -127,7 +127,7 @@ export default function RootLayout({
         { "@type": "Country", name: "Canada" },
         { "@type": "AdministrativeArea", name: "European Union" },
       ],
-      priceRange: "$150-$1600+",
+      priceRange: "£120-£1250+",
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "sales",

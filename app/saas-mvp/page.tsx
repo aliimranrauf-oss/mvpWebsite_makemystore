@@ -49,7 +49,7 @@ export default function SaasMvpPage() {
       description:
         "A working SaaS product on Next.js and Supabase, delivered in 48–72 hours, with user accounts, a real database and full code ownership.",
       path: "/saas-mvp",
-      lowPriceUsd: lowestPrice(mvpTiers.map((t) => t.price)),
+      lowPriceGbp: lowestPrice(mvpTiers.map((t) => t.price)),
       offerCount: mvpTiers.length,
     }),
     faqJsonLd(mvpFaqs),
