@@ -61,7 +61,7 @@ function PriceInput({
 
   function commit() {
     const n = Number(draft);
-    if (!Number.isFinite(n) || n < 0 || n > 99999 || draft.trim() === "") {
+    if (!Number.isFinite(n) || n < 0 || n > 99999999 || draft.trim() === "") {
       setDraft(String(value));
       return;
     }
@@ -78,7 +78,7 @@ function PriceInput({
         onKeyDown={(e) => e.key === "Enter" && (e.currentTarget as HTMLInputElement).blur()}
         inputMode="decimal"
         aria-label={label}
-        className="w-11 bg-transparent text-right text-base font-medium text-white outline-none sm:w-12 sm:text-sm"
+        className="w-[4.5rem] bg-transparent text-right text-base font-medium text-white outline-none sm:w-[4.75rem] sm:text-sm"
       />
       <span className="text-[11px] text-slate-400">{currency}</span>
     </label>
@@ -147,7 +147,7 @@ function AddOwn({
   const [price, setPrice] = useState("");
 
   const priceNum = Number(price);
-  const priceOk = price.trim() !== "" && Number.isFinite(priceNum) && priceNum >= 0 && priceNum <= 99999;
+  const priceOk = price.trim() !== "" && Number.isFinite(priceNum) && priceNum >= 0 && priceNum <= 99999999;
   const canAdd = name.trim().length > 0 && (kind === "toggle" || priceOk);
 
   function submit() {

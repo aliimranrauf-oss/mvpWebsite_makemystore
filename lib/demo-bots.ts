@@ -4,7 +4,7 @@
 // The dashboard state is sent with every chat message, so the bot always answers
 // from the latest values. Edit freely.
 
-export type DemoNicheId = "restaurant" | "clinic" | "salon";
+export type DemoNicheId = "restaurant" | "clinic" | "salon" | "realestate";
 
 export type DemoItem = { id: string; name: string; price: number; available: boolean };
 export type DemoToggle = {
@@ -178,6 +178,57 @@ Cancellation: free up to 12 hours before the appointment.`,
       },
     ],
   },
+  {
+    id: "realestate",
+    label: "Real estate",
+    businessName: "Skyline Properties",
+    initials: "SP",
+    currency: "AED",
+    itemsTitle: "Listings",
+    availableLabel: "Available",
+    unavailableLabel: "Sold / Let",
+    greeting:
+      "Hello! I'm the Skyline Properties assistant. Ask about listings, prices or booking a viewing, in any language.",
+    suggestions: [
+      "Is the 1-bed in the Marina still available?",
+      "Can I view a villa on Saturday?",
+      "ما هي أسعار الشقق للإيجار؟",
+    ],
+    about: `Business: Skyline Properties, a Dubai real estate agency (SAMPLE business for a demo). Prices in AED. Rentals are quoted per YEAR; sale listings are the full asking price.
+Services: sales, long-term rentals, property management and free valuation of your own property.
+Viewings: ask for name, which listing, preferred day/time and phone number, then say an agent will confirm by WhatsApp. Viewings are free and take about 30 minutes.
+Rentals: a refundable security deposit of 5% of the annual rent, plus a one-time agency fee of 5%. Cheques can be arranged (1 to 4 payments).
+Sales: a 4% DLD (Dubai Land Department) transfer fee applies; mortgage help is available for residents and non-residents. Foreign buyers can purchase in freehold areas.
+Never promise a discount or confirm a final price; say the agent will confirm.
+Location: Dubai Marina office. Languages: English, Arabic, Urdu, Hindi, Russian.`,
+    hours: "Sun-Thu 9:00-19:00, Sat 10:00-16:00 (closed Fri)",
+    items: [
+      { id: "studio", name: "Studio, JLT (rent per year)", price: 52000, available: true },
+      { id: "onebed", name: "1-bed apartment, Dubai Marina (rent per year)", price: 95000, available: true },
+      { id: "twobed", name: "2-bed apartment, Business Bay (rent per year)", price: 140000, available: true },
+      { id: "downtown", name: "2-bed apartment, Downtown (for sale)", price: 2100000, available: true },
+      { id: "townhouse", name: "3-bed townhouse, Arabian Ranches (for sale)", price: 3200000, available: true },
+      { id: "villa", name: "4-bed villa, Dubai Hills (for sale)", price: 6500000, available: true },
+    ],
+    toggles: [
+      {
+        id: "viewings",
+        label: "Property viewings",
+        hint: "Accept viewing bookings",
+        on: true,
+        onFact: "Viewing bookings are open, including weekends.",
+        offFact: "Viewings are paused right now; take the customer's details and say an agent will call when they reopen.",
+      },
+      {
+        id: "mortgage",
+        label: "Mortgage advice",
+        hint: "Free consultation",
+        on: true,
+        onFact: "A free mortgage consultation is available for buyers.",
+        offFact: "Mortgage consultations are not available right now; suggest asking again next week.",
+      },
+    ],
+  },
 ];
 
 export function getNiche(id: unknown): DemoNiche {
@@ -213,7 +264,7 @@ export function buildLiveKnowledge(niche: DemoNiche, raw: unknown): string {
   const lines = niche.items.map((item) => {
     const r = s.items?.[item.id];
     const price =
-      r && typeof r.price === "number" && Number.isFinite(r.price) && r.price >= 0 && r.price <= 99999
+      r && typeof r.price === "number" && Number.isFinite(r.price) && r.price >= 0 && r.price <= 99999999
         ? Math.round(r.price * 100) / 100
         : item.price;
     const available = r && typeof r.available === "boolean" ? r.available : item.available;
@@ -235,7 +286,7 @@ export function buildLiveKnowledge(niche: DemoNiche, raw: unknown): string {
     .map((c) => {
       const name = cleanText(c?.name, 40);
       const price =
-        typeof c?.price === "number" && Number.isFinite(c.price) && c.price >= 0 && c.price <= 99999
+        typeof c?.price === "number" && Number.isFinite(c.price) && c.price >= 0 && c.price <= 99999999
           ? Math.round(c.price * 100) / 100
           : null;
       if (!name || price === null) return "";

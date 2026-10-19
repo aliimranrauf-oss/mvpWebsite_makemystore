@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Send, RotateCcw, ArrowRight, MessageCircle, LayoutDashboard, UtensilsCrossed, Stethoscope, Scissors } from "lucide-react";
+import { Send, RotateCcw, ArrowRight, MessageCircle, LayoutDashboard, UtensilsCrossed, Stethoscope, Scissors, Home } from "lucide-react";
 import { DEMO_NICHES, MAX_CUSTOM, initialState, type DemoNicheId, type DemoState } from "@/lib/demo-bots";
 import DemoDashboard, { type DashboardActions } from "@/components/DemoDashboard";
 
@@ -14,6 +14,7 @@ const NICHE_ICONS = {
   restaurant: UtensilsCrossed,
   clinic: Stethoscope,
   salon: Scissors,
+  realestate: Home,
 } as const;
 
 const newId = () => Math.random().toString(36).slice(2, 8);
