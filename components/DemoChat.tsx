@@ -1,11 +1,25 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Send, RotateCcw, ArrowRight, MessageCircle, LayoutDashboard, UtensilsCrossed, Stethoscope, Scissors, Home } from "lucide-react";
-import { DEMO_NICHES, MAX_CUSTOM, initialState, type DemoNicheId, type DemoState } from "@/lib/demo-bots";
+import { DEMO_NICHES, LANGUAGES, MAX_CUSTOM, MAX_FAQS, TONES, cleanText, initialState, type DemoNicheId, type DemoState } from "@/lib/demo-bots";
 import DemoDashboard, { type DashboardActions } from "@/components/DemoDashboard";
+import DemoToolbar, { type DemoPanelId } from "@/components/demo/DemoToolbar";
+import InboxPanel from "@/components/demo/InboxPanel";
+import LeadsPanel from "@/components/demo/LeadsPanel";
+import ManagePanel, { type BotSettingsActions } from "@/components/demo/ManagePanel";
+import {
+  findPhone,
+  initialExtras,
+  todayISO,
+  wantsHuman,
+  type ConvStatus,
+  type DemoExtras,
+  type Lead,
+  type LiveMsg as Msg,
+} from "@/lib/demo-extras";
 
-type Msg = { role: "user" | "assistant" | "system"; content: string };
+const mk = (role: Msg["role"], content: string, by?: Msg["by"]): Msg => ({ role, content, at: Date.now(), by });
 
 // Per demo conversation. Generous so prospects can really explore the dashboard + chat.
 const MAX_USER_MESSAGES = 40;
@@ -23,6 +37,10 @@ function freshStates(): Record<DemoNicheId, DemoState> {
   return Object.fromEntries(DEMO_NICHES.map((n) => [n.id, initialState(n)])) as Record<DemoNicheId, DemoState>;
 }
 
+function freshExtras(): Record<DemoNicheId, DemoExtras> {
+  return Object.fromEntries(DEMO_NICHES.map((n) => [n.id, initialExtras(n.id)])) as Record<DemoNicheId, DemoExtras>;
+}
+
 export default function DemoChat() {
   const [nicheId, setNicheId] = useState<DemoNicheId>("restaurant");
   const niche = DEMO_NICHES.find((n) => n.id === nicheId)!;
@@ -30,12 +48,22 @@ export default function DemoChat() {
   const [states, setStates] = useState<Record<DemoNicheId, DemoState>>(freshStates);
   const state = states[nicheId];
 
-  const [messages, setMessages] = useState<Msg[]>([{ role: "assistant", content: niche.greeting }]);
+  const [extras, setExtras] = useState<Record<DemoNicheId, DemoExtras>>(freshExtras);
+  const ex = extras[nicheId];
+
+  const [messages, setMessages] = useState<Msg[]>(() => [mk("assistant", niche.greeting, "ai")]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [tab, setTab] = useState<"chat" | "dashboard">("chat");
   const [changed, setChanged] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Inbox / Leads / Manage panels (all demo-only, in-browser state)
+  const [panel, setPanel] = useState<DemoPanelId | null>(null);
+  const [humanMode, setHumanMode] = useState(false); // true = a person has taken over from the AI
+  const [handoff, setHandoff] = useState(false); // the visitor asked for a person
+  const [unread, setUnread] = useState(0); // visitor messages that arrived while a person is in charge
+  const sessionRef = useRef(newId()); // changes on every restart so late AI replies are ignored
 
   const userCount = messages.filter((m) => m.role === "user").length;
   const limitReached = userCount >= MAX_USER_MESSAGES;
@@ -45,8 +73,42 @@ export default function DemoChat() {
   }, [messages, loading, tab]);
 
   function note(text: string) {
-    setMessages((m) => [...m, { role: "system", content: text }]);
+    setMessages((m) => [...m, mk("system", text)]);
     setChanged(true);
+  }
+
+  function patchExtras(id: DemoNicheId, fn: (e: DemoExtras) => DemoExtras) {
+    setExtras((all) => ({ ...all, [id]: fn(all[id]) }));
+  }
+
+  // One lead per chat session: created from the first phone number, enriched when the bot reports name + need.
+  function upsertChatLead(id: DemoNicheId, info: { name?: string; phone?: string; need?: string }) {
+    const leadId = `chat-${sessionRef.current}`;
+    patchExtras(id, (e) => {
+      const found = e.leads.find((l) => l.id === leadId);
+      if (found) {
+        return {
+          ...e,
+          leads: e.leads.map((l) =>
+            l.id === leadId
+              ? { ...l, name: info.name || l.name, phone: info.phone || l.phone, need: info.need || l.need }
+              : l
+          ),
+        };
+      }
+      const lead: Lead = {
+        id: leadId,
+        name: info.name || "Chat visitor",
+        phone: info.phone || "",
+        need: info.need || "Enquiry from the demo chat",
+        status: "new",
+        priority: "medium",
+        notes: "",
+        followUp: todayISO(),
+        fromChat: true,
+      };
+      return { ...e, leads: [lead, ...e.leads] };
+    });
   }
 
   function patchState(fn: (s: DemoState) => DemoState) {
@@ -118,32 +180,112 @@ export default function DemoChat() {
     askBot: () => setTab("chat"),
   };
 
+  const settings: BotSettingsActions = {
+    setTone(t) {
+      patchState((s) => ({ ...s, tone: t }));
+      note(`Tone set to ${TONES.find((x) => x.id === t)?.label.toLowerCase()}`);
+    },
+    setLanguage(l) {
+      patchState((s) => ({ ...s, language: l }));
+      note(l === "auto" ? "Bot now matches the customer's language" : `Bot now always replies in ${l}`);
+    },
+    setAfterHours(on) {
+      patchState((s) => ({ ...s, afterHours: on }));
+      note(on ? "After-hours mode on: the bot says you are closed" : "After-hours mode off");
+    },
+    setWelcome(text) {
+      const t = cleanText(text, 160);
+      if (!t) return;
+      patchState((s) => ({ ...s, welcome: t }));
+      setMessages((m) => (m[0]?.role === "assistant" ? [{ ...m[0], content: t }, ...m.slice(1)] : m));
+      note("Welcome message updated");
+    },
+    addFaq(q, a) {
+      const cq = cleanText(q, 100);
+      const ca = cleanText(a, 250);
+      if (!cq || !ca) return;
+      patchState((s) => ({ ...s, faqs: [...s.faqs, { id: newId(), q: cq, a: ca }].slice(0, MAX_FAQS) }));
+      note(`Bot taught a new answer: ${cq}`);
+    },
+    removeFaq(id) {
+      const f = state.faqs.find((x) => x.id === id);
+      patchState((s) => ({ ...s, faqs: s.faqs.filter((x) => x.id !== id) }));
+      if (f) note(`Answer removed: ${f.q}`);
+    },
+  };
+
+  const closePanel = useCallback(() => setPanel(null), []);
+
+  function openPanel(id: DemoPanelId) {
+    setPanel((cur) => (cur === id ? null : id));
+    if (id === "inbox") setUnread(0);
+  }
+
+  function takeover(on: boolean) {
+    setHumanMode(on);
+    if (on) setHandoff(false);
+    else setUnread(0);
+    note(on ? "You took over. AI replies are paused" : "AI replies resumed");
+  }
+
+  function ownerReply(text: string) {
+    const t = text.trim().slice(0, 500);
+    if (!t) return;
+    setMessages((m) => [...m, mk("assistant", t, "owner")]);
+    setUnread(0);
+    patchExtras(nicheId, (e) => ({ ...e, liveStatus: "waiting" }));
+  }
+
+  function resetConversation(id: DemoNicheId, greeting: string) {
+    sessionRef.current = newId();
+    setNicheId(id);
+    setMessages([mk("assistant", greeting, "ai")]);
+    setInput("");
+    setChanged(false);
+    setPanel(null);
+    setHumanMode(false);
+    setHandoff(false);
+    setUnread(0);
+    setLoading(false);
+  }
+
   function reset(id: DemoNicheId) {
     const next = DEMO_NICHES.find((n) => n.id === id)!;
     setStates((all) => ({ ...all, [id]: initialState(next) }));
-    setNicheId(id);
-    setMessages([{ role: "assistant", content: next.greeting }]);
-    setInput("");
-    setChanged(false);
+    setExtras((all) => ({ ...all, [id]: initialExtras(id) }));
+    resetConversation(id, next.greeting);
   }
 
   function switchNiche(id: DemoNicheId) {
-    const next = DEMO_NICHES.find((n) => n.id === id)!;
-    setNicheId(id);
-    setMessages([{ role: "assistant", content: next.greeting }]);
-    setInput("");
-    setChanged(false);
+    resetConversation(id, states[id].welcome);
   }
 
   async function send(text: string) {
     const content = text.trim();
     if (!content || loading || limitReached) return;
 
-    const next: Msg[] = [...messages, { role: "user", content }];
+    const next: Msg[] = [...messages, mk("user", content)];
+    const nid = nicheId;
+    const sid = sessionRef.current;
     setMessages(next);
     setInput("");
-    setLoading(true);
     setTab("chat");
+
+    // Lead capture: a phone number in the visitor's text starts a lead (the bot adds name and need below).
+    const phone = findPhone(content);
+    if (phone) upsertChatLead(nid, { phone: cleanText(phone, 24) });
+
+    // The visitor asked for a person: flag it in the Inbox.
+    if (!humanMode && wantsHuman(content)) setHandoff(true);
+
+    // A person has taken over: no AI call. The message waits in the Inbox for a manual reply.
+    if (humanMode) {
+      setUnread((u) => u + 1);
+      patchExtras(nid, (e) => ({ ...e, liveStatus: "open" as ConvStatus }));
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const res = await fetch("/api/demo-chat", {
@@ -153,17 +295,80 @@ export default function DemoChat() {
           niche: nicheId,
           state,
           // dashboard notes are display-only; the live state above is what the bot reads
-          messages: next.filter((m) => m.role !== "system"),
+          messages: next.filter((m) => m.role !== "system").map((m) => ({ role: m.role, content: m.content })),
         }),
       });
       const data = await res.json().catch(() => ({}));
-      setMessages([...next, { role: "assistant", content: data.reply || "Something went wrong. Please try again." }]);
+      if (sessionRef.current !== sid) return; // the demo was restarted while the bot was thinking
+      setMessages((m) => [...m, mk("assistant", data.reply || "Something went wrong. Please try again.", "ai")]);
+      const l = data.lead;
+      if (l && typeof l.phone === "string") {
+        upsertChatLead(nid, {
+          name: cleanText(l.name, 40),
+          phone: cleanText(l.phone, 24),
+          need: cleanText(l.need, 100),
+        });
+      }
     } catch {
-      setMessages([...next, { role: "assistant", content: "Connection problem. Please try again." }]);
+      if (sessionRef.current !== sid) return;
+      setMessages((m) => [...m, mk("assistant", "Connection problem. Please try again.", "ai")]);
     } finally {
-      setLoading(false);
+      if (sessionRef.current === sid) setLoading(false);
     }
   }
+
+  const lastChat = [...messages].reverse().find((m) => m.role !== "system");
+  const chatLeads = ex.leads.filter((l) => l.fromChat).length;
+
+  const inboxBadge = panel === "inbox" ? undefined : handoff && !humanMode ? "!" : unread > 0 ? String(Math.min(unread, 9)) : undefined;
+
+  const overlay =
+    panel === "inbox" ? (
+      <InboxPanel
+        niche={niche}
+        extras={ex}
+        messages={messages}
+        humanMode={humanMode}
+        handoff={handoff}
+        onClose={closePanel}
+        onTakeover={takeover}
+        onOwnerReply={ownerReply}
+        onSeeChat={() => setTab("chat")}
+        onLiveStatus={(st) => patchExtras(nicheId, (e) => ({ ...e, liveStatus: st }))}
+        onLiveAssignee={(name) => patchExtras(nicheId, (e) => ({ ...e, liveAssignee: name }))}
+        onSampleStatus={(id, st) =>
+          patchExtras(nicheId, (e) => ({ ...e, conversations: e.conversations.map((c) => (c.id === id ? { ...c, status: st } : c)) }))
+        }
+        onSampleAssignee={(id, name) =>
+          patchExtras(nicheId, (e) => ({ ...e, conversations: e.conversations.map((c) => (c.id === id ? { ...c, assignee: name } : c)) }))
+        }
+      />
+    ) : panel === "leads" ? (
+      <LeadsPanel
+        businessName={niche.businessName}
+        leads={ex.leads}
+        onClose={closePanel}
+        onPatch={(id, patch) =>
+          patchExtras(nicheId, (e) => ({ ...e, leads: e.leads.map((l) => (l.id === id ? { ...l, ...patch } : l)) }))
+        }
+      />
+    ) : panel === "manage" ? (
+      <ManagePanel
+        niche={niche}
+        state={state}
+        bookings={ex.bookings}
+        onBookings={(b) => patchExtras(nicheId, (e) => ({ ...e, bookings: b }))}
+        settings={settings}
+        stats={{
+          visitorMsgs: userCount,
+          aiReplies: messages.filter((m, i) => i > 0 && m.role === "assistant" && m.by !== "owner").length,
+          teamReplies: messages.filter((m) => m.by === "owner").length,
+          chatLeads,
+        }}
+        onClose={closePanel}
+        onSeeChat={() => setTab("chat")}
+      />
+    ) : null;
 
   const chatPanel = (
     <div className="flex flex-col overflow-hidden rounded-[1.5rem] border border-[#CBD9EE] bg-white shadow-xl">
@@ -175,7 +380,9 @@ export default function DemoChat() {
           </span>
           <div>
             <p className="text-sm font-semibold">{niche.businessName}</p>
-            <p className="text-xs text-white/80">Online · replies in any language</p>
+            <p className="text-xs text-white/80">
+              {humanMode ? "A team member is replying" : "Online · replies in any language"}
+            </p>
           </div>
         </div>
         <button
@@ -202,16 +409,21 @@ export default function DemoChat() {
             </div>
           ) : (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-              <p
-                dir="auto"
-                className={`max-w-[85%] whitespace-pre-wrap px-4 py-2.5 text-sm leading-relaxed ${
-                  m.role === "user"
-                    ? "rounded-2xl rounded-br-md bg-[#2563EB] text-white"
-                    : "rounded-2xl rounded-bl-md border border-[#D6E2F3] bg-white text-[#0F172A]"
-                }`}
-              >
-                {m.content}
-              </p>
+              <div className="flex max-w-[85%] flex-col items-start">
+                {m.by === "owner" && <span className="mb-0.5 px-1 text-[11px] font-medium text-[#6D28D9]">Team member</span>}
+                <p
+                  dir="auto"
+                  className={`whitespace-pre-wrap px-4 py-2.5 text-sm leading-relaxed ${
+                    m.role === "user"
+                      ? "rounded-2xl rounded-br-md bg-[#2563EB] text-white"
+                      : m.by === "owner"
+                        ? "rounded-2xl rounded-bl-md border border-[#DDD6FE] bg-[#F5F3FF] text-[#0F172A]"
+                        : "rounded-2xl rounded-bl-md border border-[#D6E2F3] bg-white text-[#0F172A]"
+                  }`}
+                >
+                  {m.content}
+                </p>
+              </div>
             </div>
           )
         )}
@@ -219,6 +431,13 @@ export default function DemoChat() {
           <div className="flex justify-start">
             <span className="rounded-2xl rounded-bl-md border border-[#D6E2F3] bg-white px-4 py-2.5 text-sm text-slate-500">
               Typing...
+            </span>
+          </div>
+        )}
+        {humanMode && lastChat?.role === "user" && (
+          <div className="flex justify-start">
+            <span className="rounded-2xl rounded-bl-md border border-[#DDD6FE] bg-[#F5F3FF] px-4 py-2.5 text-sm text-[#6D28D9]">
+              A team member will reply shortly
             </span>
           </div>
         )}
@@ -307,6 +526,9 @@ export default function DemoChat() {
       <p className="mx-auto mt-4 max-w-md text-center text-sm text-muted">
         Switch an item off, change a price, or make your own field in the dashboard, then ask the bot about it. It updates instantly.
       </p>
+      <p className="mx-auto mt-1.5 max-w-md text-center text-xs text-muted">
+        Try Inbox, Leads and Manage at the top of the dashboard to see more.
+      </p>
 
       {/* Mobile: tabs. Desktop: side by side. */}
       <div className="mt-5 grid grid-cols-2 gap-1 rounded-full border border-border bg-surface p-1 lg:hidden" role="tablist">
@@ -341,7 +563,15 @@ export default function DemoChat() {
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#6D28D9] lg:flex">
             <LayoutDashboard size={14} aria-hidden /> Owner view: manage stock and prices
           </p>
-          <DemoDashboard niche={niche} state={state} actions={actions} />
+          <DemoDashboard
+            niche={niche}
+            state={state}
+            actions={actions}
+            botPaused={humanMode}
+            leadsCaptured={9 + chatLeads}
+            toolbar={<DemoToolbar active={panel} onOpen={openPanel} badges={{ inbox: inboxBadge }} />}
+            overlay={overlay}
+          />
         </div>
         <div className={`min-w-0 ${tab === "chat" ? "block" : "hidden lg:block"}`}>
           <p className="mb-2 hidden items-center gap-2 px-1 text-xs font-semibold uppercase tracking-wide text-[#1D4ED8] lg:flex">

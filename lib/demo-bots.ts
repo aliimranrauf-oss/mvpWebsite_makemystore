@@ -37,6 +37,24 @@ export type CustomItem = { id: string; name: string; price: number; available: b
 export type CustomToggle = { id: string; label: string; on: boolean };
 
 export const MAX_CUSTOM = 3;
+export const MAX_FAQS = 4;
+
+export type DemoTone = "friendly" | "formal" | "brief";
+export type DemoLanguage = "auto" | "English" | "Arabic" | "Urdu";
+export type DemoFaq = { id: string; q: string; a: string };
+
+export const TONES: { id: DemoTone; label: string; fact: string }[] = [
+  { id: "friendly", label: "Friendly", fact: "Tone: warm, friendly and conversational." },
+  { id: "formal", label: "Formal", fact: "Tone: polite, professional and formal. No slang or emojis." },
+  { id: "brief", label: "Brief", fact: "Tone: very short and direct, one or two sentences at most." },
+];
+
+export const LANGUAGES: { id: DemoLanguage; label: string }[] = [
+  { id: "auto", label: "Match the customer" },
+  { id: "English", label: "English" },
+  { id: "Arabic", label: "Arabic" },
+  { id: "Urdu", label: "Urdu" },
+];
 
 export type DemoState = {
   items: Record<string, { price: number; available: boolean }>;
@@ -45,6 +63,11 @@ export type DemoState = {
   notice: string; // free-text notice for customers
   customItems: CustomItem[]; // "make your own" items added by the owner
   customToggles: CustomToggle[]; // "make your own" toggles added by the owner
+  welcome: string; // first message shown in the customer chat (display only, not sent to the bot)
+  tone: DemoTone;
+  language: DemoLanguage;
+  afterHours: boolean; // demo switch: pretend the business is closed right now
+  faqs: DemoFaq[]; // extra Q&A the owner taught the bot
 };
 
 export const DEMO_NICHES: DemoNiche[] = [
@@ -62,7 +85,8 @@ export const DEMO_NICHES: DemoNiche[] = [
     suggestions: ["Is the lamb kofta available?", "Do you have vegetarian dishes?", "Can I book a table for 6?"],
     about: `Business: Olive & Ember, a Mediterranean restaurant (SAMPLE business for a demo). Prices in AED.
 Dietary: vegan, vegetarian and gluten-free options exist; the falafel bowl is vegan and the mushroom risotto is vegetarian. Halal certified.
-Reservations: tables for 1-10 guests; ask for name, date, time, party size and phone, then say the team will confirm. Groups over 10 need a call.`,
+Reservations: tables for 1-10 guests; ask for name, date, time, party size and phone, then say the team will confirm. Groups over 10 need a call.
+Allergies: only share the dietary information above. For any other allergy question say the team will check with the kitchen, and never guarantee a dish is safe for an allergy.`,
     hours: "Daily 12:00-23:30",
     items: [
       { id: "souvlaki", name: "Grilled chicken souvlaki", price: 48, available: true },
@@ -107,7 +131,8 @@ Reservations: tables for 1-10 guests; ask for name, date, time, party size and p
 Emergency line open 24/7. Braces consultation is free.
 Insurance: accepts most major insurance.
 Booking: ask for name, preferred day/time and phone number, then say the team will confirm by WhatsApp within an hour.
-Location: Dubai, Jumeirah Lake Towers. Parking available. Languages: English, Arabic, Urdu, Hindi.`,
+Location: Dubai, Jumeirah Lake Towers. Parking available. Languages: English, Arabic, Urdu, Hindi.
+Safety: you are NOT a dentist. Never diagnose, never recommend medication or treatment for symptoms. If the customer describes pain, swelling, bleeding, a broken tooth or any urgent problem, tell them to call the 24/7 emergency line or visit the clinic now, and say you are alerting the clinic team.`,
     hours: "Sat-Thu 9:00-21:00, Fri 14:00-20:00",
     items: [
       { id: "cleaning", name: "Check-up and cleaning", price: 150, available: true },
@@ -243,6 +268,11 @@ export function initialState(niche: DemoNiche): DemoState {
     notice: "",
     customItems: [],
     customToggles: [],
+    welcome: niche.greeting,
+    tone: "friendly",
+    language: "auto",
+    afterHours: false,
+    faqs: [],
   };
 }
 
@@ -304,6 +334,29 @@ export function buildLiveKnowledge(niche: DemoNiche, raw: unknown): string {
     })
     .filter(Boolean);
 
+  const tone = TONES.find((t) => t.id === s.tone) ?? TONES[0];
+  const language = LANGUAGES.find((l) => l.id === s.language && l.id !== "auto");
+  const afterHours = s.afterHours === true;
+
+  const faqs = (Array.isArray(s.faqs) ? s.faqs : [])
+    .slice(0, MAX_FAQS)
+    .map((f) => {
+      const q = cleanText(f?.q, 100);
+      const a = cleanText(f?.a, 250);
+      return q && a ? `- Q: ${q} | A: ${a}` : "";
+    })
+    .filter(Boolean);
+
+  const style = [
+    `- ${tone.fact}`,
+    language
+      ? `- Reply language is fixed by the owner: always answer in ${language.label}, whatever language the customer writes in.`
+      : "",
+    afterHours
+      ? `- The business is CLOSED right now (outside opening hours). Say so politely, mention the opening hours, and still collect the customer's details so the team can follow up when open.`
+      : "",
+  ].filter(Boolean);
+
   return `${niche.about}
 
 LIVE DASHBOARD DATA (set by the owner just now; always trust this over anything said earlier in the chat).
@@ -312,5 +365,7 @@ Opening hours: ${hours}
 ${niche.itemsTitle}:
 ${[...lines, ...customItems].join("\n")}
 Status:
-${[...facts, ...customToggles].join("\n")}${notice ? `\nNotice from the owner for customers (mention it when relevant): ${notice}` : ""}`;
+${[...facts, ...customToggles].join("\n")}${notice ? `\nNotice from the owner for customers (mention it when relevant): ${notice}` : ""}
+Reply style:
+${style.join("\n")}${faqs.length ? `\nExtra answers taught by the owner (use these when the customer asks):\n${faqs.join("\n")}` : ""}`;
 }

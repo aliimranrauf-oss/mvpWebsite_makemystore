@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { MessageCircle, Clock, Megaphone, Plus, Sparkles } from "lucide-react";
 import { MAX_CUSTOM, type DemoNiche, type DemoState } from "@/lib/demo-bots";
 
@@ -18,9 +18,17 @@ export type DashboardActions = {
   askBot: () => void; // switches to the chat tab on mobile
 };
 
-type Props = { niche: DemoNiche; state: DemoState; actions: DashboardActions };
+type Props = {
+  niche: DemoNiche;
+  state: DemoState;
+  actions: DashboardActions;
+  toolbar?: ReactNode; // Inbox / Leads / Manage buttons, shown in the header
+  overlay?: ReactNode; // the open panel; covers this card without changing its size
+  botPaused?: boolean; // true while a human has taken over from the AI
+  leadsCaptured?: number; // overrides the sample "9" so live chat leads are counted
+};
 
-function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
+export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
   return (
     <button
       type="button"
@@ -263,15 +271,15 @@ function TextRow({
   );
 }
 
-export default function DemoDashboard({ niche, state, actions }: Props) {
+export default function DemoDashboard({ niche, state, actions, toolbar, overlay, botPaused, leadsCaptured }: Props) {
   const unavailable =
     niche.items.filter((i) => state.items[i.id]?.available === false).length +
     state.customItems.filter((c) => !c.available).length;
 
   return (
-    <div className="overflow-hidden rounded-xl2 border border-[#1E293B] bg-[#0F172A] text-slate-100 shadow-xl">
+    <div className="relative overflow-hidden rounded-xl2 border border-[#1E293B] bg-[#0F172A] text-slate-100 shadow-xl">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-[#1E293B] px-3 py-3.5 sm:px-4">
+      <div className="flex items-center gap-2 border-b border-[#1E293B] px-3 py-3.5 sm:gap-3 sm:px-4">
         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#8B5CF6] font-display text-sm font-semibold text-white">
           {niche.initials}
         </span>
@@ -279,9 +287,15 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
           <p className="truncate text-sm font-semibold text-white">{niche.businessName}</p>
           <p className="text-xs text-slate-400">Owner dashboard</p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#1E293B] px-2.5 py-1 text-xs font-medium text-emerald-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          Bot live
+        {toolbar}
+        <span
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#1E293B] px-2.5 py-1 text-xs font-medium ${
+            botPaused ? "text-amber-300" : "text-emerald-400"
+          }`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${botPaused ? "bg-amber-300" : "bg-emerald-400"}`} />
+          <span className={toolbar ? "hidden sm:inline" : undefined}>{botPaused ? "AI paused" : "Bot live"}</span>
+          {toolbar && <span className="sr-only sm:hidden">{botPaused ? "AI paused" : "Bot live"}</span>}
         </span>
       </div>
 
@@ -290,7 +304,7 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
         <div className="grid grid-cols-3 gap-2">
           {[
             { label: "Chats today", value: "128" },
-            { label: "Leads captured", value: "9" },
+            { label: "Leads captured", value: String(leadsCaptured ?? 9) },
             { label: niche.unavailableLabel, value: String(unavailable) },
           ].map((s) => (
             <div key={s.label} className="min-w-0 rounded-lg bg-[#1E293B] px-2.5 py-2.5">
@@ -422,6 +436,8 @@ export default function DemoDashboard({ niche, state, actions }: Props) {
           Sample dashboard with sample numbers. Yours is private, with your own login.
         </p>
       </div>
+
+      {overlay}
     </div>
   );
 }
