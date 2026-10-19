@@ -1,4 +1,5 @@
-import { MessageSquare, Rocket, Wrench, Store, ArrowRight } from "lucide-react";
+import { MessageSquare, Rocket, Wrench, Store, ArrowRight, Check } from "lucide-react";
+import { themeAt } from "@/lib/card-theme";
 import { services as serviceData } from "@/lib/data";
 
 const icons = {
@@ -28,37 +29,40 @@ export default function ServiceCards() {
         </div>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
-          {services.map((s) => {
+          {services.map((s, i) => {
             const Icon = s.icon;
-            const ring = s.accent === "mint" ? "text-mint" : "text-cyan";
-            const bg = s.accent === "mint" ? "bg-mint/10" : "bg-cyan/10";
+            const th = themeAt(i);
             return (
               <div
                 key={s.title}
-                className="flex flex-col rounded-xl2 card-glow-border p-7"
+                className={`flex flex-col rounded-xl2 border p-7 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg ${th.card} ${th.text}`}
               >
                 <span
-                  className={`inline-flex h-11 w-11 items-center justify-center rounded-lg ${bg} ${ring}`}
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-lg ${th.chip}`}
                 >
                   <Icon size={20} />
                 </span>
-                <h3 className="mt-5 font-display text-xl font-semibold text-ink">
+                <h3 className="mt-5 font-display text-xl font-semibold">
                   {s.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{s.desc}</p>
-                <ul className="mt-5 flex-1 space-y-2.5">
+                <p className={`mt-2 text-sm leading-relaxed ${th.sub}`}>{s.desc}</p>
+                <ul className="mt-5 flex-1 space-y-2.5 border-t border-current/10 pt-5">
                   {s.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2 text-sm text-muted">
-                      <span className={`mt-1.5 h-1 w-1 shrink-0 rounded-full ${ring} bg-current`} />
+                    <li key={p} className="flex items-start gap-2.5 text-sm font-medium leading-snug">
+                      <span
+                        className={`mt-px inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${th.tick}`}
+                      >
+                        <Check size={10} strokeWidth={3} aria-hidden="true" />
+                      </span>
                       {p}
                     </li>
                   ))}
                 </ul>
-                <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
-                  <span className="font-display text-lg font-semibold text-ink">{s.price}</span>
+                <div className="mt-6 flex items-center justify-between gap-3 border-t border-current/10 pt-5">
+                  <span className="font-display text-lg font-semibold">{s.price}</span>
                   <a
                     href={`/${s.slug}`}
-                    className={`inline-flex items-center gap-1.5 text-sm font-medium ${ring}`}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:scale-[1.02] ${th.btn}`}
                   >
                     Details
                     <ArrowRight size={14} />

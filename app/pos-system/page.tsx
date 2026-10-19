@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import DemoEmbed from "@/components/DemoEmbed";
 import PageHeader from "@/components/PageHeader";
 import { posTiers, posFaqs } from "@/lib/data";
+import { tierThemes } from "@/lib/card-theme";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 import { liveDemos } from "@/lib/demos";
 
@@ -289,27 +290,31 @@ export default function PosSystemPage() {
               </p>
             </div>
             <div className="mt-10 grid gap-5 sm:grid-cols-3">
-              {posTiers.map((t) => (
+              {posTiers.map((t, i) => {
+                const th = tierThemes(posTiers)[i];
+                return (
                 <div
                   key={t.name}
-                  className={`rounded-xl2 p-6 ${
-                    t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
-                  }`}
-                  style={{ ["--card-bg" as string]: t.highlight ? "#F7FBF8" : "#FFFFFF" }}
+                  className={`flex h-full flex-col rounded-xl2 border p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg ${th.card} ${th.text}`}
                 >
-                  <p className="text-sm font-medium text-ink">{t.name}</p>
-                  <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">{t.desc}</p>
-                  <ul className="mt-5 space-y-2.5">
+                  <p className="text-sm font-semibold">{t.name}</p>
+                  <p className="mt-3 font-display text-3xl font-semibold">{t.price}</p>
+                  <p className={`mt-3 text-sm leading-relaxed ${th.sub}`}>{t.desc}</p>
+                  <ul className="mt-5 space-y-2.5 border-t border-current/10 pt-5">
                     {t.features.map((f) => (
-                      <li key={f} className="flex items-start gap-2 text-sm text-muted">
-                        <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                      <li key={f} className="flex items-start gap-2.5 text-sm font-medium leading-snug">
+                        <span
+                          className={`mt-px inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${th.tick}`}
+                        >
+                          <Check size={10} strokeWidth={3} aria-hidden="true" />
+                        </span>
                         {f}
                       </li>
                     ))}
                   </ul>
                 </div>
-              ))}
+              );
+              })}
             </div>
           </div>
         </section>

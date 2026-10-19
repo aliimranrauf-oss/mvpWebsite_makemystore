@@ -1,5 +1,6 @@
 import { ArrowRight, Check } from "lucide-react";
 import { Tier, services } from "@/lib/data";
+import { tierThemes, themeAt } from "@/lib/card-theme";
 import { content as cvContent, gbp, priceRange } from "@/lib/cv-data";
 
 /** Full tier cards. Used on /pricing. */
@@ -12,6 +13,7 @@ export function TierGroup({
   tiers: Tier[];
   cta?: { href: string; label: string };
 }) {
+  const themes = tierThemes(tiers);
   return (
     <div>
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -24,27 +26,31 @@ export function TierGroup({
         )}
       </div>
       <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((t) => (
+        {tiers.map((t, i) => {
+          const th = themes[i];
+          return (
           <div
             key={t.name}
-            className={`rounded-xl2 p-6 ${
-              t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border"
-            }`}
-            style={{ ["--card-bg" as string]: t.highlight ? "#F7FBF8" : "#FFFFFF" }}
+            className={`flex h-full flex-col rounded-xl2 border p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg ${th.card} ${th.text}`}
           >
-            <p className="text-sm font-medium text-ink">{t.name}</p>
-            <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
-            <p className="mt-3 text-sm leading-relaxed text-muted">{t.desc}</p>
-            <ul className="mt-5 space-y-2.5">
+            <p className="text-sm font-semibold">{t.name}</p>
+            <p className="mt-3 font-display text-3xl font-semibold">{t.price}</p>
+            <p className={`mt-3 text-sm leading-relaxed ${th.sub}`}>{t.desc}</p>
+            <ul className="mt-5 space-y-2.5 border-t border-current/10 pt-5">
               {t.features.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-sm text-muted">
-                  <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                <li key={f} className="flex items-start gap-2.5 text-sm font-medium leading-snug">
+                  <span
+                    className={`mt-px inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${th.tick}`}
+                  >
+                    <Check size={10} strokeWidth={3} aria-hidden="true" />
+                  </span>
                   {f}
                 </li>
               ))}
             </ul>
           </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
@@ -100,23 +106,27 @@ export default function Pricing() {
         </div>
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {rows.map((r) => (
+          {rows.map((r, i) => {
+            const th = themeAt(i);
+            return (
             <a
               key={r.id}
               href={`/pricing#${r.id}`}
-              className="card-glow-border group flex flex-col rounded-xl2 p-6 transition-transform hover:-translate-y-0.5"
-              style={{ ["--card-bg" as string]: "#FFFFFF" }}
+              className={`group flex flex-col rounded-xl2 border p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg ${th.card} ${th.text}`}
             >
-              <p className="text-sm font-medium text-ink">{r.title}</p>
-              <p className="mt-2 font-display text-2xl font-semibold text-ink">{r.price}</p>
-              <p className="mt-1 text-xs font-medium text-mint">{r.basis}</p>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{r.desc}</p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-ink group-hover:text-mint">
+              <p className="text-sm font-semibold">{r.title}</p>
+              <p className="mt-3 font-display text-3xl font-semibold">{r.price}</p>
+              <span className={`mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold ${th.chip}`}>
+                {r.basis}
+              </span>
+              <p className={`mt-4 flex-1 border-t border-current/10 pt-4 text-sm leading-relaxed ${th.sub}`}>{r.desc}</p>
+              <span className={`mt-5 inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-transform group-hover:scale-[1.02] ${th.btn}`}>
                 See prices
                 <ArrowRight size={14} />
               </span>
             </a>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-10">

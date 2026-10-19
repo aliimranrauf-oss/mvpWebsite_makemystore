@@ -14,6 +14,7 @@ import {
 } from "@/lib/data";
 import { content as cvContent, gbp, packageLevels } from "@/lib/cv-data";
 import { pricingFaqs } from "@/lib/faq-groups";
+import { CARD_THEMES } from "@/lib/card-theme";
 import { buildMetadata, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
 
 export const metadata = buildMetadata({
@@ -259,16 +260,17 @@ export default function PricingPage() {
               note="A personal portfolio site that shows your work. One fixed price at every career level."
             />
             <div
-              className="card-glow-border mt-10 flex max-w-md flex-col rounded-xl2 p-6"
-              style={{ ["--card-bg" as string]: "#FFFFFF" }}
+              className={`mt-10 flex max-w-md flex-col rounded-xl2 border p-6 shadow-sm transition-shadow hover:shadow-lg ${CARD_THEMES.gold.card} ${CARD_THEMES.gold.text}`}
             >
-              <p className="text-sm font-medium text-ink">{portfolio.name}</p>
-              <p className="mt-2 font-display text-3xl font-semibold text-ink">{gbp(portfolio.prices.entry)}</p>
-              <p className="mt-1 text-xs font-medium text-mint">Fixed price</p>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{portfolio.tagline}</p>
+              <p className="text-sm font-semibold">{portfolio.name}</p>
+              <p className="mt-3 font-display text-4xl font-semibold">{gbp(portfolio.prices.entry)}</p>
+              <span className={`mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold ${CARD_THEMES.gold.chip}`}>
+                Fixed price
+              </span>
+              <p className={`mt-4 border-t border-current/10 pt-4 text-sm leading-relaxed ${CARD_THEMES.gold.sub}`}>{portfolio.tagline}</p>
               <a
                 href="/cv-writing#portfolio"
-                className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-mint hover:underline"
+                className={`mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${CARD_THEMES.gold.btn}`}
               >
                 Portfolio website details
                 <ArrowRight size={14} />

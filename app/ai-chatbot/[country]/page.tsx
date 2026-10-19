@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import { chatbotTiers } from "@/lib/data";
+import { tierThemes } from "@/lib/card-theme";
 import { SITE_URL, WHATSAPP_NUMBER } from "@/lib/constants";
 import { chatbotCountries, getCountry, chatbotHreflang } from "@/lib/chatbot-countries";
 import { buildMetadata, serviceJsonLd, breadcrumbJsonLd, faqJsonLd } from "@/lib/seo";
@@ -160,43 +161,41 @@ export default function ChatbotCountryPage({ params }: Props) {
               <p className="mt-4 text-muted">{c.priceNote}</p>
             </div>
             <div className="mt-10 grid gap-5 lg:grid-cols-3">
-              {chatbotTiers.map((t) => {
+              {chatbotTiers.map((t, i) => {
+                const th = tierThemes(chatbotTiers)[i];
                 const local = c.tierPrices[t.slug as keyof typeof c.tierPrices];
                 return (
                   <a
                     key={t.slug}
                     href={`/contact?service=ai-chatbot&package=${t.slug}`}
                     aria-label={`Choose ${t.name}, ${t.price}`}
-                    className={`group flex flex-col rounded-xl2 p-6 transition-all hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint ${
-                      t.highlight ? "card-glow-border card-glow-border--accent" : "card-glow-border hover:!border-mint/60"
-                    }`}
-                    style={{ ["--card-bg" as string]: t.highlight ? "#F7FBF8" : "#FFFFFF" }}
+                    className={`group flex h-full flex-col rounded-xl2 border p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mint ${th.card} ${th.text}`}
                   >
                     <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-medium text-ink">{t.name}</p>
+                      <p className="text-sm font-semibold">{t.name}</p>
                       {t.highlight && (
-                        <span className="rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-semibold text-mint">
+                        <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${th.chip}`}>
                           Most popular
                         </span>
                       )}
                     </div>
-                    <p className="mt-2 font-display text-2xl font-semibold text-ink">{t.price}</p>
-                    {c.currencyName !== "GBP" && <p className="mt-1 text-xs text-muted">{local}</p>}
-                    <p className="mt-3 text-sm leading-relaxed text-muted">{t.desc}</p>
-                    <ul className="mt-5 flex-1 space-y-2.5">
+                    <p className="mt-3 font-display text-3xl font-semibold">{t.price}</p>
+                    {c.currencyName !== "GBP" && <p className={`mt-1 text-xs ${th.sub}`}>{local}</p>}
+                    <p className={`mt-3 text-sm leading-relaxed ${th.sub}`}>{t.desc}</p>
+                    <ul className="mt-5 flex-1 space-y-2.5 border-t border-current/10 pt-5">
                       {t.features.map((f) => (
-                        <li key={f} className="flex items-start gap-2 text-sm text-muted">
-                          <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                        <li key={f} className="flex items-start gap-2.5 text-sm font-medium leading-snug">
+                          <span
+                            className={`mt-px inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${th.tick}`}
+                          >
+                            <Check size={10} strokeWidth={3} aria-hidden="true" />
+                          </span>
                           {f}
                         </li>
                       ))}
                     </ul>
                     <span
-                      className={`mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full text-sm font-semibold transition-colors ${
-                        t.highlight
-                          ? "bg-mint text-white"
-                          : "border border-border bg-surface text-ink group-hover:border-mint/60 group-hover:text-mint"
-                      }`}
+                      className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition-transform group-hover:scale-[1.02] ${th.btn}`}
                     >
                       Choose this plan
                       <ArrowRight size={16} />
