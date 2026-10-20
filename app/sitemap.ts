@@ -3,6 +3,7 @@ import { SITE_URL, SITE_LAST_UPDATED } from "@/lib/constants";
 import { supabase } from "@/lib/supabaseClient";
 import { liveDemos } from "@/lib/demos";
 import { chatbotCountries } from "@/lib/chatbot-countries";
+import { chatbotVerticals } from "@/lib/chatbot-verticals";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fixed date: a new Date() on every build tells Google nothing changed meaningfully.
@@ -23,6 +24,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...chatbotCountries.map((c) => ({
       url: `${SITE_URL}/ai-chatbot/${c.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+    ...chatbotVerticals.map((v) => ({
+      url: `${SITE_URL}/ai-chatbot/for/${v.slug}`,
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,

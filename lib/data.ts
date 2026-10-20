@@ -8,6 +8,8 @@ export type Tier = {
   features: string[];
   highlight?: boolean;
   slug?: string; // used to pre-fill the contact form when the card is clicked
+  setupFrom?: number; // lowest one-time price in GBP (for the first-year cost line)
+  monthlyFrom?: number; // lowest care-plan price per month in GBP (omit if no care plan)
 };
 
 export const services = [
@@ -77,6 +79,8 @@ export const chatbotTiers: Tier[] = [
   {
     name: "AI Bot",
     slug: "ai-bot",
+    setupFrom: 480,
+    monthlyFrom: 25,
     price: "£480–£950",
     desc: "Understands any question and replies in your customer's language, using your real business information.",
     features: [
@@ -91,6 +95,8 @@ export const chatbotTiers: Tier[] = [
   {
     name: "AI Bot + Dashboard",
     slug: "ai-bot-dashboard",
+    setupFrom: 950,
+    monthlyFrom: 40,
     price: "from £950",
     desc: "Run your bot yourself. Change stock, prices and hours in a private dashboard, and the bot updates instantly.",
     features: [
@@ -103,6 +109,12 @@ export const chatbotTiers: Tier[] = [
     ],
   },
 ];
+
+/** "From" first-year cost = setup + 12 months of care plan. Used for the pricing cards. */
+export function firstYearFrom(t: Tier): number | null {
+  if (!t.setupFrom || !t.monthlyFrom) return null;
+  return t.setupFrom + t.monthlyFrom * 12;
+}
 
 export const chatbotAddons = [
   { name: "WhatsApp connection", price: "+£95" },
@@ -318,6 +330,18 @@ export const chatbotFaqs = [
   {
     q: "What if I need help or changes after it's live?",
     a: "Small tweaks in the first month are free. After that, the care plan covers updates to your information and quick fixes. Bigger requests, like new features, are separate work with their own quote.",
+  },
+  {
+    q: "What will it cost me in the first year?",
+    a: "Setup is a one-time price, and the optional care plan is monthly. For example, an AI Bot starting at £480 with the £25/month care plan is from £780 in the first year, and an AI Bot + Dashboard starting at £950 with the £40/month care plan is from £1,430. Your fixed quote shows your exact numbers before we start.",
+  },
+  {
+    q: "Is my customers' data safe, and who owns it?",
+    a: "Your business content and your customers' chat and lead data belong to you. It is stored in a private database with access controls, only your bot and your dashboard login can read it, and we never sell or share it. You can ask for an export or deletion at any time, and we can move everything to your own accounts. We don't claim legal compliance on your behalf, but we can tell you exactly what is stored so you can complete your own privacy notice.",
+  },
+  {
+    q: "Are there extra fees for WhatsApp?",
+    a: "Our connection fee (+£95) is a one-time setup price. WhatsApp itself is run by Meta, which has its own price list. Replies to customers who message you first are normally free, while messages your business starts (such as reminders or promotions) can be charged by Meta, billed directly to your WhatsApp Business account. We explain the current rates for your country before you decide.",
   },
 ];
 

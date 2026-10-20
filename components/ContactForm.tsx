@@ -26,6 +26,7 @@ export default function ContactForm({
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [service, setService] = useState(defaultService);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +38,9 @@ export default function ContactForm({
 
     const name = String(data.get("name") || "").trim();
     const email = String(data.get("email") || "").trim();
-    const message = String(data.get("message") || "").trim();
+    let message = String(data.get("message") || "").trim();
+    // Care plan interest is added to the message so it shows in the lead and the alert email.
+    if (data.get("care_plan") && message) message += "\n\n[Interested in the monthly care plan]";
 
     const nextErrors: Record<string, string> = {};
     if (!name) nextErrors.name = "Name is required.";
@@ -199,7 +202,8 @@ export default function ContactForm({
           <select
             id="service"
             name="service"
-            defaultValue={defaultService}
+            value={service}
+            onChange={(e) => setService(e.target.value)}
             className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-mint"
           >
             {services.map((s) => (
@@ -211,6 +215,15 @@ export default function ContactForm({
           </select>
         </div>
       </div>
+
+      {service === "ai-chatbot" && (
+        <label className="flex items-start gap-3 rounded-lg border border-mint/30 bg-mint/5 px-4 py-3 text-sm text-ink">
+          <input type="checkbox" name="care_plan" className="mt-0.5 h-4 w-4 accent-[#10B981]" />
+          <span>
+            I would also like the monthly care plan (hosting, monitoring and updates, from £25/month).
+          </span>
+        </label>
+      )}
 
       <div>
         <label htmlFor="budget" className="mb-1.5 block text-sm font-medium text-ink">

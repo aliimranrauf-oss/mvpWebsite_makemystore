@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
+import { sendLeadEmails } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -127,6 +128,9 @@ export async function POST(req: NextRequest) {
         { status: 502 }
       );
     }
+
+    // Email you the lead + auto-reply to the customer (never fails the request).
+    await sendLeadEmails({ name, email, phone: phone || null, service, budget: budget || null, message, source });
 
     return NextResponse.json({ success: true });
   } catch (err) {

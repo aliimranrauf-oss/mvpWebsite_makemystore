@@ -41,8 +41,8 @@ function freshExtras(): Record<DemoNicheId, DemoExtras> {
   return Object.fromEntries(DEMO_NICHES.map((n) => [n.id, initialExtras(n.id)])) as Record<DemoNicheId, DemoExtras>;
 }
 
-export default function DemoChat() {
-  const [nicheId, setNicheId] = useState<DemoNicheId>("restaurant");
+export default function DemoChat({ initialNiche = "restaurant" }: { initialNiche?: DemoNicheId } = {}) {
+  const [nicheId, setNicheId] = useState<DemoNicheId>(initialNiche);
   const niche = DEMO_NICHES.find((n) => n.id === nicheId)!;
 
   const [states, setStates] = useState<Record<DemoNicheId, DemoState>>(freshStates);

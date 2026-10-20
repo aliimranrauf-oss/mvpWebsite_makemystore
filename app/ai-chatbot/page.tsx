@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import DemoChat from "@/components/DemoChat";
-import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons } from "@/lib/data";
+import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons, firstYearFrom } from "@/lib/data";
 import { tierThemes } from "@/lib/card-theme";
 import { SITE_URL, WHATSAPP_NUMBER, AI_CHATBOT_VIDEO } from "@/lib/constants";
 import YouTubeFacade from "@/components/YouTubeFacade";
@@ -58,9 +58,9 @@ const included = [
 const builders = ["WordPress", "Shopify", "Wix", "Squarespace", "Webflow", "Custom websites"];
 
 const niches = [
-  { icon: Stethoscope, title: "Clinics and dentists", ask: "“Do you take my insurance? How much is a check-up?”" },
-  { icon: UtensilsCrossed, title: "Restaurants and cafes", ask: "“Do you have vegan dishes? Can I book for 6?”" },
-  { icon: Scissors, title: "Salons and spas", ask: "“How much is bridal makeup? Are you free Saturday?”" },
+  { icon: Stethoscope, title: "Clinics and dentists", ask: "“Do you take my insurance? How much is a check-up?”", href: "/ai-chatbot/for/clinics" },
+  { icon: UtensilsCrossed, title: "Restaurants and cafes", ask: "“Do you have vegan dishes? Can I book for 6?”", href: "/ai-chatbot/for/restaurants" },
+  { icon: Scissors, title: "Salons and spas", ask: "“How much is bridal makeup? Are you free Saturday?”", href: "/ai-chatbot/for/salons" },
   { icon: Home, title: "Real estate agents", ask: "“Is the 2-bed still available? Can I book a viewing?”" },
   { icon: ShoppingBag, title: "Online shops", ask: "“Where is my order? What is your return policy?”" },
   { icon: Dumbbell, title: "Gyms and training centres", ask: "“What are the membership prices? Do you have classes?”" },
@@ -217,6 +217,12 @@ export default function AiChatbotPage() {
                     </span>
                     <h3 className="mt-4 font-display text-lg font-semibold text-ink">{n.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-muted">Typical questions: {n.ask}</p>
+                    {"href" in n && n.href && (
+                      <a href={n.href} className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-mint hover:underline">
+                        See the {n.title.split(" ")[0].toLowerCase()} page
+                        <ArrowRight size={14} />
+                      </a>
+                    )}
                   </div>
                 );
               })}
@@ -313,6 +319,9 @@ export default function AiChatbotPage() {
               <p className="mt-4 text-muted">
                 Fixed quote before anything starts, with no surprises later.
               </p>
+              <p className="mt-3 text-sm font-medium text-ink">
+                Most clients add the care plan: we host, monitor and update your bot from £25/month.
+              </p>
               <ul className="mt-4 space-y-1.5 text-sm text-muted">
                 <li><span className="font-medium text-ink">Basic:</span> a few simple, repeated questions.</li>
                 <li><span className="font-medium text-ink">AI Bot:</span> any question, in any language.</li>
@@ -351,6 +360,12 @@ export default function AiChatbotPage() {
                       </li>
                     ))}
                   </ul>
+                  {firstYearFrom(t) && (
+                    <div className="mt-4 rounded-lg border border-current/15 px-3 py-2 text-xs leading-snug">
+                      <p className="font-semibold">+ Care plan from £{t.monthlyFrom}/month</p>
+                      <p className="mt-0.5 opacity-80">First year from £{firstYearFrom(t)?.toLocaleString("en-GB")} (setup + 12 months)</p>
+                    </div>
+                  )}
                   <span
                     className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition-transform group-hover:scale-[1.02] ${th.btn}`}
                   >
@@ -362,6 +377,21 @@ export default function AiChatbotPage() {
               })}
             </div>
             <div className="mt-6 grid gap-5 lg:grid-cols-2">
+              <div className="rounded-xl2 border-2 border-mint/50 bg-mint/5 p-6">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm font-semibold text-ink">{chatbotCarePlan.name} (recommended)</p>
+                  <span className="rounded-full bg-mint px-2.5 py-1 text-[11px] font-semibold text-white">Keeps your bot running</span>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{chatbotCarePlan.desc}</p>
+                <ul className="mt-4 space-y-1.5 text-sm">
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot</span><span className="font-medium text-ink">£25–£40 / month</span></li>
+                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot + Dashboard</span><span className="font-medium text-ink">£40–£65 / month</span></li>
+                </ul>
+                <p className="mt-4 text-xs leading-relaxed text-muted">
+                  The AI itself is billed by usage and is typically only a few pounds a month for a small business.
+                  You can ask us to move the bot to your own accounts at any time.
+                </p>
+              </div>
               <div className="rounded-xl2 border border-border bg-surface p-6">
                 <p className="text-sm font-semibold text-ink">Add-ons</p>
                 <ul className="mt-3 divide-y divide-border">
@@ -372,16 +402,9 @@ export default function AiChatbotPage() {
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div className="rounded-xl2 border border-border bg-surface p-6">
-                <p className="text-sm font-semibold text-ink">{chatbotCarePlan.name} (optional)</p>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{chatbotCarePlan.desc}</p>
-                <ul className="mt-4 space-y-1.5 text-sm">
-                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot</span><span className="font-medium text-ink">£25–£40 / month</span></li>
-                  <li className="flex justify-between gap-4"><span className="text-muted">AI Bot + Dashboard</span><span className="font-medium text-ink">£40–£65 / month</span></li>
-                </ul>
-                <p className="mt-4 text-xs leading-relaxed text-muted">
-                  The AI itself is billed by usage and is typically only a few pounds a month for a small business.
+                <p className="mt-3 text-xs leading-relaxed text-muted">
+                  WhatsApp is run by Meta, which has its own price list. Replies to customers who message you first are normally free;
+                  messages your business starts can be charged by Meta directly to your WhatsApp Business account.
                 </p>
               </div>
             </div>
