@@ -128,7 +128,52 @@ function Compress() {
     {out && <a className={`${btn} inline-block`} href={out.url} download="compressed.jpg">Download image</a>}</div>);
 }
 
+function Shopify() {
+  const [p, setP] = useState("50"); const [c, setC] = useState("15"); const [pct, setPct] = useState("2.9"); const [fix, setFix] = useState("0.30"); const [tx, setTx] = useState("0"); const [sh, setSh] = useState("4"); const [ad, setAd] = useState("8");
+  const fees = (num(p) * (num(pct) + num(tx))) / 100 + num(fix); const profit = num(p) - num(c) - fees - num(sh) - num(ad);
+  return (<div className="grid gap-6 lg:grid-cols-2"><div className="grid grid-cols-2 gap-3">
+    <F l="Selling price"><input className={inp} value={p} onChange={(e) => setP(e.target.value)} /></F><F l="Product cost"><input className={inp} value={c} onChange={(e) => setC(e.target.value)} /></F>
+    <F l="Payment fee %"><input className={inp} value={pct} onChange={(e) => setPct(e.target.value)} /></F><F l="Fixed fee per order"><input className={inp} value={fix} onChange={(e) => setFix(e.target.value)} /></F>
+    <F l="Extra transaction fee %"><input className={inp} value={tx} onChange={(e) => setTx(e.target.value)} /></F><F l="Shipping cost"><input className={inp} value={sh} onChange={(e) => setSh(e.target.value)} /></F>
+    <F l="Ad cost per order"><input className={inp} value={ad} onChange={(e) => setAd(e.target.value)} /></F></div>
+    <div className="grid grid-cols-2 gap-3"><Stat l="Total fees" v={money(fees)} /><Stat l="Net profit per order" v={money(profit)} /><Stat l="Net margin" v={`${num(p) ? money((profit / num(p)) * 100) : "0.00"}%`} /><Stat l="Profit per 100 orders" v={money(profit * 100)} /></div></div>);
+}
+
+function Cod() {
+  const [p, setP] = useState("40"); const [c, setC] = useState("12"); const [sh, setSh] = useState("3"); const [cod, setCod] = useState("2"); const [ret, setRet] = useState("25"); const [rs, setRs] = useState("3"); const [ad, setAd] = useState("6");
+  const r = Math.min(100, Math.max(0, num(ret))) / 100; const profit = (1 - r) * (num(p) - num(c) - (num(p) * num(cod)) / 100) - num(sh) - r * num(rs) - num(ad);
+  return (<div className="grid gap-6 lg:grid-cols-2"><div className="grid grid-cols-2 gap-3">
+    <F l="Selling price"><input className={inp} value={p} onChange={(e) => setP(e.target.value)} /></F><F l="Product cost"><input className={inp} value={c} onChange={(e) => setC(e.target.value)} /></F>
+    <F l="Delivery fee"><input className={inp} value={sh} onChange={(e) => setSh(e.target.value)} /></F><F l="COD handling fee %"><input className={inp} value={cod} onChange={(e) => setCod(e.target.value)} /></F>
+    <F l="Returned parcels %"><input className={inp} value={ret} onChange={(e) => setRet(e.target.value)} /></F><F l="Return shipping fee"><input className={inp} value={rs} onChange={(e) => setRs(e.target.value)} /></F>
+    <F l="Ad cost per order"><input className={inp} value={ad} onChange={(e) => setAd(e.target.value)} /></F></div>
+    <div className="grid grid-cols-2 gap-3"><Stat l="Profit per order" v={money(profit)} /><Stat l="Profit per 100 orders" v={money(profit * 100)} /><Stat l="Delivered parcels" v={`${money((1 - r) * 100)}%`} /><Stat l="Status" v={profit > 0 ? "Profitable" : "Losing money"} /></div></div>);
+}
+
+function Meta() {
+  const [t, setT] = useState("Free invoice generator"); const [b, setB] = useState("create and download PDF invoices in seconds"); const [a, setA] = useState("No sign-up needed."); const [title, setTitle] = useState("Free Invoice Generator | MakeMyStore");
+  const draft = `${t}: ${b}. ${a}`.replace(/\s+/g, " ").trim(); const [edit, setEdit] = useState<string | null>(null); const d = edit ?? draft;
+  const tag = (n: number, max: number) => <span className={n > max ? "text-red-600" : "text-mint"}>{n}/{max}</span>;
+  return (<div className="grid gap-6 lg:grid-cols-2"><div className="space-y-3">
+    <F l="Page topic"><input className={inp} value={t} onChange={(e) => { setT(e.target.value); setEdit(null); }} /></F>
+    <F l="Main benefit"><input className={inp} value={b} onChange={(e) => { setB(e.target.value); setEdit(null); }} /></F>
+    <F l="Call to action"><input className={inp} value={a} onChange={(e) => { setA(e.target.value); setEdit(null); }} /></F>
+    <F l="Page title"><input className={inp} value={title} onChange={(e) => setTitle(e.target.value)} /></F><p className="text-xs text-muted">Title length {tag(title.length, 60)}</p></div>
+    <div className="space-y-3"><F l="Meta description (editable)"><textarea className={inp} rows={4} value={d} onChange={(e) => setEdit(e.target.value)} /></F><p className="text-xs text-muted">Description length {tag(d.length, 160)}</p>
+      <div className="rounded-xl border border-border bg-white p-4"><div className="text-xs text-muted">www.makemystore.online</div><div className="text-lg text-blue-700">{title.slice(0, 60)}</div><div className="text-sm text-ink">{d.slice(0, 160)}</div></div></div></div>);
+}
+
+function Rate() {
+  const [g, setG] = useState("3000"); const [ex, setEx] = useState("500"); const [tax, setTax] = useState("20"); const [h, setH] = useState("25"); const [off, setOff] = useState("5");
+  const yearly = ((num(g) + num(ex)) * 12) / (1 - Math.min(num(tax), 90) / 100); const hours = num(h) * Math.max(1, 52 - num(off)); const rate = hours ? yearly / hours : 0;
+  return (<div className="grid gap-6 lg:grid-cols-2"><div className="grid grid-cols-2 gap-3">
+    <F l="Target monthly take-home"><input className={inp} value={g} onChange={(e) => setG(e.target.value)} /></F><F l="Monthly expenses"><input className={inp} value={ex} onChange={(e) => setEx(e.target.value)} /></F>
+    <F l="Tax %"><input className={inp} value={tax} onChange={(e) => setTax(e.target.value)} /></F><F l="Billable hours / week"><input className={inp} value={h} onChange={(e) => setH(e.target.value)} /></F>
+    <F l="Weeks off per year"><input className={inp} value={off} onChange={(e) => setOff(e.target.value)} /></F></div>
+    <div className="grid grid-cols-2 gap-3"><Stat l="Hourly rate" v={money(rate)} /><Stat l="Day rate (6 billable hrs)" v={money(rate * 6)} /><Stat l="Yearly revenue needed" v={money(yearly)} /><Stat l="Billable hours / year" v={String(Math.round(hours))} /></div></div>);
+}
+
 export const widgets: Record<string, () => JSX.Element> = {
   "invoice-generator": Invoice, "profit-margin-calculator": Profit, "qr-code-generator": Qr, "cv-builder": Cv,
-  "business-name-generator": Names, "currency-converter": Currency, "chatbot-roi-calculator": Roi, "image-compressor": Compress,
+  "business-name-generator": Names, "currency-converter": Currency, "chatbot-roi-calculator": Roi, "image-compressor": Compress, "shopify-fee-calculator": Shopify, "cod-profit-calculator": Cod, "meta-description-generator": Meta, "freelance-rate-calculator": Rate,
 };

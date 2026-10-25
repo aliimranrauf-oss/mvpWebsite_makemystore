@@ -4,6 +4,7 @@ import { ArrowRight, Check, Languages, Clock, UserPlus, Stethoscope, UtensilsCro
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RelatedTools from "@/components/tools/RelatedTools";
 import PageHeader from "@/components/PageHeader";
 import DemoChat from "@/components/DemoChat";
 import { chatbotTiers, chatbotFaqs, chatbotCarePlan, chatbotAddons, firstYearFrom } from "@/lib/data";
@@ -499,6 +500,7 @@ export default function AiChatbotPage() {
           </div>
         </section>
       </main>
+      <RelatedTools service="ai-chatbot" />
       <Footer />
     </>
   );

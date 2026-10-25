@@ -4,6 +4,7 @@ import { ArrowRight, Check, Rocket, Database, Bot, Github } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RelatedTools from "@/components/tools/RelatedTools";
 import PageHeader from "@/components/PageHeader";
 import { mvpTiers, mvpFaqs } from "@/lib/data";
 import { tierThemes } from "@/lib/card-theme";
@@ -259,6 +260,7 @@ export default function SaasMvpPage() {
           </div>
         </section>
       </main>
+      <RelatedTools service="saas-mvp" />
       <Footer />
     </>
   );

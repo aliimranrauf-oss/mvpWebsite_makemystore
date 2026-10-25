@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RelatedTools from "@/components/tools/RelatedTools";
 import DemoEmbed from "@/components/DemoEmbed";
 import PageHeader from "@/components/PageHeader";
 import { posTiers, posFaqs } from "@/lib/data";
@@ -370,6 +371,7 @@ export default function PosSystemPage() {
           </div>
         </section>
       </main>
+      <RelatedTools service="pos-system" />
       <Footer />
     </>
   );

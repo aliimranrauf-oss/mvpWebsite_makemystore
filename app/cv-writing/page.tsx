@@ -2,6 +2,7 @@ import ServiceReviews from "@/components/ServiceReviews";
 import { SERVICE_GROUPS } from "@/lib/reviews";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RelatedTools from "@/components/tools/RelatedTools";
 import CvPage from "@/components/CvPage";
 import { cvMetadata, cvJsonLd } from "@/lib/cv-seo";
 
@@ -22,6 +23,7 @@ export default function CvWritingPage() {
           reviews={<ServiceReviews services={SERVICE_GROUPS.cv} title="What clients say about our CV & portfolio work" />}
         />
       </main>
+      <RelatedTools service="cv-writing" />
       <Footer />
     </>
   );

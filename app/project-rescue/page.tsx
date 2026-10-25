@@ -4,6 +4,7 @@ import { ArrowRight, Check, Wrench, Search, ShieldCheck } from "lucide-react";
 import { Plus } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import RelatedTools from "@/components/tools/RelatedTools";
 import PageHeader from "@/components/PageHeader";
 import { rescueTiers, rescueFaqs } from "@/lib/data";
 import { tierThemes } from "@/lib/card-theme";
@@ -245,6 +246,7 @@ export default function ProjectRescuePage() {
           </div>
         </section>
       </main>
+      <RelatedTools service="project-rescue" />
       <Footer />
     </>
   );

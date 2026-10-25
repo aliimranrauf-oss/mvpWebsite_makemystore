@@ -44,7 +44,7 @@ export default function ToolPage({ params }: { params: { slug: string } }) {
           <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-muted">{t.steps.map((s) => <li key={s}>{s}</li>)}</ol>
           <h2 className="mt-8 font-display text-2xl font-bold text-ink">Frequently asked questions</h2>
           <div className="mt-3 space-y-2">{t.faqs.map((f) => (<details key={f.q} className="rounded-lg border border-border p-4"><summary className="cursor-pointer font-medium text-ink">{f.q}</summary><p className="mt-2 text-muted">{f.a}</p></details>))}</div>
-          <div className="mt-10 rounded-xl2 bg-mint-dim p-6"><p className="font-display font-semibold text-ink">{t.cta.text}</p><Link href={t.cta.href} className="mt-2 inline-block text-mint hover:underline">{t.cta.label}</Link></div>
+          <div className="mt-10 rounded-xl2 bg-mint-dim p-6"><p className="font-display font-semibold text-ink">{t.cta.text}</p><div className="mt-2 flex flex-wrap gap-4"><Link href={t.cta.href} className="font-semibold text-mint hover:underline">{t.cta.label}</Link><Link href="/contact" className="text-ink hover:underline">Get a free quote</Link></div></div>
           <h2 className="mt-10 font-display text-xl font-bold text-ink">More free tools</h2>
           <ul className="mt-3 space-y-1.5">{related.map((r) => <li key={r.slug}><Link className="text-mint hover:underline" href={`/tools/${r.slug}`}>{r.name}</Link></li>)}</ul>
         </section>
