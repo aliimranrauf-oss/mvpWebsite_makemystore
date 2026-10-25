@@ -10,6 +10,7 @@ import { CONTACT_EMAIL, WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/lib/constant
 /** Tap-to-chat link for the business WhatsApp number. */
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 import { chatbotCarePlan } from "@/lib/data";
+import { tools } from "@/lib/tools";
 
 export type SiteFact = {
   q: string;
@@ -127,6 +128,22 @@ export const siteFacts: SiteFact[] = [
   {
     q: "Do you have a blog?",
     keywords: ["blog", "articles", "guides", "tutorials"],
-    a: "Our blog at /blog will carry straight-talk guides on AI chatbots, SaaS MVPs, POS systems and shipping real production code. There are no posts yet, so check back soon.",
+    a: "Our blog at /blog will carry straight-talk guides on AI chatbots, SaaS MVPs, POS systems and shipping real production code. There are no posts yet, so check back soon. Practical guides are already at /guides.",
   },
 ];
+
+// Free tools: built from lib/tools.ts so the bots always match the /tools page.
+// Everything here is free and runs in the visitor's browser (no sign-up).
+const toolFacts: SiteFact[] = [
+  {
+    q: "Do you have free tools?",
+    keywords: ["free tool", "free tools", "tools page", "any tools", "online tools", "free calculator", "free generator", "free resource"],
+    a: `Yes. We have free tools that need no sign-up and run in your browser: ${tools.map((t) => `${t.name} (/tools/${t.slug})`).join(", ")}. See them all at /tools.`,
+  },
+  ...tools.map((t) => ({
+    q: `Do you have a free ${t.name.toLowerCase()}?`,
+    keywords: [t.name.toLowerCase(), ...t.keywords.filter((k) => k.length > 8)],
+    a: `Yes. Our free ${t.name} is at /tools/${t.slug}. No sign-up needed. ${t.cta.text} ${t.cta.href}`,
+  })),
+];
+siteFacts.push(...toolFacts);
