@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { liveDemos } from "@/lib/demos";
 import { chatbotCountries } from "@/lib/chatbot-countries";
 import { chatbotVerticals } from "@/lib/chatbot-verticals";
+import { tools } from "@/lib/tools";
+import { guides } from "@/lib/guides";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fixed date: a new Date() on every build tells Google nothing changed meaningfully.
@@ -82,6 +84,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.8,
     },
+    { url: `${SITE_URL}/tools`, lastModified, changeFrequency: "monthly", priority: 0.8 },
+    ...tools.map((t) => ({ url: `${SITE_URL}/tools/${t.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.7 })),
+    { url: `${SITE_URL}/guides`, lastModified, changeFrequency: "monthly", priority: 0.7 },
+    ...guides.map((g) => ({ url: `${SITE_URL}/guides/${g.slug}`, lastModified, changeFrequency: "monthly" as const, priority: 0.6 })),
     {
       url: `${SITE_URL}/reviews`,
       lastModified,

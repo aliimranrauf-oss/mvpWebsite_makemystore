@@ -37,6 +37,7 @@ export const NAV_LINKS = [
   { href: "/pricing", label: "Pricing" },
   { href: "/reviews", label: "Reviews" },
   { href: "/#faq", label: "FAQ" },
+  { href: "/tools", label: "Free Tools" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

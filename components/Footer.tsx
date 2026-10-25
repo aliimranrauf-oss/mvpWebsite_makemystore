@@ -24,6 +24,8 @@ export default function Footer() {
           <a href="/pricing" className="hover:text-ink">Pricing</a>
           <a href="/reviews" className="hover:text-ink">Reviews</a>
           <a href="/#faq" className="hover:text-ink">FAQ</a>
+          <a href="/tools" className="hover:text-ink">Free Tools</a>
+          <a href="/guides" className="hover:text-ink">Guides</a>
           <a href="/about" className="hover:text-ink">About</a>
           <a href="/contact" className="hover:text-ink">Contact</a>
           {WHATSAPP_NUMBER && (
