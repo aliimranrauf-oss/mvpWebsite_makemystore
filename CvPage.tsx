@@ -1,0 +1,613 @@
+"use client";
+
+import { useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Noto_Sans_Arabic } from "next/font/google";
+import { ArrowRight, Briefcase, Check, Clock, Plus, FileText, Globe2, MapPin, ShieldCheck } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
+import Reveal from "@/components/Reveal";
+import CvOrderForm from "@/components/CvOrderForm";
+import Image from "next/image";
+import { content, gbp, packageLevels, bundleValueRange, type Lang, type LevelId } from "@/lib/cv-data";
+
+// Arabic font is only loaded on this route (the rest of the site is unaffected).
+const arabicFont = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-arabic",
+  display: "swap",
+});
+
+
+// One colour per career level, so the same level always looks the same
+// in every package group. Only the pricing cards use these.
+const LEVEL_THEME: Record<
+  LevelId,
+  { card: string; text: string; sub: string; tick: string; chip: string; btn: string }
+> = {
+  entry: {
+    card: "bg-gradient-to-br from-[#EAF7EC] to-[#CBEAD1] border-[#B3DBBB]",
+    text: "text-ink",
+    sub: "text-ink/70",
+    tick: "bg-[#2E9E48] text-white",
+    chip: "bg-white/70 text-[#1F7A38]",
+    btn: "bg-ink text-white hover:bg-ink/90",
+  },
+  professional: {
+    card: "bg-gradient-to-br from-[#E8F5FD] to-[#C2E3F7] border-[#A6D3EE]",
+    text: "text-ink",
+    sub: "text-ink/70",
+    tick: "bg-[#0EA5E9] text-white",
+    chip: "bg-white/70 text-[#0B6FA3]",
+    btn: "bg-ink text-white hover:bg-ink/90",
+  },
+  senior: {
+    card: "bg-gradient-to-br from-[#FFF5DE] to-[#FFE2A6] border-[#F0CC80]",
+    text: "text-ink",
+    sub: "text-ink/70",
+    tick: "bg-[#C98A0B] text-white",
+    chip: "bg-white/70 text-[#8A5A00]",
+    btn: "bg-ink text-white hover:bg-ink/90",
+  },
+  executive: {
+    card: "bg-gradient-to-br from-[#10241E] to-[#26493E] border-[#10241E]",
+    text: "text-white",
+    sub: "text-white/75",
+    tick: "bg-[#6FD08A] text-ink",
+    chip: "bg-white/15 text-white",
+    btn: "bg-white text-ink hover:bg-white/90",
+  },
+};
+
+export default function CvPage({
+  initialLang = "en",
+  reviews,
+}: {
+  initialLang?: Lang;
+  /** Server-rendered reviews block, placed before the final CTA. */
+  reviews?: React.ReactNode;
+}) {
+  // English lives at /cv-writing and Arabic at /cv-writing/ar, so each language
+  // has its own address that search engines can index.
+  const lang: Lang = initialLang;
+  const t = content[lang];
+  const isAr = lang === "ar";
+  const router = useRouter();
+
+  // Old shared links like /cv-writing?lang=ar now go to the Arabic page.
+  useEffect(() => {
+    if (initialLang === "en" && new URLSearchParams(window.location.search).get("lang") === "ar") {
+      router.replace("/cv-writing/ar");
+    }
+  }, [initialLang, router]);
+
+  const arrow = `rtl:-scale-x-100`;
+  const portfolioPrice = t.packages.items.find((p) => p.id === "portfolio")?.prices.entry ?? 0;
+  const bundle = t.packages.items.find((p) => p.id === "all-in-one");
+  const bundleValue = bundleValueRange(t.packages.items);
+  const bundlePrice = bundle?.prices.entry ?? 0;
+
+  return (
+    <div className={arabicFont.variable}>
+      {/* Scoped RTL tweaks — only active while Arabic is selected */}
+      <style>{`
+        .cv-rtl, .cv-rtl .font-display, .cv-rtl .font-body {
+          font-family: var(--font-arabic), "Segoe UI", Tahoma, Arial, sans-serif;
+        }
+        .cv-rtl h1 { line-height: 1.4; }
+        .cv-rtl h2, .cv-rtl h3 { line-height: 1.5; }
+        .cv-rtl .tracking-wide { letter-spacing: 0; }
+        @media (min-width: 1024px) {
+          .cv-rtl .lg\\:text-left { text-align: right; }
+        }
+      `}</style>
+
+      {/* Language switch (always LTR so it never jumps sides) */}
+      <div dir="ltr" className="border-b border-border bg-surface2/60">
+        <div className="mx-auto flex max-w-content items-center justify-end gap-3 px-5 py-2 sm:px-8">
+          <Globe2 size={14} className="text-muted" aria-hidden="true" />
+          <div role="group" aria-label="Language" className="inline-flex rounded-full border border-border bg-surface p-0.5 text-xs font-semibold">
+            <Link
+              href="/cv-writing"
+              hrefLang="en"
+              aria-current={!isAr ? "page" : undefined}
+              className={`rounded-full px-3.5 py-1.5 transition-colors ${
+                !isAr ? "bg-mint text-white" : "text-muted hover:text-ink"
+              }`}
+            >
+              English
+            </Link>
+            <Link
+              href="/cv-writing/ar"
+              hrefLang="ar"
+              lang="ar"
+              aria-current={isAr ? "page" : undefined}
+              className={`rounded-full px-3.5 py-1.5 transition-colors ${
+                isAr ? "bg-mint text-white" : "text-muted hover:text-ink"
+              }`}
+            >
+              العربية
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div dir={isAr ? "rtl" : "ltr"} lang={lang} className={isAr ? "cv-rtl" : ""}>
+        {/* HERO — same PageHeader + image slot as the POS page.
+            Replace /public/images/hero/cv-writing.png with your own image
+            (1586 x 992 px, same size as the other hero images). No code change needed. */}
+        <PageHeader
+          eyebrow={t.hero.eyebrow}
+          title={t.hero.title}
+          description={t.hero.desc}
+          image={{
+            src: "/images/hero/cv-writing.png",
+            alt: isAr
+              ? "كتابة احترافية للسيرة الذاتية وملف LinkedIn لباحثي العمل في دبي وأبوظبي والسعودية"
+              : "Professional CV and LinkedIn writing for job seekers in Dubai, Abu Dhabi and Saudi Arabia",
+          }}
+        >
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:justify-start">
+            <a
+              href="#order"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+            >
+              {t.hero.primary}
+              <ArrowRight size={16} className={arrow} />
+            </a>
+            <a
+              href="#packages"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-surface px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-mint/60 hover:text-mint"
+            >
+              {t.hero.secondary}
+            </a>
+          </div>
+        </PageHeader>
+
+        {/* Stats strip */}
+        <section className="border-b border-border bg-surface2/60">
+          <div className="mx-auto grid max-w-content grid-cols-2 gap-6 px-5 py-8 sm:px-8 md:grid-cols-4">
+            {t.stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+                  <bdi>{s.value}</bdi>
+                </p>
+                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-muted">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Packages — one block per service, four fixed-price level cards each */}
+        <section id="packages" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.packages.title}</h2>
+              <p className="mt-4 text-muted">{t.packages.intro}</p>
+            </div>
+
+            {/* Featured limited offer: every service for one price */}
+            {bundle && (
+              <Reveal>
+                <div
+                  id={`pkg-${bundle.id}`}
+                  className="relative mt-10 scroll-mt-24 overflow-hidden rounded-xl2 bg-gradient-to-br from-[#0B1F18] via-[#124A2E] to-[#1F7A38] p-6 text-white shadow-xl ring-2 ring-amber-300/80 sm:p-10"
+                >
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -top-24 h-64 w-64 rounded-full bg-amber-300/20 blur-3xl ltr:-right-16 rtl:-left-16"
+                  />
+                  <div className="relative grid gap-8 lg:grid-cols-5 lg:items-center">
+                    <div className="lg:col-span-3">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-300 px-3 py-1.5 text-xs font-bold text-ink">
+                          <Clock size={13} aria-hidden="true" /> {t.packages.limitedBadge}
+                        </span>
+                        <span className="rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium text-white">
+                          {bundle.priceNote}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 font-display text-2xl font-semibold sm:text-3xl">{bundle.name}</h3>
+                      <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/80">{bundle.tagline}</p>
+
+                      <p className="mt-6 text-xs font-semibold uppercase tracking-wide text-amber-200">
+                        {t.packages.bundleIncludes}
+                      </p>
+                      <ul className="mt-3 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+                        {bundle.features.map((f) => (
+                          <li key={f} className="flex items-start gap-2 text-sm text-white/90">
+                            <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber-300 text-ink">
+                              <Check size={11} strokeWidth={3} aria-hidden="true" />
+                            </span>
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="lg:col-span-2">
+                      <div className="rounded-xl2 border border-white/20 bg-white/10 p-6 text-center backdrop-blur-sm">
+                        <p className="text-xs text-white/75">
+                          {t.packages.worth}{" "}
+                          <bdi className="line-through decoration-amber-300/80">
+                            {gbp(bundleValue.low)}–{gbp(bundleValue.high)}
+                          </bdi>{" "}
+                          {t.packages.separately}
+                        </p>
+                        <p className="mt-3 font-display text-5xl font-semibold sm:text-6xl">
+                          <bdi>{gbp(bundlePrice)}</bdi>
+                        </p>
+                        <p className="mt-1 text-xs font-medium text-amber-200">{t.packages.fixedBadge}</p>
+                        <p className="mx-auto mt-3 inline-block rounded-full bg-amber-300/20 px-3 py-1 text-xs font-semibold text-amber-100">
+                          {t.packages.saveUpTo} <bdi>{gbp(bundleValue.high - bundlePrice)}</bdi>
+                        </p>
+                        <a
+                          href="#order"
+                          data-package={bundle.id}
+                          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-amber-300 px-5 py-3.5 text-sm font-bold text-ink transition-transform hover:scale-[1.02]"
+                        >
+                          {t.packages.claimOffer}
+                          <ArrowRight size={16} className={arrow} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            )}
+
+            {/* Level guide */}
+            <dl className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {t.packages.levels.map((l) => (
+                <div key={l.id} className="rounded-xl2 border border-border bg-surface2/60 px-4 py-3">
+                  <dt className="flex items-baseline justify-between gap-2 text-sm font-semibold text-ink">
+                    {l.label}
+                    <span className="text-xs font-medium text-mint">{l.years}</span>
+                  </dt>
+                  <dd className="mt-1 text-xs leading-relaxed text-muted">{l.blurb}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="mt-16 space-y-16">
+              {t.packages.items
+                .filter((p) => !p.flat)
+                .map((p) => {
+                  const offered = packageLevels(p);
+                  const cards = t.packages.levels.filter((l) => offered.includes(l.id));
+                  return (
+                    <div key={p.id} id={`pkg-${p.id}`} className="scroll-mt-24">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h3 className="font-display text-2xl font-semibold text-ink">{p.name}</h3>
+                        {p.badge && (
+                          <span className="rounded-full bg-mint/10 px-2.5 py-1 text-[11px] font-semibold text-mint">
+                            {p.badge}
+                          </span>
+                        )}
+                        <span className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted">
+                          {p.priceNote}
+                        </span>
+                      </div>
+                      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{p.tagline}</p>
+                      <p className="mt-2 max-w-2xl text-xs leading-relaxed text-ink/70">
+                        <span className="font-semibold text-ink">{t.packages.bestFor}</span> {p.bestFor}
+                      </p>
+
+                      <p className="mt-5 text-xs font-semibold text-ink">{t.packages.groupIncludes}</p>
+                      <ul className="mt-2 grid gap-x-8 gap-y-2 sm:grid-cols-2">
+                        {p.features.map((f) => (
+                          <li key={f} className="flex items-start gap-2 text-sm text-muted">
+                            <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div
+                        className={`mt-6 grid gap-4 ${
+                          cards.length === 2 ? "sm:grid-cols-2 lg:max-w-xl" : "sm:grid-cols-2 lg:grid-cols-4"
+                        }`}
+                      >
+                        {cards.map((l, i) => {
+                          const th = LEVEL_THEME[l.id];
+                          return (
+                            <Reveal key={l.id} delay={i * 60}>
+                              <div
+                                className={`flex h-full flex-col rounded-xl2 border p-5 shadow-sm transition-shadow hover:shadow-lg ${th.card} ${th.text}`}
+                              >
+                                <div className="flex items-start justify-between gap-2">
+                                  <div>
+                                    <p className="text-sm font-semibold">{l.label}</p>
+                                    <p className={`text-xs ${th.sub}`}>{l.years}</p>
+                                  </div>
+                                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${th.chip}`}>
+                                    {t.packages.fixedBadge}
+                                  </span>
+                                </div>
+                                <p className="mt-4 font-display text-4xl font-semibold">
+                                  <bdi>{gbp(p.prices[l.id])}</bdi>
+                                </p>
+
+                                {p.cardPoints && (
+                                  <ul className="mt-4 space-y-2 border-t border-current/10 pt-4">
+                                    {p.cardPoints.map((pt) => (
+                                      <li key={pt} className="flex items-start gap-2 text-xs font-medium leading-snug">
+                                        <span
+                                          className={`mt-px inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${th.tick}`}
+                                        >
+                                          <Check size={10} strokeWidth={3} aria-hidden="true" />
+                                        </span>
+                                        {pt}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+
+                                <div className="mt-auto flex pt-5">
+                                  <a
+                                    href="#order"
+                                    data-package={p.id}
+                                    data-level={l.id}
+                                    className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.02] ${th.btn}`}
+                                  >
+                                    {t.packages.orderNow}
+                                    <ArrowRight size={15} className={arrow} />
+                                  </a>
+                                </div>
+                              </div>
+                            </Reveal>
+                          );
+                        })}
+                      </div>
+                      {cards.length === 2 && <p className="mt-3 text-xs text-muted">{t.packages.onlyFrom}</p>}
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div className="mt-12 flex flex-col gap-3 rounded-xl2 border border-border bg-surface2/60 p-5 text-sm text-muted sm:flex-row sm:items-center">
+              <FileText size={18} className="shrink-0 text-mint" />
+              <p>
+                <span className="font-semibold text-ink">{t.packages.academicBold}</span> {t.packages.academicText}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Portfolio website showcase.
+            Replace /public/images/cv/portfolio-sample.png with your own image
+            (1600 x 1000 px). No code change needed. */}
+        <section id="portfolio" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto grid max-w-content items-center gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-2">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint">
+                <Briefcase size={14} /> {t.portfolio.badge}
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.portfolio.title}</h2>
+              <p className="mt-4 text-muted">{t.portfolio.intro}</p>
+              <p className="mt-5 flex items-baseline gap-2">
+                <span className="font-display text-3xl font-semibold text-ink">
+                  <bdi>{gbp(portfolioPrice)}</bdi>
+                </span>
+                <span className="text-xs font-medium text-mint">{t.packages.fixedBadge}</span>
+              </p>
+              <ul className="mt-6 space-y-3">
+                {t.portfolio.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-2 text-sm text-muted">
+                    <Check size={16} className="mt-0.5 shrink-0 text-mint" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#order"
+                data-package="portfolio"
+                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                {t.portfolio.cta}
+                <ArrowRight size={16} className={arrow} />
+              </a>
+            </div>
+            <Reveal>
+              <div dir="ltr" className="overflow-hidden rounded-xl2 border border-border bg-surface2/60 shadow-sm">
+                <Image
+                  src="/images/cv/portfolio-sample.png"
+                  alt={t.portfolio.imageAlt}
+                  width={1600}
+                  height={1000}
+                  className="h-auto w-full"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Gulf focus */}
+        <section className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint">
+                <Globe2 size={14} /> {t.gulf.badge}
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.gulf.title}</h2>
+              <p className="mt-4 text-muted">{t.gulf.intro}</p>
+            </div>
+            <div className="mt-12 grid gap-8 sm:grid-cols-2">
+              {t.gulf.points.map((g) => (
+                <div key={g.title} className="flex gap-4">
+                  <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-mint/10 text-mint">
+                    <MapPin size={18} />
+                  </span>
+                  <div>
+                    <h3 className="font-display text-lg font-semibold text-ink">{g.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{g.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-10 flex flex-wrap gap-2.5">
+              {t.gulf.markets.map((m) => (
+                <span key={m} className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-ink">
+                  {m}
+                </span>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* City sections: Dubai, Abu Dhabi, Saudi Arabia (each has an anchor id for links) */}
+        <section id="cities" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-2xl">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-mint/10 px-3 py-1.5 text-xs font-semibold text-mint">
+                <MapPin size={14} /> {t.cities.badge}
+              </span>
+              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">{t.cities.title}</h2>
+              <p className="mt-4 text-muted">{t.cities.intro}</p>
+            </div>
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {t.cities.items.map((c, i) => (
+                <Reveal key={c.id} delay={i * 60}>
+                  <article
+                    id={c.id}
+                    className="flex h-full scroll-mt-24 flex-col rounded-xl2 border border-border bg-surface2/60 p-6"
+                  >
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-mint/10 text-mint">
+                      <MapPin size={18} />
+                    </span>
+                    <h3 className="mt-4 font-display text-lg font-semibold text-ink">{c.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{c.desc}</p>
+                    <ul className="mt-4 space-y-2">
+                      {c.points.map((pt) => (
+                        <li key={pt} className="flex items-start gap-2 text-sm text-muted">
+                          <Check size={15} className="mt-0.5 shrink-0 text-mint" />
+                          {pt}
+                        </li>
+                      ))}
+                    </ul>
+                    <a
+                      href="#order"
+                      className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-mint hover:underline"
+                    >
+                      {t.cities.cta}
+                      <ArrowRight size={15} className={arrow} />
+                    </a>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* What's included */}
+        <section className="border-b border-border">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.included.title}</h2>
+              <p className="mt-4 text-muted">{t.included.intro}</p>
+            </div>
+            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {t.included.items.map((item) => (
+                <div key={item.title}>
+                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-lg bg-cyan/10 text-cyan">
+                    <ShieldCheck size={20} />
+                  </span>
+                  <h3 className="mt-5 font-display text-lg font-semibold text-ink">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.how.title}</h2>
+              <p className="mt-4 text-muted">{t.how.intro}</p>
+            </div>
+            <ol className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {t.how.steps.map((s, i) => (
+                <li key={s.title}>
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-mint text-sm font-semibold text-white">
+                    {isAr ? (i + 1).toLocaleString("ar-EG") : i + 1}
+                  </span>
+                  <h3 className="mt-4 font-display text-lg font-semibold text-ink">{s.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{s.desc}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Order form */}
+        <section id="order" className="scroll-mt-20 border-b border-border">
+          <div className="mx-auto grid max-w-content gap-12 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.order.title}</h2>
+              <p className="mt-4 text-muted">{t.order.intro}</p>
+              <ul className="mt-8 space-y-3">
+                {t.order.bullets.map((b) => (
+                  <li key={b} className="flex items-start gap-2 text-sm text-muted">
+                    <Check size={16} className="mt-0.5 shrink-0 text-mint" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="lg:col-span-3">
+              <div className="rounded-xl2 border border-border bg-surface p-6 sm:p-8">
+                <CvOrderForm lang={lang} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-content px-5 py-20 sm:px-8 sm:py-28">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.faq.title}</h2>
+            </div>
+            <div className="mt-10 divide-y divide-border border-t border-border">
+              {t.faq.items.map((f) => (
+                <details key={f.q} className="group py-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-ink">
+                    <span className="font-medium">{f.q}</span>
+                    <Plus size={18} className="shrink-0 text-mint transition-transform duration-200 group-open:rotate-45" />
+                  </summary>
+                  <p className="mt-3 max-w-[65ch] text-sm leading-relaxed text-muted">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {reviews}
+
+        {/* Final CTA */}
+        <section className="relative overflow-hidden">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-0 h-[300px] w-[700px] -translate-x-1/2 rounded-full bg-mint/10 blur-[110px]"
+          />
+          <div className="relative mx-auto max-w-content px-5 py-20 text-center sm:px-8 sm:py-28">
+            <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{t.cta.title}</h2>
+            <p className="mx-auto mt-4 max-w-md text-muted">{t.cta.desc}</p>
+            <div className="mt-8">
+              <a
+                href="#order"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-mint px-6 py-3.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+              >
+                {t.cta.button}
+                <ArrowRight size={16} className={arrow} />
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  );
+}
