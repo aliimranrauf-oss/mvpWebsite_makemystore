@@ -1,0 +1,19 @@
+# MakeMyStore
+
+> MakeMyStore builds custom AI chatbots, SaaS MVPs and POS systems for small businesses, and rescues stuck AI-generated projects. Fixed-price quotes, delivered remotely.
+
+## Services
+- [AI Chatbot Development](https://www.makemystore.online/ai-chatbot): Custom chatbots trained on your business, for your website and WhatsApp. From $150.
+- [AI Chatbots for UK businesses](https://www.makemystore.online/ai-chatbot/uk)
+- [AI Chatbots for US businesses](https://www.makemystore.online/ai-chatbot/usa)
+- [AI Chatbots for Australian businesses](https://www.makemystore.online/ai-chatbot/australia)
+- [Arabic and English AI Chatbots for UAE businesses](https://www.makemystore.online/ai-chatbot/uae)
+- [SaaS MVP Development](https://www.makemystore.online/saas-mvp): Working SaaS product on Next.js and Supabase in 48-72 hours.
+- [POS Systems](https://www.makemystore.online/pos-system): Point of sale and inventory software with live demos.
+- [Project Rescue](https://www.makemystore.online/project-rescue): Fix and deploy projects stuck on Lovable, Bolt or other AI builders.
+
+## Company
+- [About](https://www.makemystore.online/about)
+- [Contact](https://www.makemystore.online/contact)
+- [Blog](https://www.makemystore.online/blog)
+- [Privacy Policy](https://www.makemystore.online/privacy)
