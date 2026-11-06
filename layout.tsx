@@ -1,0 +1,245 @@
+import type { Metadata, Viewport } from "next";
+import { Space_Grotesk, Inter } from "next/font/google";
+import Script from "next/script";
+import dynamic from "next/dynamic";
+import CookieConsent from "@/components/CookieConsent";
+import "./globals.css";
+import { SITE_URL, SITE_NAME, GA_MEASUREMENT_ID, GTM_ID, CHATBOT_MODE, DEFAULT_OG_IMAGE, SOCIAL_LINKS, PHONE_E164 } from "@/lib/constants";
+
+// Only the active bot's code (and the shared ChatWidget it pulls in) ever
+// gets fetched — dynamic() + a build-time-constant CHATBOT_MODE lets
+// Next.js drop the other two branches from the client bundle entirely,
+// and ssr:false keeps it off the initial-render critical path too.
+const FaqChatBot = dynamic(() => import("@/components/FaqChatBot"), { ssr: false });
+const AiChatBot = dynamic(() => import("@/components/AiChatBot"), { ssr: false });
+const HybridChatBot = dynamic(() => import("@/components/HybridChatBot"), { ssr: false });
+
+const display = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const body = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-body",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+  category: "technology",
+  formatDetection: { email: false, address: false, telephone: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  // After adding the site in Google Search Console / Bing Webmaster, paste the
+  // verification codes here (or verify via DNS and leave this out).
+  // verification: { google: "YOUR_GOOGLE_CODE", other: { "msvalidate.01": "YOUR_BING_CODE" } },
+  title: {
+    default: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
+    template: "%s",
+  },
+  description:
+    "We set up your Google Business Profile, build your website or online store, and add an AI chatbot for your website and WhatsApp. Fixed packages for small businesses.",
+  keywords: [
+    "AI chatbot development",
+    "SaaS MVP development",
+    "POS system development",
+    "shop management system",
+    "inventory management software",
+    "Next.js developer",
+    "fix Lovable project",
+    "AI app development",
+    "WhatsApp chatbot",
+  ],
+  openGraph: {
+    title: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
+    description:
+      "Get found on Google, sell online, and answer customers automatically with a Google Business Profile, website or store, and AI chatbot.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    images: [DEFAULT_OG_IMAGE],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
+    description:
+      "Get found on Google, sell online, and answer customers automatically with a Google Business Profile, website or store, and AI chatbot.",
+    images: ["/images/og-image.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#FFFFFF",
+  colorScheme: "light",
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const siteJsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": ["ProfessionalService", "Organization"],
+      "@id": `${SITE_URL}/#organization`,
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: { "@type": "ImageObject", url: `${SITE_URL}/header-logo.png` },
+      image: `${SITE_URL}/images/og-image.png`,
+      description:
+        "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects, delivered on Next.js, Supabase, and Vercel.",
+      email: "info@makemystore.online",
+      telephone: PHONE_E164,
+      areaServed: [
+        { "@type": "Country", name: "United States" },
+        { "@type": "Country", name: "United Kingdom" },
+        { "@type": "Country", name: "Australia" },
+        { "@type": "Country", name: "United Arab Emirates" },
+        { "@type": "Country", name: "Canada" },
+        { "@type": "AdministrativeArea", name: "European Union" },
+      ],
+      priceRange: "£120-£1250+",
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        email: "info@makemystore.online",
+        telephone: PHONE_E164,
+        availableLanguage: ["English"],
+      },
+      ...(SOCIAL_LINKS.length ? { sameAs: SOCIAL_LINKS } : {}),
+      knowsAbout: [
+        "AI Chatbot Development",
+        "SaaS MVP Development",
+        "POS & Shop Management Systems",
+        "Inventory Management Software",
+        "Next.js",
+        "Supabase",
+        "Project Rescue",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: SITE_NAME,
+      inLanguage: "en",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+    },
+  ];
+
+  return (
+    <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <body className="font-body antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+        />
+
+        {/* GTM noscript fallback */}
+        {GTM_ID && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+
+        {/* Consent Mode v2 defaults: must run BEFORE GTM / GA4 load */}
+        <Script id="consent-default" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            var mmsConsent = 'denied';
+            try { if (localStorage.getItem('mms_consent') === 'granted') mmsConsent = 'granted'; } catch (e) {}
+
+            // EU / UK / Switzerland: strict, wait for the visitor's choice
+            gtag('consent', 'default', {
+              analytics_storage: mmsConsent,
+              ad_storage: mmsConsent,
+              ad_user_data: mmsConsent,
+              ad_personalization: mmsConsent,
+              region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'],
+              wait_for_update: 500
+            });
+
+            // Everywhere else (UAE, Gulf, etc.): allowed by default so Google Ads
+            // can keep the click ID and count conversions
+            gtag('consent', 'default', {
+              analytics_storage: 'granted',
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted'
+            });
+          `}
+        </Script>
+
+        {GTM_ID ? (
+          /* Google Tag Manager (add your GA4 tag inside GTM, not here, to avoid double counting) */
+          <Script id="gtm-init" strategy="afterInteractive">
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${GTM_ID}');
+            `}
+          </Script>
+        ) : (
+          <>
+            {/* Google Analytics (GA4) direct tag: used only when no GTM ID is set */}
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}');
+              `}
+            </Script>
+          </>
+        )}
+
+        {children}
+
+        {CHATBOT_MODE === "faq" && <FaqChatBot />}
+        {CHATBOT_MODE === "ai" && <AiChatBot />}
+        {CHATBOT_MODE === "hybrid" && <HybridChatBot />}
+        <CookieConsent />
+      </body>
+    </html>
+  );
+}

@@ -1,0 +1,136 @@
+import { Mail, Clock, ShieldCheck } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import PageHeader from "@/components/PageHeader";
+import ContactForm from "@/components/ContactForm";
+import { CONTACT_EMAIL, SITE_URL } from "@/lib/constants";
+import { buildMetadata } from "@/lib/seo";
+import { services, chatbotTiers } from "@/lib/data";
+
+export const metadata = buildMetadata({
+  title: "Contact — MakeMyStore",
+  description:
+    "Tell us about your AI chatbot, SaaS MVP, or project rescue and get a fixed quote back within 24 hours.",
+  path: "/contact",
+  keywords: [
+    "contact MakeMyStore",
+    "hire AI chatbot developer",
+    "get SaaS MVP quote",
+    "fix AI generated project",
+    "Next.js developer contact",
+  ],
+});
+
+const reassurances = [
+  {
+    icon: Clock,
+    title: "Reply within 24 hours",
+    desc: "Every message gets a real reply, not an autoresponder loop.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "No obligation",
+    desc: "Sending details doesn't commit you to anything — you'll get a quote first.",
+  },
+];
+
+const REF_MESSAGES: Record<string, string> = {
+  "battery-solar-shop":
+    "I tried the Battery & Solar Shop POS demo and I'd like a quote. My shop sells: ",
+};
+
+export default function ContactPage({
+  searchParams,
+}: {
+  searchParams: { service?: string; ref?: string; package?: string };
+}) {
+  const defaultService =
+    searchParams.service && services.some((s) => s.slug === searchParams.service)
+      ? (searchParams.service as string)
+      : "other";
+
+  // Chatbot package chosen on /ai-chatbot (e.g. ?service=ai-chatbot&package=ai-bot-dashboard)
+  const chosenTier = searchParams.package
+    ? chatbotTiers.find((t) => t.slug === searchParams.package)
+    : undefined;
+
+  const defaultMessage =
+    (searchParams.ref && REF_MESSAGES[searchParams.ref]) ||
+    (chosenTier
+      ? `I'm interested in the ${chosenTier.name} package (${chosenTier.price}). My business is: `
+      : "");
+  return (
+    <>
+      <Navbar />
+      <main>
+        <PageHeader
+          eyebrow="Get in touch"
+          title="Tell us what you need"
+          description="A chatbot, a new MVP, or a project that's stuck — share the details below and get a fixed quote back."
+        />
+
+        <section>
+          <div className="mx-auto max-w-content px-5 py-16 sm:px-8 sm:py-20">
+            <div className="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+              <div>
+                <h2 className="font-display text-2xl font-semibold text-ink">
+                  What happens next
+                </h2>
+                <div className="mt-6 space-y-6">
+                  {reassurances.map((r) => {
+                    const Icon = r.icon;
+                    return (
+                      <div key={r.title} className="flex gap-4">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-mint/10 text-mint">
+                          <Icon size={20} />
+                        </span>
+                        <div>
+                          <h3 className="font-medium text-ink">{r.title}</h3>
+                          <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                            {r.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div
+                  className="mt-10 rounded-xl2 card-glow-border p-6"
+                  style={{ ["--card-bg" as string]: "#F6F8F7" }}
+                >
+                  <p className="text-sm text-muted">Prefer email?</p>
+                  <a
+                    href={`mailto:${CONTACT_EMAIL}`}
+                    className="mt-2 inline-flex items-center gap-2 font-display text-base font-semibold text-ink hover:text-mint"
+                  >
+                    <Mail size={16} />
+                    {CONTACT_EMAIL}
+                  </a>
+                </div>
+              </div>
+
+              <div className="rounded-xl2 card-glow-border p-6 sm:p-8">
+                {chosenTier && (
+                  <div className="mb-6 flex items-start justify-between gap-3 rounded-lg border border-mint/30 bg-mint/10 px-4 py-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-wide text-mint">You selected</p>
+                      <p className="mt-0.5 text-sm font-semibold text-ink">
+                        AI Chatbot: {chosenTier.name} <span className="font-normal text-muted">({chosenTier.price})</span>
+                      </p>
+                    </div>
+                    <a href="/ai-chatbot#pricing" className="shrink-0 py-1 text-xs font-medium text-mint underline underline-offset-2">
+                      Change
+                    </a>
+                  </div>
+                )}
+                <ContactForm defaultService={defaultService} defaultMessage={defaultMessage} />
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
