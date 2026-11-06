@@ -51,11 +51,11 @@ export const metadata: Metadata = {
   // verification codes here (or verify via DNS and leave this out).
   // verification: { google: "YOUR_GOOGLE_CODE", other: { "msvalidate.01": "YOUR_BING_CODE" } },
   title: {
-    default: "MakeMyStore — AI Chatbots, SaaS MVPs & POS Systems",
+    default: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
     template: "%s",
   },
   description:
-    "Custom AI chatbots, SaaS MVPs & POS systems built on Next.js & Supabase, plus fixes for stuck AI-generated projects. Real code, delivered fast, you own it all.",
+    "We set up your Google Business Profile, build your website or online store, and add an AI chatbot for your website and WhatsApp. Fixed packages for small businesses.",
   keywords: [
     "AI chatbot development",
     "SaaS MVP development",
@@ -68,9 +68,9 @@ export const metadata: Metadata = {
     "WhatsApp chatbot",
   ],
   openGraph: {
-    title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
+    title: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
     description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
+      "Get found on Google, sell online, and answer customers automatically with a Google Business Profile, website or store, and AI chatbot.",
     url: SITE_URL,
     siteName: SITE_NAME,
     images: [DEFAULT_OG_IMAGE],
@@ -79,9 +79,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "MakeMyStore — AI Chatbots, SaaS MVPs, POS Systems & Project Rescue",
+    title: "MakeMyStore — Google Business Profile, Website & AI Chatbot Setup",
     description:
-      "Custom AI chatbots, AI-powered SaaS MVPs, POS & shop management systems, and fixes for stuck AI-generated projects — real code, fast delivery, full ownership.",
+      "Get found on Google, sell online, and answer customers automatically with a Google Business Profile, website or store, and AI chatbot.",
     images: ["/images/og-image.png"],
   },
   icons: {

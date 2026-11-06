@@ -16,9 +16,9 @@ import { getApprovedReviews } from "@/lib/get-reviews";
 import { aggregateRatingFrom, reviewsJsonLd } from "@/lib/seo";
 import { SITE_URL, SITE_NAME, DEFAULT_OG_IMAGE } from "@/lib/constants";
 
-const HOME_TITLE = "MakeMyStore: Custom AI Chatbots, SaaS MVPs & POS Systems";
+const HOME_TITLE = "MakeMyStore: Google Business Profile, Website & AI Chatbot Setup";
 const HOME_DESC =
-  "Hire a developer for a custom AI chatbot, SaaS MVP, or POS & inventory system on Next.js and Supabase. Serving clients in the US, UK, Europe, Australia & UAE. Prices in GBP, fixed quotes, you own the code.";
+  "We set up your Google Business Profile, build your website or online store, and add an AI chatbot for your website and WhatsApp. Fixed packages in GBP, you own everything.";
 
 export const metadata: Metadata = {
   title: { absolute: HOME_TITLE },
@@ -42,11 +42,10 @@ export const metadata: Metadata = {
 };
 
 const services = [
+  { name: "Google Business Profile Setup", path: "/business-setup", desc: "Get found on Google Search and Maps with a properly set up business listing in your own account." },
+  { name: "Business Website or Online Store", path: "/business-setup", desc: "A fast website for services or an ecommerce store for sellers, with WhatsApp ordering." },
   { name: "AI Chatbot Development", path: "/ai-chatbot", desc: "Custom AI chatbots trained on your data for your website, WhatsApp, or Telegram." },
-  { name: "SaaS MVP Development", path: "/saas-mvp", desc: "A working SaaS product on Next.js and Supabase with accounts, database, and optional AI." },
-  { name: "POS & Shop Management System", path: "/pos-system", desc: "Custom POS with inventory, invoicing, customers, payments, reports, and an AI assistant." },
-  { name: "Project Rescue", path: "/project-rescue", desc: "Fix and deploy stuck projects from Lovable, Bolt, and other AI builders." },
-  { name: "CV, LinkedIn & Career Writing", path: "/cv-writing", desc: "ATS-ready CVs, cover letters, LinkedIn profiles, biographies and portfolio websites at fixed prices." },
+  { name: "POS & Shop Management System (add-on)", path: "/pos-system", desc: "Optional POS with inventory, invoicing, customers, payments, and reports for shops." },
 ];
 
 
