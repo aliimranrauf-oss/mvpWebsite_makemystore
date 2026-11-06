@@ -1,8 +1,11 @@
-import { MessageSquare, Rocket, Wrench, Store, ArrowRight, Check } from "lucide-react";
+import { MessageSquare, Rocket, Wrench, Store, MapPin, Globe, HeartHandshake, ArrowRight, Check } from "lucide-react";
 import { themeAt } from "@/lib/card-theme";
 import { services as serviceData } from "@/lib/data";
 
 const icons = {
+  "business-setup": MapPin,
+  "website-store": Globe,
+  "care-plan": HeartHandshake,
   "ai-chatbot": MessageSquare,
   "saas-mvp": Rocket,
   "pos-system": Store,
@@ -61,7 +64,7 @@ export default function ServiceCards() {
                 <div className="mt-6 flex items-center justify-between gap-3 border-t border-current/10 pt-5">
                   <span className="font-display text-lg font-semibold">{s.price}</span>
                   <a
-                    href={`/${s.slug}`}
+                    href={`/${s.slug === "website-store" || s.slug === "care-plan" ? "business-setup" : s.slug}`}
                     className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-transform hover:scale-[1.02] ${th.btn}`}
                   >
                     Details
