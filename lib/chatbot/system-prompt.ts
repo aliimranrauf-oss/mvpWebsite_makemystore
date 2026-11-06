@@ -1,5 +1,5 @@
 // Shared brain for the website widget AND the WhatsApp bot, so both always answer the same way.
-import { services, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, mvpFaqs, rescueFaqs, benefits, type Tier } from "@/lib/data";
+import { services, setupTiers, setupFaqs, chatbotTiers, mvpTiers, rescueTiers, posTiers, faqs, posFaqs, mvpFaqs, rescueFaqs, benefits, type Tier } from "@/lib/data";
 import { PERSONA, CONTACT_RULES } from "@/lib/chatbot/persona";
 
 function formatTiers(label: string, tiers: Tier[]): string {
@@ -11,18 +11,17 @@ export function buildSystemPrompt(): string {
   const servicesText = services.map((s) => `- ${s.title}: ${s.desc} (${s.price}). Key points: ${s.points.join("; ")}.`).join("\n");
 
   const pricingText = [
+    formatTiers("Complete setup packages (Google Business Profile + website or store + chatbot)", setupTiers),
     formatTiers("Chatbots", chatbotTiers),
-    formatTiers("SaaS MVPs", mvpTiers),
     formatTiers("POS & Shop Management", posTiers),
-    formatTiers("Project Rescue", rescueTiers),
   ].join("\n");
 
-  const faqText = [...faqs, ...mvpFaqs, ...rescueFaqs, ...posFaqs].map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
+  const faqText = [...setupFaqs, ...faqs, ...posFaqs].map((f) => `Q: ${f.q}\nA: ${f.a}`).join("\n\n");
   const benefitsText = benefits.map((b) => `- ${b.title}: ${b.desc}`).join("\n");
 
   // Generated from lib/data.ts at module load, so pricing/service changes
   // there flow into the bot's knowledge automatically — nothing to keep in sync by hand.
-  return `You are the assistant for MakeMyStore.online, a company that builds AI chatbots, AI-powered SaaS MVPs, custom POS & shop management systems, rescues stuck AI-generated projects, and writes professional CVs, cover letters, LinkedIn profiles and biographies, and builds personal portfolio websites (mainly for job seekers in Saudi Arabia, the UAE and the Gulf).
+  return `You are the assistant for MakeMyStore.online, a company that helps small local businesses get found on Google (Google Business Profile setup), sell online (business website or ecommerce store) and answer customers automatically (AI chatbot on website and WhatsApp), with an optional monthly care plan and an optional POS & shop management system for shops. We no longer offer CV writing, SaaS MVPs or project rescue; if asked, say these are not currently offered and mention our current services.
 
 Answer questions about services, pricing, and timelines using ONLY the information below. If asked something outside this scope, say you're not sure and offer to connect them with the team. Our own contact details below (WhatsApp number, email, contact form and order form) are part of that information, and you must give them whenever a visitor asks. Keep answers short: 2 to 4 sentences.
 

@@ -14,52 +14,114 @@ export type Tier = {
 
 export const services = [
   {
+    slug: "business-setup",
+    title: "Google Business Profile Setup",
+    desc: "Get found on Google Search and Maps. We create and optimise your Google Business Profile in your own account.",
+    points: [
+      "Profile created under your own Google account",
+      "Photos, hours, services and WhatsApp link",
+      "Review-collection link and QR setup",
+    ],
+    price: "From £150",
+    accent: "mint" as const,
+  },
+  {
+    slug: "website-store",
+    title: "Business Website or Online Store",
+    desc: "A fast website for service businesses, or an ecommerce store for sellers, with WhatsApp ordering built in.",
+    points: [
+      "Website for services, store for sellers",
+      "Mobile-first, WhatsApp order button",
+      "You own the code and the domain",
+    ],
+    price: "From £250",
+    accent: "cyan" as const,
+  },
+  {
     slug: "ai-chatbot",
-    title: "Custom AI Chatbot",
-    desc: "A chatbot trained on your business — from a simple FAQ bot to a full AI assistant with memory.",
+    title: "AI Chatbot (Website + WhatsApp)",
+    desc: "An assistant trained on your business that answers customers 24/7 and collects leads and orders.",
     points: [
-      "Basic scripted bot or GPT/Claude-powered",
-      "Real memory + RAG on your own data",
+      "Answers from your own prices and policies",
       "WhatsApp, Telegram, or website widget",
+      "Leads sent straight to you",
     ],
     price: "From £120",
     accent: "mint" as const,
   },
   {
-    slug: "saas-mvp",
-    title: "AI-Powered SaaS MVP",
-    desc: "A working SaaS product built on Next.js and Supabase, delivered in days, not months.",
+    slug: "care-plan",
+    title: "Monthly Care Plan",
+    desc: "We keep your listing, website and chatbot updated and working, so you can focus on customers.",
     points: [
-      "Production code, not a template",
-      "48–72 hour delivery",
-      "Optional AI chatbot built in",
+      "Updates, fixes and hosting monitoring",
+      "Chatbot answers kept current",
+      "Simple monthly report",
     ],
-    price: "From £200",
+    price: "From £25 / month",
     accent: "cyan" as const,
   },
+];
+
+export const setupTiers: Tier[] = [
   {
-    slug: "pos-system",
-    title: "POS & Shop Management System",
-    desc: "Inventory, invoicing, customers, suppliers, and reports — with a built-in AI assistant. Custom-built for any business.",
-    points: [
-      "Inventory, billing, customers & suppliers in one system",
-      "AI assistant proposes changes, you confirm",
-      "Works offline, syncs automatically",
+    name: "Starter",
+    slug: "setup-starter",
+    price: "£150–£250",
+    desc: "Get found on Google with a simple one-page website.",
+    features: [
+      "Google Business Profile setup",
+      "1-page website with WhatsApp button",
+      "Contact form and Google Maps link",
     ],
-    price: "From £320",
-    accent: "mint" as const,
+    setupFrom: 150,
   },
   {
-    slug: "project-rescue",
-    title: "Project Rescue",
-    desc: "Stuck on a project from Lovable, Bolt, or another AI builder? We finish it properly and deploy it right.",
-    points: [
-      "We review and fix what's broken",
-      "Rebuilt cleanly on Next.js",
-      "Deployed to your GitHub + Vercel",
+    name: "Growth",
+    slug: "setup-growth",
+    price: "£300–£500",
+    desc: "A full website or simple online store for your business.",
+    features: [
+      "Google Business Profile setup",
+      "5-page website or simple store",
+      "WhatsApp ordering and basic SEO",
     ],
-    price: "From £120",
-    accent: "cyan" as const,
+    highlight: true,
+    setupFrom: 300,
+    monthlyFrom: 25,
+  },
+  {
+    name: "Complete",
+    slug: "setup-complete",
+    price: "£500–£800",
+    desc: "Everything: be found, sell online, and answer customers automatically.",
+    features: [
+      "Google Business Profile setup",
+      "Website or online store",
+      "AI chatbot on website and WhatsApp",
+      "Review-collection setup",
+    ],
+    setupFrom: 500,
+    monthlyFrom: 25,
+  },
+];
+
+export const setupFaqs = [
+  {
+    q: "Is Google My Business the same as Google Business Profile?",
+    a: "Yes. Google renamed it Google Business Profile. It is the free listing that shows your business on Google Search and Google Maps.",
+  },
+  {
+    q: "Who owns the Google listing?",
+    a: "You do. We create it in your own Google account, or you add us as a manager, so you can always remove our access.",
+  },
+  {
+    q: "Can you guarantee first place on Google?",
+    a: "No one can honestly guarantee rankings. We set up your listing and website properly so you have the best chance of being found.",
+  },
+  {
+    q: "How long does verification take?",
+    a: "Google decides this. It can take from a few minutes to several days and may need a video or a postcard. We guide you through it.",
   },
 ];
 

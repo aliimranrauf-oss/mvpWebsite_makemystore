@@ -26,19 +26,13 @@ export const NAV_LINKS = [
   {
     label: "Services",
     children: [
+      { href: "/business-setup", label: "Google Profile + Website + Chatbot" },
       { href: "/ai-chatbot", label: "AI Chatbot" },
-      { href: "/saas-mvp", label: "SaaS MVP" },
-      { href: "/pos-system", label: "POS System" },
-      { href: "/project-rescue", label: "Project Rescue" },
-      { href: "/cv-writing", label: "CV & LinkedIn Writing" },
+      { href: "/pos-system", label: "POS System (add-on)" },
     ],
   },
-  { href: "/cv-writing", label: "CV Writing" },
   { href: "/pricing", label: "Pricing" },
-  { href: "/reviews", label: "Reviews" },
-  { href: "/#faq", label: "FAQ" },
-  { href: "/tools", label: "Free Tools" },
-  { href: "/blog", label: "Blog" },
+  { href: "/ai-chatbot#demo", label: "Live Demo" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ];
