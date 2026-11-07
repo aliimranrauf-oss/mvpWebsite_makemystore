@@ -3,8 +3,7 @@
 // Edit the questions themselves in lib/data.ts (developer services) and
 // lib/cv-data.ts (CV & LinkedIn). Only the pricing group lives here.
 
-import { chatbotFaqs, mvpFaqs, posFaqs, rescueFaqs } from "@/lib/data";
-import { content as cvContent } from "@/lib/cv-data";
+import { chatbotFaqs, posFaqs, setupFaqs } from "@/lib/data";
 
 export type FaqItem = { q: string; a: string };
 export type FaqGroupData = { id: string; title: string; items: FaqItem[] };
@@ -27,10 +26,8 @@ export const pricingFaqs: FaqItem[] = [
 export const faqGroups: FaqGroupData[] = [
   { id: "pricing", title: "Pricing & payment", items: pricingFaqs },
   { id: "ai-chatbot", title: "AI Chatbot", items: chatbotFaqs },
-  { id: "saas-mvp", title: "AI-Powered SaaS MVP", items: mvpFaqs },
+  { id: "business-setup", title: "Google Business Profile, Website & Store", items: setupFaqs },
   { id: "pos-system", title: "POS & Shop Management", items: posFaqs },
-  { id: "project-rescue", title: "Project Rescue", items: rescueFaqs },
-  { id: "cv-writing", title: "CV, LinkedIn & Career Writing", items: cvContent.en.faq.items },
 ];
 
 export const allFaqItems: FaqItem[] = faqGroups.flatMap((g) => g.items);

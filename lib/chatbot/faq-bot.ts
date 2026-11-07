@@ -618,12 +618,15 @@ const GROUP_LINK: Record<string, string> = {
 function buildPool(): PoolItem[] {
   const items: PoolItem[] = [];
   const add = (q: string, a: string, link: string) =>
-    items.push({ a, link, q: new Set(tokenize(q)), body: new Set(tokenize(a)) });
+    DISCONTINUED.test(q + " " + a) ? undefined : items.push({ a, link, q: new Set(tokenize(q)), body: new Set(tokenize(a)) });
   for (const g of faqGroups) for (const f of g.items) add(f.q, f.a, GROUP_LINK[g.id] ?? "/pricing");
   for (const d of demos.filter((x) => x.live)) for (const f of d.faqs) add(f.q, f.a, `/pos-system/${d.slug}`);
   for (const f of siteFacts) add(f.q, f.a, "/contact");
   return items;
 }
+// Services we no longer offer: never answer from these.
+const DISCONTINUED = /\b(cv|resume|curriculum|linkedin|biograph\w*|portfolio|mvp|saas|rescue|lovable|bolt|cover letter|ats)\b/i;
+
 const POOL = buildPool();
 
 function bestPoolMatch(normalized: string): string | null {
@@ -648,7 +651,7 @@ function bestPoolMatch(normalized: string): string | null {
   return best ? `${best.a}\n\nMore: ${best.link}` : null;
 }
 
-const ENTRIES = buildEntries();
+const ENTRIES = buildEntries().filter((e) => !DISCONTINUED.test(e.keywords.join(" ") + " " + e.response));
 
 const LEAD_INTENT_KEYWORDS = [
   "quote",
@@ -696,7 +699,7 @@ export function getFaqResponse(userMessage: string): FaqBotReply {
   }
 
   return {
-    text: `I didn't quite catch that. I can answer questions about prices, services, timelines, payment, our CV, LinkedIn & portfolio website service and more. For anything else, a real person will reply within 24 hours: ${CONTACT_EMAIL}, WhatsApp ${WHATSAPP_DISPLAY}, or /contact.`,
+    text: `I didn't quite catch that. I can answer questions about prices, Google Business Profile setup, websites and online stores, AI chatbots, timelines, payment and more. For anything else, a real person will reply within 24 hours: ${CONTACT_EMAIL}, WhatsApp ${WHATSAPP_DISPLAY}, or /contact.`,
     suggestQuote: true,
     matched: false,
   };

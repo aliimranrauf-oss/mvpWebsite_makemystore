@@ -1,7 +1,6 @@
 import { ArrowRight, Check } from "lucide-react";
 import { Tier, services } from "@/lib/data";
 import { tierThemes, themeAt } from "@/lib/card-theme";
-import { content as cvContent, gbp, priceRange } from "@/lib/cv-data";
 
 /** Full tier cards. Used on /pricing. */
 export function TierGroup({
@@ -59,36 +58,23 @@ export function TierGroup({
 type Row = { id: string; title: string; price: string; basis: string; desc: string; page: string };
 
 function buildRows(): Row[] {
-  const dev = (slug: string, id: string, basis: string): Row => {
-    const s = services.find((x) => x.slug === slug)!;
-    return { id, title: s.title, price: s.price, basis, desc: s.desc, page: `/${slug}` };
-  };
-  const tiered = cvContent.en.packages.items.filter((p) => !p.flat);
-  const cvLow = Math.min(...tiered.map((p) => priceRange(p).low));
-  const cvHigh = Math.max(...tiered.map((p) => priceRange(p).high));
-  const portfolio = cvContent.en.packages.items.find((p) => p.id === "portfolio")!;
-  return [
-    dev("ai-chatbot", "chatbot", "Fixed quote after a short scope review"),
-    dev("saas-mvp", "saas-mvp", "Fixed quote after a short scope review"),
-    dev("pos-system", "pos", "Fixed quote after a short scope review"),
-    dev("project-rescue", "rescue", "Free review, then a fixed quote"),
-    {
-      id: "cv",
-      title: "CV, LinkedIn & Career Writing",
-      price: `From ${gbp(cvLow)}`,
-      basis: `Fixed prices by career level, up to ${gbp(cvHigh)}`,
-      desc: "CV and cover letter, LinkedIn, complete career packages and professional biographies.",
-      page: "/cv-writing#packages",
-    },
-    {
-      id: "portfolio",
-      title: "Portfolio Website",
-      price: gbp(portfolio.prices.entry),
-      basis: "Fixed price at every level",
-      desc: "A personal portfolio website that shows your work, built to go with your CV.",
-      page: "/cv-writing#portfolio",
-    },
-  ];
+  const rows: Row[] = services.map((s) => ({
+    id: s.slug,
+    title: s.title,
+    price: s.price,
+    basis: "Fixed quote after a short scope review",
+    desc: s.desc,
+    page: s.slug === "ai-chatbot" ? "/ai-chatbot" : "/business-setup",
+  }));
+  rows.push({
+    id: "pos",
+    title: "POS & Shop Management System (add-on)",
+    price: "From £320",
+    basis: "Fixed quote after a short scope review",
+    desc: "Optional inventory, billing and customer system for shops.",
+    page: "/pos-system",
+  });
+  return rows;
 }
 
 /** Compact "starting from" summary for the homepage. Full detail lives on /pricing. */
@@ -100,8 +86,8 @@ export default function Pricing() {
         <div className="max-w-xl">
           <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl">Pricing</h2>
           <p className="mt-4 text-muted">
-            All prices are in pounds sterling. CV and portfolio prices are fixed. Development
-            projects get a fixed quote before any work starts.
+            All prices are in pounds sterling. Every project gets a fixed quote
+            before any work starts.
           </p>
         </div>
 

@@ -38,12 +38,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
     { url: `${SITE_URL}/business-setup`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     {
-      url: `${SITE_URL}/saas-mvp`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
       url: `${SITE_URL}/pos-system`,
       lastModified,
       changeFrequency: "monthly",
@@ -56,28 +50,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
     {
-      url: `${SITE_URL}/project-rescue`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
       url: `${SITE_URL}/pricing`,
       lastModified,
       changeFrequency: "monthly",
       priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/cv-writing`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${SITE_URL}/cv-writing/ar`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
     },
     {
       url: `${SITE_URL}/blog`,
